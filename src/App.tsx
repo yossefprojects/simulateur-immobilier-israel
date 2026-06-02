@@ -29,90 +29,193 @@ function Toast({ msg, onDone }: { msg: string; onDone: () => void }) {
 
 // ── SVG Banners ────────────────────────────────────────────────────────────────
 const BannerEstimation = () => (
-  <svg viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid slice" className="w-full h-full">
-    <rect width="1200" height="160" fill="#1A3A5C"/>
-    <rect x="0"    y="80"  width="80"  height="80"  fill="#2A5080"/>
-    <rect x="90"   y="40"  width="120" height="120" fill="#0F2235"/>
-    <rect x="220"  y="60"  width="90"  height="100" fill="#2A5080"/>
-    <rect x="320"  y="20"  width="100" height="140" fill="#0F2235"/>
-    <rect x="430"  y="50"  width="80"  height="110" fill="#1A3A5C"/>
-    <rect x="520"  y="70"  width="110" height="90"  fill="#2A5080"/>
-    <rect x="640"  y="30"  width="90"  height="130" fill="#0F2235"/>
-    <rect x="740"  y="55"  width="75"  height="105" fill="#2A5080"/>
-    <rect x="825"  y="25"  width="130" height="135" fill="#0F2235"/>
-    <rect x="965"  y="65"  width="85"  height="95"  fill="#1A3A5C"/>
-    <rect x="1060" y="45"  width="140" height="115" fill="#2A5080"/>
-    <rect x="100" y="55" width="8" height="6" fill="#C9A84C" opacity="0.8"/>
-    <rect x="115" y="55" width="8" height="6" fill="#C9A84C" opacity="0.6"/>
-    <rect x="130" y="55" width="8" height="6" fill="#C9A84C" opacity="0.9"/>
-    <rect x="330" y="35" width="8" height="6" fill="#C9A84C" opacity="0.9"/>
-    <rect x="840" y="40" width="8" height="6" fill="#C9A84C" opacity="0.9"/>
-    <rect x="855" y="40" width="8" height="6" fill="#C9A84C" opacity="0.6"/>
-    <circle cx="1150" cy="30" r="18" fill="#E8C96A" opacity="0.9"/>
-    <rect x="0" y="150" width="1200" height="10" fill="#0F2235" opacity="0.6"/>
+  <svg width="100%" viewBox="0 0 680 120" preserveAspectRatio="xMidYMid slice" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+    <rect width="680" height="120" fill="#0F2235"/>
+    <circle cx="60"  cy="18" r="1.2" fill="#ffffff" opacity=".6"/>
+    <circle cx="130" cy="10" r="1"   fill="#ffffff" opacity=".5"/>
+    <circle cx="220" cy="22" r="1.4" fill="#ffffff" opacity=".7"/>
+    <circle cx="370" cy="8"  r="1"   fill="#ffffff" opacity=".4"/>
+    <circle cx="490" cy="16" r="1.2" fill="#ffffff" opacity=".6"/>
+    <circle cx="580" cy="9"  r="1"   fill="#ffffff" opacity=".5"/>
+    <circle cx="640" cy="25" r="1.4" fill="#ffffff" opacity=".7"/>
+    <circle cx="620" cy="22" r="14" fill="#E8C96A" opacity=".85"/>
+    <rect x="0"   y="70" width="55"  height="50" fill="#112840"/>
+    <rect x="60"  y="55" width="80"  height="65" fill="#112840"/>
+    <rect x="145" y="65" width="50"  height="55" fill="#112840"/>
+    <rect x="200" y="42" width="70"  height="78" fill="#112840"/>
+    <rect x="275" y="60" width="60"  height="60" fill="#112840"/>
+    <rect x="340" y="48" width="85"  height="72" fill="#112840"/>
+    <rect x="430" y="58" width="55"  height="62" fill="#112840"/>
+    <rect x="490" y="36" width="90"  height="84" fill="#112840"/>
+    <rect x="585" y="62" width="95"  height="58" fill="#112840"/>
+    <rect x="10"  y="78" width="40"  height="42" fill="#0F2235"/>
+    <rect x="70"  y="60" width="60"  height="60" fill="#0F2235"/>
+    <rect x="155" y="72" width="38"  height="48" fill="#0F2235"/>
+    <rect x="210" y="50" width="55"  height="70" fill="#0F2235"/>
+    <rect x="285" y="66" width="48"  height="54" fill="#0F2235"/>
+    <rect x="350" y="30" width="65"  height="90" fill="#0C2040"/>
+    <rect x="380" y="20" width="5"   height="12" fill="#C9A84C" opacity=".7"/>
+    <rect x="75"  y="68" width="7" height="5" rx=".5" fill="#C9A84C" opacity=".75"/>
+    <rect x="88"  y="68" width="7" height="5" rx=".5" fill="#C9A84C" opacity=".5"/>
+    <rect x="75"  y="78" width="7" height="5" rx=".5" fill="#C9A84C" opacity=".4"/>
+    <rect x="215" y="58" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".8"/>
+    <rect x="228" y="58" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".5"/>
+    <rect x="215" y="68" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".6"/>
+    <rect x="354" y="38" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".9"/>
+    <rect x="366" y="38" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".6"/>
+    <rect x="378" y="38" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".8"/>
+    <rect x="354" y="50" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".5"/>
+    <rect x="366" y="50" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".7"/>
+    <rect x="378" y="50" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".4"/>
+    <rect x="354" y="62" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".8"/>
+    <rect x="378" y="62" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".6"/>
+    <rect x="495" y="44" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".7"/>
+    <rect x="507" y="44" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".5"/>
+    <rect x="519" y="44" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".8"/>
+    <rect x="495" y="56" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".4"/>
+    <rect x="519" y="56" width="8" height="6" rx=".5" fill="#C9A84C" opacity=".6"/>
+    <rect x="0" y="112" width="680" height="8" fill="#0C1E30"/>
+    <rect x="60"  y="113" width="55" height="4" rx="1" fill="#1A3A5C" opacity=".4"/>
+    <rect x="200" y="113" width="70" height="4" rx="1" fill="#1A3A5C" opacity=".3"/>
+    <rect x="350" y="113" width="65" height="5" rx="1" fill="#C9A84C" opacity=".15"/>
   </svg>
 )
 const BannerUrbanisme = () => (
-  <svg viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid slice" className="w-full h-full">
-    <rect width="1200" height="160" fill="#0F2235"/>
-    <line x1="0" y1="40"  x2="1200" y2="40"  stroke="#2A5080" strokeWidth="0.5" opacity="0.6"/>
-    <line x1="0" y1="80"  x2="1200" y2="80"  stroke="#2A5080" strokeWidth="0.5" opacity="0.6"/>
-    <line x1="0" y1="120" x2="1200" y2="120" stroke="#2A5080" strokeWidth="0.5" opacity="0.6"/>
-    <line x1="150"  y1="0" x2="150"  y2="160" stroke="#2A5080" strokeWidth="0.5" opacity="0.6"/>
-    <line x1="350"  y1="0" x2="350"  y2="160" stroke="#2A5080" strokeWidth="0.5" opacity="0.6"/>
-    <line x1="600"  y1="0" x2="600"  y2="160" stroke="#2A5080" strokeWidth="0.5" opacity="0.6"/>
-    <line x1="900"  y1="0" x2="900"  y2="160" stroke="#2A5080" strokeWidth="0.5" opacity="0.6"/>
-    <rect x="160" y="45" width="180" height="70" fill="none" stroke="#C9A84C" strokeWidth="1.5" opacity="0.7"/>
-    <rect x="360" y="10" width="230" height="110" fill="#C9A84C" opacity="0.08" stroke="#C9A84C" strokeWidth="2"/>
-    <rect x="610" y="45" width="280" height="65" fill="none" stroke="#2A5080" strokeWidth="1" opacity="0.8"/>
-    <rect x="910" y="25" width="180" height="90" fill="none" stroke="#C9A84C" strokeWidth="1.5" opacity="0.5"/>
-    <text x="440" y="65" fill="#C9A84C" fontSize="11" fontFamily="monospace" opacity="0.9">6627 / 142</text>
-    <circle cx="475" cy="85" r="6" fill="#C9A84C" opacity="0.9"/>
-    <circle cx="475" cy="85" r="12" fill="none" stroke="#C9A84C" strokeWidth="1" opacity="0.4"/>
+  <svg width="100%" viewBox="0 0 680 120" preserveAspectRatio="xMidYMid slice" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+    <rect width="680" height="120" fill="#0C1E30"/>
+    <line x1="0"   y1="30"  x2="680" y2="30"  stroke="#1A3A5C" strokeWidth=".8" opacity=".8"/>
+    <line x1="0"   y1="60"  x2="680" y2="60"  stroke="#1A3A5C" strokeWidth=".8" opacity=".8"/>
+    <line x1="0"   y1="90"  x2="680" y2="90"  stroke="#1A3A5C" strokeWidth=".8" opacity=".8"/>
+    <line x1="80"  y1="0"   x2="80"  y2="120" stroke="#1A3A5C" strokeWidth=".8" opacity=".8"/>
+    <line x1="200" y1="0"   x2="200" y2="120" stroke="#1A3A5C" strokeWidth=".8" opacity=".8"/>
+    <line x1="340" y1="0"   x2="340" y2="120" stroke="#1A3A5C" strokeWidth=".8" opacity=".8"/>
+    <line x1="480" y1="0"   x2="480" y2="120" stroke="#1A3A5C" strokeWidth=".8" opacity=".8"/>
+    <line x1="600" y1="0"   x2="600" y2="120" stroke="#1A3A5C" strokeWidth=".8" opacity=".8"/>
+    <rect x="90"  y="10" width="100" height="80" fill="#C9A84C" opacity=".06" stroke="#C9A84C" strokeWidth="1.5"/>
+    <rect x="210" y="6"  width="120" height="55" fill="none"    stroke="#1A3A5C" strokeWidth="1" opacity=".9"/>
+    <rect x="210" y="68" width="120" height="45" fill="none"    stroke="#1A3A5C" strokeWidth=".8" opacity=".6"/>
+    <rect x="350" y="8"  width="120" height="104" fill="#C9A84C" opacity=".1" stroke="#C9A84C" strokeWidth="2"/>
+    <rect x="490" y="10" width="100" height="45" fill="none"    stroke="#1A3A5C" strokeWidth="1" opacity=".7"/>
+    <rect x="490" y="62" width="100" height="50" fill="none"    stroke="#1A3A5C" strokeWidth=".8" opacity=".5"/>
+    <text x="128" y="55" fontFamily="monospace" fontSize="9" fill="#C9A84C" opacity=".7" textAnchor="middle">6627 / 142</text>
+    <text x="270" y="38" fontFamily="monospace" fontSize="8" fill="#2A5080" opacity=".9" textAnchor="middle">GUSH 5240</text>
+    <text x="410" y="56" fontFamily="monospace" fontSize="9" fill="#C9A84C" opacity=".9" textAnchor="middle">6640 / 88</text>
+    <circle cx="410" cy="80" r="7" fill="#C9A84C" opacity=".25"/>
+    <circle cx="410" cy="80" r="4" fill="#C9A84C" opacity=".6"/>
+    <circle cx="410" cy="80" r="2" fill="#C9A84C"/>
+    <line x1="0"   y1="60" x2="680" y2="60" stroke="#ffffff" strokeWidth="2.5" opacity=".04"/>
+    <line x1="340" y1="0"  x2="340" y2="120" stroke="#ffffff" strokeWidth="2.5" opacity=".04"/>
   </svg>
 )
 const BannerInvestisseur = () => (
-  <svg viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid slice" className="w-full h-full">
-    <rect width="1200" height="160" fill="#0F2235"/>
-    <polygon points="0,140 200,120 400,100 600,75 800,50 1000,30 1200,15 1200,160 0,160" fill="#C9A84C" opacity="0.06"/>
-    <polyline points="0,140 200,120 400,100 600,75 800,50 1000,30 1200,15" fill="none" stroke="#C9A84C" strokeWidth="2" opacity="0.8"/>
-    <line x1="0" y1="40"  x2="1200" y2="40"  stroke="#2A5080" strokeWidth="0.5" opacity="0.4"/>
-    <line x1="0" y1="80"  x2="1200" y2="80"  stroke="#2A5080" strokeWidth="0.5" opacity="0.4"/>
-    <line x1="0" y1="120" x2="1200" y2="120" stroke="#2A5080" strokeWidth="0.5" opacity="0.4"/>
-    <circle cx="400"  cy="100" r="4" fill="#C9A84C" opacity="0.7"/>
-    <circle cx="800"  cy="50"  r="4" fill="#C9A84C" opacity="0.7"/>
-    <circle cx="1200" cy="15"  r="5" fill="#C9A84C" opacity="0.9"/>
+  <svg width="100%" viewBox="0 0 680 120" preserveAspectRatio="xMidYMid slice" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+    <rect width="680" height="120" fill="#0C1E30"/>
+    <line x1="60" y1="20"  x2="660" y2="20"  stroke="#1A3A5C" strokeWidth=".5" opacity=".8"/>
+    <line x1="60" y1="50"  x2="660" y2="50"  stroke="#1A3A5C" strokeWidth=".5" opacity=".8"/>
+    <line x1="60" y1="80"  x2="660" y2="80"  stroke="#1A3A5C" strokeWidth=".5" opacity=".8"/>
+    <line x1="60" y1="110" x2="660" y2="110" stroke="#1A3A5C" strokeWidth=".5" opacity=".8"/>
+    <line x1="60" y1="10" x2="60" y2="115" stroke="#1A3A5C" strokeWidth=".8" opacity=".9"/>
+    <text x="52" y="23"  fontFamily="monospace" fontSize="8" fill="#C9A84C" opacity=".7" textAnchor="end">5M₪</text>
+    <text x="52" y="53"  fontFamily="monospace" fontSize="8" fill="#C9A84C" opacity=".7" textAnchor="end">3M₪</text>
+    <text x="52" y="83"  fontFamily="monospace" fontSize="8" fill="#C9A84C" opacity=".7" textAnchor="end">2M₪</text>
+    <text x="120"  y="116" fontFamily="monospace" fontSize="8" fill="#2A5080" textAnchor="middle">+1</text>
+    <text x="240"  y="116" fontFamily="monospace" fontSize="8" fill="#2A5080" textAnchor="middle">+3</text>
+    <text x="420"  y="116" fontFamily="monospace" fontSize="8" fill="#2A5080" textAnchor="middle">+6</text>
+    <text x="600"  y="116" fontFamily="monospace" fontSize="8" fill="#C9A84C" textAnchor="middle">+10 ans</text>
+    <polygon points="60,90 120,86 180,82 240,78 300,72 360,66 420,58 480,50 540,41 600,32 660,24 660,110 60,110" fill="#C9A84C" opacity=".08"/>
+    <polyline points="60,90 120,86 180,82 240,78 300,72 360,66 420,58 480,50 540,41 600,32 660,24" fill="none" stroke="#C9A84C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="120" cy="86" r="3" fill="#C9A84C"/>
+    <circle cx="240" cy="78" r="3" fill="#C9A84C"/>
+    <circle cx="420" cy="58" r="3" fill="#C9A84C"/>
+    <circle cx="600" cy="32" r="4" fill="#C9A84C"/>
+    <polyline points="60,80 120,82 180,84 240,86 300,88 360,90 420,92 480,94 540,96 600,98 660,100" fill="none" stroke="#378ADD" strokeWidth="1.5" strokeDasharray="5,3" strokeLinecap="round" opacity=".7"/>
+    <text x="664" y="22" fontFamily="monospace" fontSize="9" fill="#C9A84C" fontWeight="bold">2.82M₪</text>
+    <rect x="80" y="12" width="8" height="2" rx="1" fill="#C9A84C"/>
+    <text x="92" y="15" fontFamily="monospace" fontSize="8" fill="#C9A84C" opacity=".8">Valeur du bien</text>
+    <line x1="180" y1="13" x2="190" y2="13" stroke="#378ADD" strokeWidth="1.5" strokeDasharray="3,2"/>
+    <text x="194" y="15" fontFamily="monospace" fontSize="8" fill="#378ADD" opacity=".8">CF cumulé</text>
   </svg>
 )
 const BannerPromoteur = () => (
-  <svg viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid slice" className="w-full h-full">
-    <rect width="1200" height="160" fill="#1A3A5C"/>
-    <rect x="80"  y="30"  width="200" height="100" fill="none" stroke="#C9A84C" strokeWidth="1.5" opacity="0.6"/>
-    <rect x="100" y="50"  width="70"  height="60"  fill="none" stroke="#2A5080" strokeWidth="1" opacity="0.8"/>
-    <rect x="185" y="50"  width="75"  height="60"  fill="none" stroke="#2A5080" strokeWidth="1" opacity="0.8"/>
-    <rect x="320" y="20"  width="280" height="120" fill="none" stroke="#C9A84C" strokeWidth="2" opacity="0.9"/>
-    <rect x="340" y="40"  width="80"  height="80"  fill="#C9A84C" opacity="0.08"/>
-    <rect x="340" y="40"  width="80"  height="80"  fill="none" stroke="#C9A84C" strokeWidth="1"/>
-    <rect x="700" y="60"  width="60"  height="100" fill="#0F2235"/>
-    <rect x="770" y="40"  width="80"  height="120" fill="#0F2235"/>
-    <rect x="860" y="50"  width="70"  height="110" fill="#0F2235"/>
-    <rect x="940" y="30"  width="90"  height="130" fill="#0F2235"/>
-    <rect x="770" y="40"  width="80"  height="120" fill="none" stroke="#C9A84C" strokeWidth="1" opacity="0.7"/>
+  <svg width="100%" viewBox="0 0 680 120" preserveAspectRatio="xMidYMid slice" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+    <rect width="680" height="120" fill="#0A1C2E"/>
+    <line x1="80" y1="10" x2="80"  y2="110" stroke="#2A5080" strokeWidth="3"/>
+    <line x1="80" y1="18" x2="280" y2="18"  stroke="#2A5080" strokeWidth="2.5"/>
+    <line x1="80"  y1="18" x2="100" y2="38" stroke="#2A5080" strokeWidth="1.2" opacity=".6"/>
+    <line x1="140" y1="18" x2="160" y2="38" stroke="#2A5080" strokeWidth="1.2" opacity=".6"/>
+    <line x1="200" y1="18" x2="220" y2="38" stroke="#2A5080" strokeWidth="1.2" opacity=".6"/>
+    <line x1="260" y1="18" x2="280" y2="38" stroke="#2A5080" strokeWidth="1.2" opacity=".6"/>
+    <line x1="240" y1="18" x2="240" y2="55" stroke="#C9A84C" strokeWidth="1" opacity=".7"/>
+    <rect x="228" y="55" width="24" height="14" rx="2" fill="#C9A84C" opacity=".4"/>
+    <rect x="300" y="30" width="180" height="90" fill="none"   stroke="#2A5080" strokeWidth="1.5"/>
+    <rect x="300" y="90" width="180" height="30" fill="#112840"/>
+    <rect x="300" y="60" width="180" height="30" fill="#0E2035" stroke="#1A3A5C" strokeWidth=".5"/>
+    <rect x="300" y="30" width="180" height="30" fill="none"   stroke="#1A3A5C" strokeWidth=".5" opacity=".5"/>
+    <line x1="320" y1="30" x2="320" y2="10" stroke="#2A5080" strokeWidth="1.5"/>
+    <line x1="350" y1="30" x2="350" y2="8"  stroke="#2A5080" strokeWidth="1.5"/>
+    <line x1="380" y1="30" x2="380" y2="10" stroke="#2A5080" strokeWidth="1.5"/>
+    <line x1="410" y1="30" x2="410" y2="8"  stroke="#2A5080" strokeWidth="1.5"/>
+    <line x1="440" y1="30" x2="440" y2="10" stroke="#2A5080" strokeWidth="1.5"/>
+    <line x1="460" y1="30" x2="460" y2="8"  stroke="#2A5080" strokeWidth="1.5"/>
+    <line x1="308" y1="12" x2="462" y2="12" stroke="#2A5080" strokeWidth="1.2" opacity=".5"/>
+    <rect x="315" y="96" width="18" height="18" rx="1" fill="#1A3A5C" stroke="#2A5080" strokeWidth=".8"/>
+    <rect x="345" y="96" width="18" height="18" rx="1" fill="#1A3A5C" stroke="#2A5080" strokeWidth=".8"/>
+    <rect x="375" y="96" width="18" height="18" rx="1" fill="#C9A84C" opacity=".3" stroke="#C9A84C" strokeWidth=".8"/>
+    <rect x="405" y="96" width="18" height="18" rx="1" fill="#1A3A5C" stroke="#2A5080" strokeWidth=".8"/>
+    <rect x="435" y="96" width="18" height="18" rx="1" fill="#1A3A5C" stroke="#2A5080" strokeWidth=".8"/>
+    <rect x="315" y="66" width="18" height="18" rx="1" fill="#C9A84C" opacity=".25" stroke="#C9A84C" strokeWidth=".8"/>
+    <rect x="345" y="66" width="18" height="18" rx="1" fill="#1A3A5C" stroke="#2A5080" strokeWidth=".8"/>
+    <rect x="405" y="66" width="18" height="18" rx="1" fill="#C9A84C" opacity=".25" stroke="#C9A84C" strokeWidth=".8"/>
+    <rect x="435" y="66" width="18" height="18" rx="1" fill="#1A3A5C" stroke="#2A5080" strokeWidth=".8"/>
+    <rect x="510" y="50" width="60"  height="70" fill="#112840" stroke="#1A3A5C" strokeWidth=".5"/>
+    <rect x="580" y="35" width="90"  height="85" fill="#0E2035" stroke="#1A3A5C" strokeWidth=".5"/>
+    <rect x="520" y="57" width="8" height="7" rx=".5" fill="#C9A84C" opacity=".5"/>
+    <rect x="533" y="57" width="8" height="7" rx=".5" fill="#C9A84C" opacity=".3"/>
+    <rect x="590" y="44" width="9" height="7" rx=".5" fill="#C9A84C" opacity=".6"/>
+    <rect x="605" y="44" width="9" height="7" rx=".5" fill="#C9A84C" opacity=".4"/>
+    <rect x="620" y="44" width="9" height="7" rx=".5" fill="#C9A84C" opacity=".5"/>
+    <rect x="0" y="110" width="680" height="10" fill="#081624"/>
   </svg>
 )
 const BannerFiscalite = () => (
-  <svg viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid slice" className="w-full h-full">
-    <rect width="1200" height="160" fill="#1A3A5C"/>
-    <line x1="600" y1="20"  x2="600" y2="140" stroke="#C9A84C" strokeWidth="2" opacity="0.7"/>
-    <line x1="400" y1="60"  x2="800" y2="60"  stroke="#C9A84C" strokeWidth="1.5" opacity="0.8"/>
-    <circle cx="400" cy="60" r="5" fill="#C9A84C" opacity="0.9"/>
-    <circle cx="800" cy="60" r="5" fill="#C9A84C" opacity="0.9"/>
-    <rect x="340" y="80" width="120" height="40" rx="4" fill="#2A5080" stroke="#C9A84C" strokeWidth="1" opacity="0.7"/>
-    <rect x="740" y="80" width="120" height="40" rx="4" fill="#2A5080" stroke="#C9A84C" strokeWidth="1" opacity="0.7"/>
-    <text x="100"  y="100" fill="#C9A84C" fontSize="28" fontFamily="monospace" opacity="0.2">8%</text>
-    <text x="250"  y="60"  fill="#C9A84C" fontSize="20" fontFamily="monospace" opacity="0.15">3.5%</text>
-    <text x="900"  y="110" fill="#C9A84C" fontSize="24" fontFamily="monospace" opacity="0.2">0%</text>
-    <text x="1020" y="70"  fill="#C9A84C" fontSize="18" fontFamily="monospace" opacity="0.15">10%</text>
+  <svg width="100%" viewBox="0 0 680 120" preserveAspectRatio="xMidYMid slice" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+    <rect width="680" height="120" fill="#0C1E30"/>
+    <rect x="60"  y="15" width="120" height="90" rx="4" fill="#112840" stroke="#1A3A5C" strokeWidth="1"/>
+    <rect x="60"  y="15" width="120" height="22" rx="4" fill="#1A3A5C"/>
+    <rect x="60"  y="29" width="120" height="8"  fill="#1A3A5C"/>
+    <text x="120" y="31" fontFamily="monospace" fontSize="9" fill="#C9A84C" textAnchor="middle" fontWeight="bold">מס רכישה</text>
+    <rect x="72" y="46" width="60" height="3" rx="1" fill="#2A5080"/>
+    <rect x="72" y="53" width="85" height="3" rx="1" fill="#2A5080"/>
+    <rect x="72" y="60" width="70" height="3" rx="1" fill="#2A5080"/>
+    <rect x="72" y="67" width="90" height="3" rx="1" fill="#2A5080"/>
+    <rect x="72" y="74" width="50" height="3" rx="1" fill="#2A5080"/>
+    <text x="120" y="98" fontFamily="monospace" fontSize="12" fill="#C9A84C" textAnchor="middle" fontWeight="bold">₪48,000</text>
+    <rect x="210" y="25" width="110" height="80" rx="4" fill="#112840" stroke="#1A3A5C" strokeWidth="1"/>
+    <rect x="210" y="25" width="110" height="20" rx="4" fill="#163050"/>
+    <text x="265" y="39" fontFamily="monospace" fontSize="8" fill="#85B7EB" textAnchor="middle">מס שבח</text>
+    <rect x="220" y="52" width="55" height="3" rx="1" fill="#2A5080"/>
+    <rect x="220" y="59" width="78" height="3" rx="1" fill="#2A5080"/>
+    <rect x="220" y="66" width="65" height="3" rx="1" fill="#2A5080"/>
+    <text x="265" y="90" fontFamily="monospace" fontSize="11" fill="#85B7EB" textAnchor="middle" fontWeight="bold">25%</text>
+    <rect x="350" y="20" width="115" height="85" rx="4" fill="#112840" stroke="#C9A84C" strokeWidth="1.5"/>
+    <rect x="350" y="20" width="115" height="20" rx="4" fill="#1A3050"/>
+    <text x="407" y="34" fontFamily="monospace" fontSize="8" fill="#C9A84C" textAnchor="middle">עולה חדש</text>
+    <rect x="360" y="47" width="55" height="3" rx="1" fill="#2A5080"/>
+    <rect x="360" y="54" width="78" height="3" rx="1" fill="#2A5080"/>
+    <rect x="360" y="61" width="45" height="3" rx="1" fill="#2A5080"/>
+    <text x="407" y="85" fontFamily="monospace" fontSize="10" fill="#C9A84C" textAnchor="middle" fontWeight="bold">0.5%</text>
+    <text x="407" y="97" fontFamily="monospace" fontSize="8" fill="#C9A84C" opacity=".6" textAnchor="middle">réduction olim</text>
+    <circle cx="560" cy="60" r="38" fill="#112840" stroke="#C9A84C" strokeWidth="2"/>
+    <circle cx="560" cy="60" r="30" fill="none" stroke="#C9A84C" strokeWidth=".8" opacity=".3"/>
+    <text x="560" y="68" fontFamily="Georgia,serif" fontSize="28" fill="#C9A84C" textAnchor="middle" fontWeight="bold">₪</text>
+    <line x1="560" y1="14"  x2="560" y2="8"   stroke="#C9A84C" strokeWidth="1.5" opacity=".3"/>
+    <line x1="560" y1="106" x2="560" y2="112"  stroke="#C9A84C" strokeWidth="1.5" opacity=".3"/>
+    <line x1="514" y1="60"  x2="508" y2="60"   stroke="#C9A84C" strokeWidth="1.5" opacity=".3"/>
+    <line x1="606" y1="60"  x2="612" y2="60"   stroke="#C9A84C" strokeWidth="1.5" opacity=".3"/>
+    <line x1="527" y1="27"  x2="523" y2="23"   stroke="#C9A84C" strokeWidth="1.2" opacity=".2"/>
+    <line x1="593" y1="93"  x2="597" y2="97"   stroke="#C9A84C" strokeWidth="1.2" opacity=".2"/>
+    <line x1="593" y1="27"  x2="597" y2="23"   stroke="#C9A84C" strokeWidth="1.2" opacity=".2"/>
+    <line x1="527" y1="93"  x2="523" y2="97"   stroke="#C9A84C" strokeWidth="1.2" opacity=".2"/>
   </svg>
 )
 
