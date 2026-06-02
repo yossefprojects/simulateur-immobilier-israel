@@ -11,6 +11,7 @@ export const translations = {
       urbanisme:    'Potentiel urbanistique',
       investisseur: 'Analyse investisseur',
       promoteur:    'Bilan promoteur',
+      fiscalite:    'Fiscalité',
     },
     estimation: {
       localisation:   'Localisation',
@@ -199,6 +200,7 @@ export const translations = {
       urbanisme:    'Urban potential',
       investisseur: 'Investor analysis',
       promoteur:    "Developer P&L",
+      fiscalite:    'Taxation',
     },
     estimation: {
       localisation:   'Location',
@@ -387,6 +389,7 @@ export const translations = {
       urbanisme:    'פוטנציאל תכנוני',
       investisseur: 'ניתוח למשקיע',
       promoteur:    'מאזן יזם',
+      fiscalite:    'מיסוי',
     },
     estimation: {
       localisation:   'מיקום',

@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react'
+import { LineChart, Line, XAxis, YAxis, Tooltip as ReTooltip, ResponsiveContainer, ReferenceLine, PieChart, Pie, Cell, Legend } from 'recharts'
 import { fmt, fmtM, fmtPct } from '../utils/formatters'
 import { useInvestisseur } from '../hooks/useInvestisseur'
 import { usePromoteur } from '../hooks/usePromoteur'
 import { useLang } from '../i18n/LanguageContext'
 import { setReportSection } from '../store/reportStore'
 import { DataTable, MetricCard, NumberField, SectionTitle, SliderField } from './ui'
+import { Tooltip } from './Tooltip'
 
-// ─── InvestisseurTab ──────────────────────────────────────────────────────────
+// ── InvestisseurTab ────────────────────────────────────────────────────────────
 
 export const InvestisseurTab: React.FC = () => {
   const { inputs, result, set } = useInvestisseur()
@@ -18,6 +20,12 @@ export const InvestisseurTab: React.FC = () => {
     setReportSection('investisseur', { inputs, result })
   }, [inputs, result])
 
+  const chartData = result.projection.map(p => ({
+    annee:   `+${p.annee}`,
+    valeur:  Math.round(p.valeur  / 1000),
+    cfCumul: Math.round(p.cfCumul / 1000),
+  }))
+
   return (
     <div className="grid md:grid-cols-2 gap-6">
       <div>
@@ -25,8 +33,17 @@ export const InvestisseurTab: React.FC = () => {
         <NumberField label={ti.prixAchat} value={inputs.prix} step={50000} onChange={v => set('prix', v)} />
         <SliderField label={ti.apport} min={25} max={100} step={5}
           value={inputs.apport} display={inputs.apport + '%'} onChange={v => set('apport', v)} />
-        <SliderField label={ti.taux} min={3} max={8} step={0.1}
-          value={inputs.taux} display={inputs.taux + '%'} onChange={v => set('taux', v)} />
+        <div className="mb-3">
+          <label className="block text-xs text-neutral-500 mb-1">
+            <Tooltip content="Taux actuel Banque d'Israël : environ 4.5–5.5% en 2025. Les non-résidents obtiennent généralement un taux de 0.5–1% supérieur.">
+              {ti.taux}
+            </Tooltip>
+          </label>
+          <input type="range" min={3} max={8} step={0.1} value={inputs.taux}
+            onChange={e => set('taux', parseFloat(e.target.value))}
+            className="w-full" aria-label={ti.taux} aria-valuemin={3} aria-valuemax={8} aria-valuenow={inputs.taux} />
+          <div className="text-right text-xs font-medium tabular-nums mt-0.5">{inputs.taux}%</div>
+        </div>
         <SliderField label={ti.duree} min={10} max={30} step={1}
           value={inputs.duree} display={inputs.duree + ' ' + ti.ans} onChange={v => set('duree', v)} />
 
@@ -47,9 +64,13 @@ export const InvestisseurTab: React.FC = () => {
           <MetricCard label={ti.rendBrut}   value={fmtPct(result.rendBrut)} />
           <MetricCard label={ti.rendNet}    value={fmtPct(result.rendNet)} />
           <MetricCard label={ti.mensualite} value={fmt(result.mensualite) + ' ₪'} />
-          <MetricCard label={ti.tri}        value={fmtPct(result.tri, 1)} accent />
+          <MetricCard label={
+            <Tooltip content="Taux de Rendement Interne : taux d'actualisation qui annule la VAN. Un TRI > 8% est considéré excellent sur le marché israélien.">
+              {ti.tri}
+            </Tooltip>
+          } value={fmtPct(result.tri, 1)} accent />
           <MetricCard label={`${ti.prixSortie} +${inputs.horizon} ${ti.ans}`} value={fmtM(result.prixSortie)} />
-          <MetricCard label={ti.gainTotal}  value={fmtM(result.gainTotal)} />
+          <MetricCard label={ti.gainTotal} value={fmtM(result.gainTotal)} />
         </div>
 
         <SectionTitle>{ti.cashflow}</SectionTitle>
@@ -58,10 +79,25 @@ export const InvestisseurTab: React.FC = () => {
           { label: ti.vacanceRow,   value: '-' + fmt(Math.round(inputs.loyer * inputs.vacance / 100)) + ' ₪', accent: 'neg' },
           { label: ti.chargesRow,   value: '-' + fmt(Math.round(inputs.charges / 12)) + ' ₪', accent: 'neg' },
           { label: ti.mensualiteRow,value: '-' + fmt(result.mensualite) + ' ₪', accent: 'neg' },
-          { label: ti.cfRow,        value: (cfPos ? '+' : '') + fmt(Math.round(result.cfMensuel)) + ' ₪', accent: cfPos ? 'pos' : 'neg', bold: true },
+          { label: ti.cfRow, value: (cfPos ? '+' : '') + fmt(Math.round(result.cfMensuel)) + ' ₪', accent: cfPos ? 'pos' : 'neg', bold: true },
         ]} />
 
         <SectionTitle>{ti.projection} {inputs.horizon} {ti.ans}</SectionTitle>
+
+        {/* Line chart */}
+        <div className="bg-neutral-50 rounded-xl p-3 mb-3">
+          <ResponsiveContainer width="100%" height={180}>
+            <LineChart data={chartData} margin={{ top: 5, right: 5, bottom: 0, left: 0 }}>
+              <XAxis dataKey="annee" tick={{ fontSize: 10, fill: '#6B7280' }} />
+              <YAxis tick={{ fontSize: 10, fill: '#6B7280' }} tickFormatter={v => v + 'k₪'} width={48} />
+              <ReTooltip formatter={(v) => [(v as number).toLocaleString('fr-FR') + 'k₪']} />
+              <ReferenceLine y={0} stroke="#D8D7D3" />
+              <Line type="monotone" dataKey="valeur"  stroke="#1A3A5C" strokeWidth={2} dot={{ r: 2 }} name="Valeur bien" />
+              <Line type="monotone" dataKey="cfCumul" stroke="#C9A84C" strokeWidth={2} dot={{ r: 2 }} strokeDasharray="4 2" name="CF cumulé" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
         <DataTable rows={result.projection.map(p => ({
           label:  `+${p.annee} ${ti.ans}`,
           value:  fmtM(p.valeur) + ' | CF: ' + (p.cfCumul >= 0 ? '+' : '') + fmtM(p.cfCumul),
@@ -72,7 +108,9 @@ export const InvestisseurTab: React.FC = () => {
   )
 }
 
-// ─── PromoteurTab ─────────────────────────────────────────────────────────────
+// ── PromoteurTab ───────────────────────────────────────────────────────────────
+
+const DONUT_COLORS = ['#993C1D','#1A3A5C','#534AB7','#BA7517','#0F6E56','#C9A84C']
 
 export const PromoteurTab: React.FC = () => {
   const { inputs, result, set } = usePromoteur()
@@ -83,25 +121,43 @@ export const PromoteurTab: React.FC = () => {
     setReportSection('promoteur', { inputs, result })
   }, [inputs, result])
 
+  const donutData = [
+    { name: tp.terrain,       value: inputs.coutTerrain,           color: DONUT_COLORS[0] },
+    { name: tp.construction,  value: result.coutConst,             color: DONUT_COLORS[1] },
+    { name: tp.honoraires,    value: result.frais,                 color: DONUT_COLORS[2] },
+    { name: tp.commerc,       value: result.commerc,               color: DONUT_COLORS[3] },
+    { name: tp.portage,       value: result.portage,               color: DONUT_COLORS[4] },
+    { name: tp.margeBrute,    value: Math.max(0, result.margeBrute), color: DONUT_COLORS[5] },
+  ].filter(d => d.value > 0)
+
   return (
     <div className="grid md:grid-cols-2 gap-6">
       <div>
         <SectionTitle>{tp.projet}</SectionTitle>
         <NumberField label={tp.surfTerrain} value={inputs.surfTerrain} step={100} onChange={v => set('surfTerrain', v)} />
-        <SliderField label={tp.cos} min={1} max={8} step={0.5}
-          value={inputs.cos} display={String(inputs.cos)} onChange={v => set('cos', v)} />
+        <div className="mb-3">
+          <label className="block text-xs text-neutral-500 mb-1">
+            <Tooltip content="Coefficient d'occupation du sol : ratio entre la surface de plancher constructible et la surface du terrain. Ex: COS 3 sur 1000m² = 3000m² constructibles.">
+              {tp.cos}
+            </Tooltip>
+          </label>
+          <input type="range" min={1} max={8} step={0.5} value={inputs.cos}
+            onChange={e => set('cos', parseFloat(e.target.value))}
+            className="w-full" aria-label={tp.cos} />
+          <div className="text-right text-xs font-medium tabular-nums mt-0.5">{inputs.cos}</div>
+        </div>
         <SliderField label={tp.ratioVend} min={60} max={90} step={1}
           value={inputs.ratioVend} display={inputs.ratioVend + '%'} onChange={v => set('ratioVend', v)} />
         <NumberField label={tp.prixVente} value={inputs.prixVente} step={500} onChange={v => set('prixVente', v)} />
 
         <SectionTitle>{tp.couts}</SectionTitle>
-        <NumberField label={tp.coutTerrain}  value={inputs.coutTerrain} step={100000} onChange={v => set('coutTerrain', v)} />
-        <NumberField label={tp.coutConst}    value={inputs.coutConst}   step={100}    onChange={v => set('coutConst', v)} />
-        <SliderField label={tp.tauxFrais} min={5} max={20} step={1}
-          value={inputs.tauxFrais} display={inputs.tauxFrais + '%'} onChange={v => set('tauxFrais', v)} />
-        <SliderField label={tp.tauxCommerc} min={1} max={6} step={0.5}
+        <NumberField label={tp.coutTerrain} value={inputs.coutTerrain} step={100000} onChange={v => set('coutTerrain', v)} />
+        <NumberField label={tp.coutConst}   value={inputs.coutConst}   step={100}    onChange={v => set('coutConst', v)} />
+        <SliderField label={tp.tauxFrais}   min={5}  max={20} step={1}
+          value={inputs.tauxFrais}   display={inputs.tauxFrais   + '%'} onChange={v => set('tauxFrais', v)} />
+        <SliderField label={tp.tauxCommerc} min={1}  max={6}  step={0.5}
           value={inputs.tauxCommerc} display={inputs.tauxCommerc + '%'} onChange={v => set('tauxCommerc', v)} />
-        <SliderField label={tp.tauxPortage} min={2} max={12} step={0.5}
+        <SliderField label={tp.tauxPortage} min={2}  max={12} step={0.5}
           value={inputs.tauxPortage} display={inputs.tauxPortage + '%'} onChange={v => set('tauxPortage', v)} />
       </div>
 
@@ -114,6 +170,17 @@ export const PromoteurTab: React.FC = () => {
           <MetricCard label={tp.margeCout}   value={fmtPct(result.margeSurCout, 1)} />
           <MetricCard label={tp.surfVend}    value={fmt(result.surfVendable) + ' m²'} />
           <MetricCard label={tp.prixRevient} value={fmt(result.prixRevientM2) + ' ₪/m²'} />
+        </div>
+
+        {/* Donut chart */}
+        <div className="bg-neutral-50 rounded-xl p-3 mb-4 flex justify-center">
+          <PieChart width={280} height={200}>
+            <Pie data={donutData} cx={100} cy={90} innerRadius={50} outerRadius={85} dataKey="value" paddingAngle={2}>
+              {donutData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+            </Pie>
+            <ReTooltip formatter={(v) => [fmtM(v as number)]} />
+            <Legend iconType="circle" iconSize={8} formatter={(v: string) => <span style={{ fontSize: 11 }}>{v}</span>} />
+          </PieChart>
         </div>
 
         <SectionTitle>{tp.structure}</SectionTitle>

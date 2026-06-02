@@ -1,0 +1,1 @@
+- [Premium refonte design](premium-refonte.md) — palette #1A3A5C/#C9A84C, DM Serif Display, SVG banners, 5 tabs incl. Fiscalité, recharts, xlsx, scenarios localStorage.

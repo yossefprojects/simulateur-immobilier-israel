@@ -4,17 +4,118 @@
 
 @layer base {
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    background-color: #F8F7F4;
   }
 
   input[type='number'] {
-    @apply text-sm;
+    font-size: 0.875rem;
   }
 }
 
 @layer utilities {
-  .tabular-nums {
-    font-variant-numeric: tabular-nums;
-  }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .font-display { font-family: 'DM Serif Display', serif; }
 }
+
+/* ── Tab fade-in ── */
+.tab-content {
+  animation: tabFadeIn 0.2s ease-out;
+}
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Value flash (gold) ── */
+.value-updated {
+  animation: valueFlash 0.5s ease-out;
+  border-radius: 4px;
+}
+@keyframes valueFlash {
+  0%   { background-color: rgba(201, 168, 76, 0.30); }
+  100% { background-color: transparent; }
+}
+
+/* ── Staggered waterfall bars ── */
+.waterfall-bar {
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.waterfall-bar:nth-child(1) { transition-delay: 0ms; }
+.waterfall-bar:nth-child(2) { transition-delay: 60ms; }
+.waterfall-bar:nth-child(3) { transition-delay: 120ms; }
+.waterfall-bar:nth-child(4) { transition-delay: 180ms; }
+.waterfall-bar:nth-child(5) { transition-delay: 240ms; }
+.waterfall-bar:nth-child(6) { transition-delay: 300ms; }
+.waterfall-bar:nth-child(7) { transition-delay: 360ms; }
+
+/* ── Sliders ── */
+input[type="range"] {
+  height: 6px;
+  accent-color: #1A3A5C;
+  cursor: pointer;
+}
+input[type="range"]:hover {
+  accent-color: #C9A84C;
+}
+
+/* ── Focus ring ── */
+*:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Mobile sticky result bar ── */
+@media (max-width: 768px) {
+  .result-sticky-mobile {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    border-top: 1px solid #EDEDEA;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+  }
+
+  input[type="range"] { height: 8px; }
+
+  input[type="number"],
+  select { font-size: 16px !important; }
+}
+
+/* ── PDF spinner ── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border: 2px solid rgba(26,58,92,0.3);
+  border-top-color: #1A3A5C;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  background: #1A3A5C;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 9999;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  animation: toastIn 0.2s ease-out, toastOut 0.3s ease-in 1.7s forwards;
+}
+@keyframes toastIn  { from { opacity:0; transform: translateX(-50%) translateY(12px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+@keyframes toastOut { from { opacity:1; } to { opacity:0; } }
