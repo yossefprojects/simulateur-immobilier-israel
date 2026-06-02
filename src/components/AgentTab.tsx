@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
-import { Send, Loader2, Trash2 } from 'lucide-react'
+import { Send, Loader2, Trash2, Copy, Check, FileDown } from 'lucide-react'
+import jsPDF from 'jspdf'
 import { useLang } from '../i18n/LanguageContext'
 
 const SYSTEM_PROMPT = `Tu es un assistant IA de niveau fonds d'investissement immobilier spécialisé en Israël (Tel Aviv et grandes villes).
@@ -269,14 +270,167 @@ function RenderOutput({ text }: { text: string }) {
 }
 
 export function AgentTab() {
-  const [input, setInput]   = useState('')
-  const [output, setOutput] = useState('')
+  const [input, setInput]     = useState('')
+  const [output, setOutput]   = useState('')
   const [loading, setLoading] = useState(false)
-  const [error, setError]   = useState('')
+  const [error, setError]     = useState('')
+  const [copied, setCopied]   = useState(false)
+  const [pdfBusy, setPdfBusy] = useState(false)
   const abortRef  = useRef<AbortController | null>(null)
   const outputRef = useRef<HTMLDivElement>(null)
   const { t }     = useLang()
   const ta        = t.agent
+
+  const handleCopy = useCallback(async () => {
+    if (!output) return
+    try {
+      await navigator.clipboard.writeText(output)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      const el = document.createElement('textarea')
+      el.value = output
+      document.body.appendChild(el)
+      el.select()
+      document.execCommand('copy')
+      document.body.removeChild(el)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }, [output])
+
+  const handleExportPdf = useCallback(() => {
+    if (!output || pdfBusy) return
+    setPdfBusy(true)
+    try {
+      const doc   = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
+      const W     = 210
+      const M     = 14
+      const maxW  = W - M * 2
+      const BLUE  : [number,number,number] = [26, 58, 92]
+      const GOLD  : [number,number,number] = [201, 168, 76]
+      const GRAY  : [number,number,number] = [80, 80, 80]
+      const BLACK : [number,number,number] = [30, 30, 30]
+
+      let y = 18
+      const newPage = () => { doc.addPage(); y = 18 }
+      const guard   = (h: number) => { if (y + h > 278) newPage() }
+
+      doc.setFillColor(...BLUE)
+      doc.rect(0, 0, W, 22, 'F')
+      doc.setTextColor(255, 255, 255)
+      doc.setFontSize(11)
+      doc.setFont('helvetica', 'bold')
+      doc.text('SIMULATEUR IMMOBILIER ISRAËL — RAPPORT AGENT IA', M, 10)
+      doc.setFontSize(7.5)
+      doc.setFont('helvetica', 'normal')
+      doc.text(`Généré le ${new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' })}  ·  Claude · Replit AI`, M, 17)
+      y = 30
+
+      const lines = output.split('\n')
+      for (const rawLine of lines) {
+        const line = rawLine.trim()
+        if (!line) { y += 2; continue }
+        if (line === '---') { guard(4); doc.setDrawColor(...GOLD); doc.setLineWidth(0.3); doc.line(M, y, W - M, y); y += 4; continue }
+
+        if (line.startsWith('## ')) {
+          const title = line.slice(3)
+          guard(10)
+          doc.setFillColor(...BLUE)
+          doc.rect(M, y, maxW, 7, 'F')
+          doc.setTextColor(255, 255, 255)
+          doc.setFontSize(8.5)
+          doc.setFont('helvetica', 'bold')
+          doc.text(title.toUpperCase(), M + 3, y + 5)
+          doc.setTextColor(...BLACK)
+          y += 10
+          continue
+        }
+
+        if (line.startsWith('- ')) {
+          const content = line.slice(2)
+          const scoreMatch = content.match(/^SCORE FINAL\s*:\s*(\d+)/i)
+          if (scoreMatch) {
+            const score = parseInt(scoreMatch[1])
+            guard(18)
+            doc.setFillColor(245, 245, 240)
+            doc.setDrawColor(...GOLD)
+            doc.setLineWidth(0.5)
+            doc.roundedRect(M, y, maxW, 14, 2, 2, 'FD')
+            doc.setTextColor(...GOLD)
+            doc.setFontSize(18)
+            doc.setFont('helvetica', 'bold')
+            doc.text(String(score), M + 5, y + 10)
+            doc.setFontSize(8)
+            doc.setTextColor(...GRAY)
+            doc.text('/ 100  Investment Score', M + 18, y + 7)
+            const label = score >= 80 ? 'EXCELLENT' : score >= 65 ? 'BON' : score >= 50 ? 'MODÉRÉ' : score >= 30 ? 'RISQUÉ' : 'À ÉVITER'
+            doc.setFont('helvetica', 'bold')
+            doc.setTextColor(...GOLD)
+            doc.text(label, M + 18, y + 12)
+            y += 18
+            continue
+          }
+
+          const colonIdx = content.indexOf(':')
+          if (colonIdx > 0 && colonIdx < 50) {
+            const k = content.slice(0, colonIdx).trim()
+            const v = content.slice(colonIdx + 1).trim()
+            if (v) {
+              const wrapped = doc.splitTextToSize(v, maxW * 0.5)
+              const h = Math.max(6, wrapped.length * 4.5)
+              guard(h)
+              doc.setFontSize(8)
+              doc.setFont('helvetica', 'bold')
+              doc.setTextColor(...BLUE)
+              doc.text(k, M, y + 4)
+              doc.setFont('helvetica', 'normal')
+              const isGold = /₪|NIS|M₪/.test(v)
+              doc.setTextColor(isGold ? GOLD[0] : BLACK[0], isGold ? GOLD[1] : BLACK[1], isGold ? GOLD[2] : BLACK[2])
+              doc.text(wrapped, W - M, y + 4, { align: 'right' })
+              doc.setDrawColor(230, 230, 230)
+              doc.setLineWidth(0.2)
+              doc.line(M, y + h - 0.5, W - M, y + h - 0.5)
+              y += h
+              continue
+            }
+          }
+
+          const bulletWrapped = doc.splitTextToSize('▸ ' + content.replace(/\*\*/g, ''), maxW - 5)
+          const bh = Math.max(5, bulletWrapped.length * 4.5)
+          guard(bh)
+          doc.setFontSize(8)
+          doc.setFont('helvetica', 'normal')
+          doc.setTextColor(...GRAY)
+          doc.text(bulletWrapped, M + 3, y + 4)
+          y += bh
+          continue
+        }
+
+        const paraWrapped = doc.splitTextToSize(line.replace(/\*\*/g, ''), maxW)
+        const ph = Math.max(5, paraWrapped.length * 4.5)
+        guard(ph)
+        doc.setFontSize(8)
+        doc.setFont('helvetica', 'normal')
+        doc.setTextColor(...BLACK)
+        doc.text(paraWrapped, M, y + 4)
+        y += ph
+      }
+
+      const totalPages = (doc as jsPDF & { internal: { getNumberOfPages: () => number } }).internal.getNumberOfPages()
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i)
+        doc.setFontSize(7)
+        doc.setTextColor(160, 160, 160)
+        doc.text('Simulateur Immobilier Israël  ·  Analyse indicative non contractuelle', M, 292)
+        doc.text(`${i} / ${totalPages}`, W - M, 292, { align: 'right' })
+      }
+
+      doc.save(`rapport-agent-ia-${Date.now()}.pdf`)
+    } finally {
+      setPdfBusy(false)
+    }
+  }, [output, pdfBusy])
 
   const analyze = useCallback(async () => {
     if (!input.trim() || loading) return
@@ -431,11 +585,36 @@ export function AgentTab() {
               <span className="text-sm">📊</span>
               <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1A3A5C' }}>Rapport d'analyse — Private Equity</span>
             </div>
-            {loading && (
-              <span className="text-xs text-neutral-400 flex items-center gap-1">
-                <Loader2 size={10} className="animate-spin" /> génération…
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {loading && (
+                <span className="text-xs text-neutral-400 flex items-center gap-1">
+                  <Loader2 size={10} className="animate-spin" /> génération…
+                </span>
+              )}
+              {!loading && output && (
+                <>
+                  <button
+                    onClick={handleCopy}
+                    title="Copier le rapport"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all border"
+                    style={copied
+                      ? { background: '#dcfce7', borderColor: '#86efac', color: '#15803d' }
+                      : { background: 'white', borderColor: '#e5e7eb', color: '#6b7280' }}>
+                    {copied ? <><Check size={11} /> Copié</> : <><Copy size={11} /> Copier</>}
+                  </button>
+                  <button
+                    onClick={handleExportPdf}
+                    disabled={pdfBusy}
+                    title="Exporter en PDF"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all border disabled:opacity-50"
+                    style={{ background: '#1A3A5C', borderColor: '#1A3A5C', color: 'white' }}>
+                    {pdfBusy
+                      ? <><Loader2 size={11} className="animate-spin" /> PDF…</>
+                      : <><FileDown size={11} /> PDF</>}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
           <div className="p-5">
             <RenderOutput text={output} />
