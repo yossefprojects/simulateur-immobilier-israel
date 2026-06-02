@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { fmt, fmtM, fmtPct } from '../utils/formatters'
 import { useInvestisseur } from '../hooks/useInvestisseur'
 import { usePromoteur } from '../hooks/usePromoteur'
 import { useLang } from '../i18n/LanguageContext'
+import { setReportSection } from '../store/reportStore'
 import { DataTable, MetricCard, NumberField, SectionTitle, SliderField } from './ui'
 
 // ─── InvestisseurTab ──────────────────────────────────────────────────────────
@@ -12,6 +13,10 @@ export const InvestisseurTab: React.FC = () => {
   const { t } = useLang()
   const ti = t.investisseur
   const cfPos = result.cfMensuel >= 0
+
+  useEffect(() => {
+    setReportSection('investisseur', { inputs, result })
+  }, [inputs, result])
 
   return (
     <div className="grid md:grid-cols-2 gap-6">
@@ -73,6 +78,10 @@ export const PromoteurTab: React.FC = () => {
   const { inputs, result, set } = usePromoteur()
   const { t } = useLang()
   const tp = t.promoteur
+
+  useEffect(() => {
+    setReportSection('promoteur', { inputs, result })
+  }, [inputs, result])
 
   return (
     <div className="grid md:grid-cols-2 gap-6">

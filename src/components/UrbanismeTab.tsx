@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { CheckCircle, Circle, Clock, ExternalLink } from 'lucide-react'
 import { ACCORDS_MUNICIPAUX, SOURCES_EXTERNES, STATUTS_PERMIS, STATUTS_PLAN } from '../data/accords'
 import { VILLES } from '../data/villes'
@@ -6,6 +6,7 @@ import type { AccordKey, PermisKey, PlanKey } from '../types'
 import { fmt, fmtM } from '../utils/formatters'
 import { useUrbanisme } from '../hooks/useUrbanisme'
 import { useLang } from '../i18n/LanguageContext'
+import { setReportSection } from '../store/reportStore'
 import { DataTable, NumberField, SectionTitle, SelectField, SliderField } from './ui'
 
 const ScoreRing: React.FC<{ score: number; color: string; label: string; sub: string }> = ({ score, color, label, sub }) => {
@@ -36,23 +37,28 @@ export const UrbanismeTab: React.FC = () => {
   const { t } = useLang()
   const tu = t.urbanisme
 
+  useEffect(() => {
+    setReportSection('urbanisme', { inputs, result })
+  }, [inputs, result])
+
   const villeOptions   = Object.entries(VILLES).map(([k, v]) => ({ value: k, label: v.label }))
   const planOptions    = Object.entries(STATUTS_PLAN).map(([k]) => ({ value: k, label: t.statutsPlan[k as PlanKey] }))
   const accordOptions  = Object.entries(ACCORDS_MUNICIPAUX).map(([k]) => ({ value: k, label: t.accordsMunicipaux[k as AccordKey] }))
   const permisOptions  = Object.entries(STATUTS_PERMIS).map(([k]) => ({ value: k, label: t.statutsPermis[k as PermisKey] }))
 
-  const scoreLabel = result.score >= 70 ? t.scoreLabels.fort : result.score >= 45 ? t.scoreLabels.modere : t.scoreLabels.faible
+  const scoreLabel = result.score >= 70 ? t.scoreLabels.fort
+                   : result.score >= 45 ? t.scoreLabels.modere
+                   : t.scoreLabels.faible
 
   const isChantier = inputs.accordKey === 'chantier'
-  const hasPc      = inputs.accordKey === 'pc_ok' || isChantier
   const hasAccord  = ['tama38_ok','pb_ok','pc_ok','chantier'].includes(inputs.accordKey)
   const hasPlan    = ['approved','renewal','priority'].includes(inputs.planKey)
   const hasPermis  = inputs.permisKey === 'accorde'
 
   const timelineSteps = [
-    { label: tu.taba,        desc: t.statutsPlan[inputs.planKey],           done: hasPlan,    active: ['pending','study'].includes(inputs.planKey) },
-    { label: tu.accordMun,   desc: t.accordsMunicipaux[inputs.accordKey],   done: hasAccord,  active: ['tama38_etude','pb_etude'].includes(inputs.accordKey) },
-    { label: tu.permisConstr,desc: t.statutsPermis[inputs.permisKey],       done: hasPermis,  active: inputs.permisKey === 'depose' },
+    { label: tu.taba,        desc: t.statutsPlan[inputs.planKey],          done: hasPlan,    active: ['pending','study'].includes(inputs.planKey) },
+    { label: tu.accordMun,   desc: t.accordsMunicipaux[inputs.accordKey],  done: hasAccord,  active: ['tama38_etude','pb_etude'].includes(inputs.accordKey) },
+    { label: tu.permisConstr,desc: t.statutsPermis[inputs.permisKey],      done: hasPermis,  active: inputs.permisKey === 'depose' },
     { label: tu.chantier,    desc: isChantier ? t.timelineDesc.chantierEnCours : t.timelineDesc.enAttente, done: isChantier, active: false },
   ]
 

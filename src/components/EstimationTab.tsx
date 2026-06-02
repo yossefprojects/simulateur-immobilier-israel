@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { EQUIPEMENTS, TYPES_PROJET } from '../data/coefficients'
 import { VILLES } from '../data/villes'
 import type { Equipements } from '../types'
 import { fmt, fmtM } from '../utils/formatters'
 import { useEstimation } from '../hooks/useEstimation'
 import { useLang } from '../i18n/LanguageContext'
+import { setReportSection } from '../store/reportStore'
 import { DataTable, MetricCard, ResultBox, SectionTitle, SelectField, SliderField } from './ui'
 
 const PROJ_KEYS = ['residClassique','residLuxe','programmeNeuf','tama38','pb','mixte'] as const
@@ -13,6 +14,10 @@ export const EstimationTab: React.FC = () => {
   const { inputs, result, set, setVille, toggleEquip } = useEstimation()
   const { t } = useLang()
   const te = t.estimation
+
+  useEffect(() => {
+    setReportSection('estimation', { inputs, result })
+  }, [inputs, result])
 
   const quartierOptions = Object.keys(VILLES[inputs.ville]?.quartiers ?? {}).map(q => ({ value: q, label: q }))
   const villeOptions    = Object.entries(VILLES).map(([k, v]) => ({ value: k, label: v.label }))
@@ -35,13 +40,8 @@ export const EstimationTab: React.FC = () => {
   }
 
   const waterfallLabels = [
-    te.baseQuartier,
-    te.typeProgramme,
-    te.surfaceLabel,
-    te.proxMer,
-    te.transports,
-    te.etageLabel,
-    te.equipLabel,
+    te.baseQuartier, te.typeProgramme, te.surfaceLabel,
+    te.proxMer, te.transports, te.etageLabel, te.equipLabel,
   ]
 
   return (
