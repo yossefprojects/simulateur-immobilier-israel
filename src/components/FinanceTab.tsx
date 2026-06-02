@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { LineChart, Line, XAxis, YAxis, Tooltip as ReTooltip, ResponsiveContainer, ReferenceLine, PieChart, Pie, Cell, Legend } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, Tooltip as ReTooltip, ResponsiveContainer, ReferenceLine, PieChart, Pie, Cell } from 'recharts'
 import { fmt, fmtM, fmtPct } from '../utils/formatters'
 import { useInvestisseur } from '../hooks/useInvestisseur'
 import { usePromoteur } from '../hooks/usePromoteur'
@@ -173,14 +173,23 @@ export const PromoteurTab: React.FC = () => {
         </div>
 
         {/* Donut chart */}
-        <div className="bg-neutral-50 rounded-xl p-3 mb-4 flex justify-center">
-          <PieChart width={280} height={200}>
-            <Pie data={donutData} cx={100} cy={90} innerRadius={50} outerRadius={85} dataKey="value" paddingAngle={2}>
-              {donutData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-            </Pie>
-            <ReTooltip formatter={(v) => [fmtM(v as number)]} />
-            <Legend iconType="circle" iconSize={8} formatter={(v: string) => <span style={{ fontSize: 11 }}>{v}</span>} />
-          </PieChart>
+        <div className="bg-neutral-50 rounded-xl p-3 mb-4">
+          <div className="flex justify-center">
+            <PieChart width={200} height={170}>
+              <Pie data={donutData} cx={100} cy={85} innerRadius={48} outerRadius={80} dataKey="value" paddingAngle={2}>
+                {donutData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+              </Pie>
+              <ReTooltip formatter={(v) => [fmtM(v as number)]} />
+            </PieChart>
+          </div>
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 mt-1">
+            {donutData.map((entry, i) => (
+              <div key={i} className="flex items-center gap-1.5 text-xs text-neutral-600">
+                <span className="w-2 h-2 rounded-full shrink-0" style={{ background: entry.color }} />
+                <span>{entry.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         <SectionTitle>{tp.structure}</SectionTitle>

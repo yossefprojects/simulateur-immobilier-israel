@@ -24,17 +24,29 @@ function makeTitle(input: string): string {
   const first = input.trim().split('\n')[0].replace(/[*#_]/g, '').trim()
   return first.length > 60 ? first.slice(0, 58) + '…' : first
 }
-function fmtDate(ts: number): string {
-  const d = new Date(ts)
-  const now = new Date()
-  const diffH = (now.getTime() - ts) / 3600000
-  if (diffH < 1)   return 'il y a ' + Math.round(diffH * 60) + ' min'
-  if (diffH < 24)  return 'il y a ' + Math.round(diffH) + 'h'
+function fmtDate(ts: number, lang: 'fr' | 'en' | 'he' = 'fr'): string {
+  const d    = new Date(ts)
+  const diffH = (Date.now() - ts) / 3600000
+  const diffM = Math.round(diffH * 60)
+  if (lang === 'he') {
+    if (diffH < 1)  return `לפני ${diffM} ד׳`
+    if (diffH < 24) return `לפני ${Math.round(diffH)} ש׳`
+    if (diffH < 48) return 'אתמול'
+    return d.toLocaleDateString('he-IL', { day: '2-digit', month: 'short' })
+  }
+  if (lang === 'en') {
+    if (diffH < 1)  return `${diffM}m ago`
+    if (diffH < 24) return `${Math.round(diffH)}h ago`
+    if (diffH < 48) return 'yesterday'
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
+  }
+  if (diffH < 1)   return `il y a ${diffM} min`
+  if (diffH < 24)  return `il y a ${Math.round(diffH)}h`
   if (diffH < 48)  return 'hier'
   return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })
 }
 
-const SYSTEM_PROMPT = `Tu es un analyste senior de fonds de private equity immobilier spécialisé en Israël (Tel-Aviv et grandes villes).
+const BASE_PROMPT = `Tu es un analyste senior de fonds de private equity immobilier spécialisé en Israël (Tel-Aviv et grandes villes).
 
 Pour chaque projet décrit, tu produis un rapport d'analyse complet et chiffré.
 
@@ -111,6 +123,15 @@ REGLES ABSOLUES :
 - Chiffres précis et cohérents même si des données manquent (utiliser les hypothèses)
 - Aucun emoji, aucun symbole markdown (pas de **, pas de *, pas de #), uniquement le format ci-dessus
 - Réponse professionnelle, synthétique, orientée décision d'investissement`
+
+function makeSystemPrompt(lang: 'fr' | 'en' | 'he'): string {
+  const directive: Record<string, string> = {
+    fr: 'Réponds TOUJOURS en français.',
+    en: 'Always respond in ENGLISH. Translate all labels and section titles to English, EXCEPT keep the structural markers "SCORE FINAL :" and "Statut :" exactly as-is (the UI parser depends on them).',
+    he: 'ענה תמיד בעברית. תרגם את כל התוכן לעברית — למעט הסמנים המבניים "SCORE FINAL :" ו-"Statut :" שיש לשמור בדיוק כמו שהם (מנתח הממשק תלוי בהם).',
+  }
+  return `${directive[lang]}\n\n${BASE_PROMPT}`
+}
 
 function scoreColor(score: number) {
   if (score >= 80) return { bar: '#22c55e', bg: '#f0fdf4', border: '#86efac', text: '#15803d' }
@@ -352,8 +373,8 @@ export function AgentTab() {
   const [activeId, setActiveId]   = useState<string | null>(null)
   const abortRef  = useRef<AbortController | null>(null)
   const outputRef = useRef<HTMLDivElement>(null)
-  const { t }     = useLang()
-  const ta        = t.agent
+  const { t, lang } = useLang()
+  const ta          = t.agent
 
   useEffect(() => { saveHistory(history) }, [history])
 
@@ -530,7 +551,7 @@ export function AgentTab() {
           model:      'claude-sonnet-4-6',
           max_tokens: 8192,
           stream:     true,
-          system:     SYSTEM_PROMPT,
+          system:     makeSystemPrompt(lang),
           messages:   [{ role: 'user', content: input }],
         }),
         signal: ctrl.signal,
@@ -593,7 +614,7 @@ export function AgentTab() {
         setActiveId(newItem.id)
       }
     }
-  }, [input, loading, ta.errorMsg])
+  }, [input, loading, ta.errorMsg, lang])
 
   const handleClear = () => {
     if (loading && abortRef.current) abortRef.current.abort()
@@ -645,7 +666,7 @@ export function AgentTab() {
                 ? { background: '#1A3A5C', borderColor: '#1A3A5C', color: 'white' }
                 : { background: 'white', borderColor: '#d1d5db', color: '#374151' }}>
               <History size={12} />
-              Historique
+              {ta.historyBtn}
               {history.length > 0 && (
                 <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-xs font-bold"
                   style={showHistory ? { background: 'rgba(255,255,255,0.2)' } : { background: '#f3f4f6' }}>
@@ -666,7 +687,7 @@ export function AgentTab() {
             <div className="flex items-center gap-2">
               <Clock size={13} style={{ color: '#1A3A5C' }} />
               <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1A3A5C' }}>
-                Analyses sauvegardées
+                {ta.historySaved}
               </span>
               <span className="text-xs text-neutral-400">({history.length})</span>
             </div>
@@ -674,7 +695,7 @@ export function AgentTab() {
               {history.length > 0 && (
                 <button onClick={clearAllHistory}
                   className="text-xs text-red-400 hover:text-red-600 transition-colors px-2 py-1 rounded hover:bg-red-50">
-                  Tout effacer
+                  {ta.historyClear}
                 </button>
               )}
               <button onClick={() => setShowHistory(false)}
@@ -686,7 +707,7 @@ export function AgentTab() {
 
           {history.length === 0 ? (
             <div className="px-4 py-8 text-center text-xs text-neutral-400">
-              Aucune analyse sauvegardée. Lancez votre première analyse !
+              {ta.historyEmpty}
             </div>
           ) : (
             <div className="divide-y divide-neutral-100 max-h-72 overflow-y-auto">
@@ -700,10 +721,10 @@ export function AgentTab() {
                     </div>
                     <div className="text-xs text-neutral-400 mt-0.5 flex items-center gap-1">
                       <Clock size={9} />
-                      {fmtDate(item.date)}
+                      {fmtDate(item.date, lang)}
                       {activeId === item.id && (
                         <span className="ml-1 px-1.5 py-0.5 rounded-full text-xs font-medium" style={{ background: '#dbeafe', color: '#1d4ed8' }}>
-                          Actif
+                          {ta.historyActive}
                         </span>
                       )}
                     </div>
@@ -780,17 +801,17 @@ export function AgentTab() {
           <div className="flex items-center justify-between px-4 py-2.5 border-b border-neutral-100" style={{ background: '#f8f7f5' }}>
             <div className="flex items-center gap-2">
               <span className="text-sm">📊</span>
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1A3A5C' }}>Rapport d'analyse — Private Equity</span>
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1A3A5C' }}>{ta.reportTitle}</span>
               {activeId && history.find(h => h.id === activeId) && (
                 <span className="text-xs text-neutral-400">
-                  · {fmtDate(history.find(h => h.id === activeId)!.date)}
+                  · {fmtDate(history.find(h => h.id === activeId)!.date, lang)}
                 </span>
               )}
             </div>
             <div className="flex items-center gap-2">
               {loading && (
                 <span className="text-xs text-neutral-400 flex items-center gap-1">
-                  <Loader2 size={10} className="animate-spin" /> génération…
+                  <Loader2 size={10} className="animate-spin" /> {ta.generating}
                 </span>
               )}
               {!loading && output && (
@@ -802,7 +823,7 @@ export function AgentTab() {
                     style={copied
                       ? { background: '#dcfce7', borderColor: '#86efac', color: '#15803d' }
                       : { background: 'white', borderColor: '#e5e7eb', color: '#6b7280' }}>
-                    {copied ? <><Check size={11} /> Copié</> : <><Copy size={11} /> Copier</>}
+                    {copied ? <><Check size={11} /> {ta.copiedBtn}</> : <><Copy size={11} /> {ta.copyBtn}</>}
                   </button>
                   <button
                     onClick={handleExportPdf}
@@ -811,8 +832,8 @@ export function AgentTab() {
                     className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all border disabled:opacity-50"
                     style={{ background: '#1A3A5C', borderColor: '#1A3A5C', color: 'white' }}>
                     {pdfBusy
-                      ? <><Loader2 size={11} className="animate-spin" /> PDF…</>
-                      : <><FileDown size={11} /> PDF</>}
+                      ? <><Loader2 size={11} className="animate-spin" /> {ta.pdfBtn}…</>
+                      : <><FileDown size={11} /> {ta.pdfBtn}</>}
                   </button>
                 </>
               )}

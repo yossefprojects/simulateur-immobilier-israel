@@ -23,7 +23,7 @@ export const SliderField: React.FC<SliderFieldProps> = ({ label, min, max, step,
         aria-valuemin={min} aria-valuemax={max} aria-valuenow={value}
         className="flex-1 h-1"
       />
-      <span className="text-sm font-medium w-16 text-right tabular-nums">{display}</span>
+      <span className="text-sm font-medium shrink-0 whitespace-nowrap text-right tabular-nums">{display}</span>
     </div>
   </div>
 )

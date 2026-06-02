@@ -268,7 +268,7 @@ export const TravauxTab: React.FC = () => {
             label={tw.coef2}
             min={1930} max={2024} step={5}
             value={annee}
-            display={`${annee}  ·  ${riskLabel}  ×${risqueData.coef.toFixed(2)}`}
+            display={`${annee} · ×${risqueData.coef.toFixed(2)}`}
             onChange={setAnnee}
           />
 
@@ -336,7 +336,7 @@ export const TravauxTab: React.FC = () => {
               return (
                 <div key={p.key}>
                   <div className="flex items-center justify-between text-xs mb-0.5">
-                    <span className="text-neutral-600">{p.emoji} {posteLabels[p.key]}</span>
+                    <span className="text-neutral-600">{posteLabels[p.key]}</span>
                     <span className="tabular-nums font-medium text-neutral-800">{fmt(montant)} ₪</span>
                   </div>
                   <div className="h-1.5 rounded-full bg-neutral-100 overflow-hidden">
