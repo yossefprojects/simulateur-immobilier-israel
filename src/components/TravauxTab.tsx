@@ -49,6 +49,19 @@ const VILLES_LABELS: Record<string, string> = {
   ashkelon:    'Ashkelon',
 }
 
+const VILLES_LABELS_HE: Record<string, string> = {
+  tel_aviv:    'תל אביב',
+  herzliya:    'הרצליה פיתוח',
+  jerusalem:   'ירושלים',
+  raanana:     'רעננה / כפר סבא',
+  netanya:     'נתניה',
+  haifa:       'חיפה',
+  petah_tikva: 'פתח תקווה',
+  rishon:      'ראשון לציון',
+  beer_sheva:  'באר שבע',
+  ashkelon:    'אשקלון',
+}
+
 const ACCES_DATA = [
   { value: 'facile',    coef: 1.00 },
   { value: 'moyen',     coef: 1.06 },
@@ -79,26 +92,27 @@ const fmtM = (n: number) => `${(n / 1000).toFixed(0)}K₪`
 
 // ── SourceCard ────────────────────────────────────────────────────────────────
 
-const FIABILITE_CONFIG: Record<string, { label: string; bg: string; color: string }> = {
-  confirmé: { label: '✓ Confirmé',           bg: '#EAF3DE', color: '#27500A' },
-  estimé:   { label: '~ Estimé / extrapolé', bg: '#FAEEDA', color: '#633806' },
-  terrain:  { label: '↗ Retour terrain',     bg: '#E6F1FB', color: '#0C447C' },
+const FIABILITE_CONFIG: Record<string, { bg: string; color: string }> = {
+  confirmé: { bg: '#EAF3DE', color: '#27500A' },
+  estimé:   { bg: '#FAEEDA', color: '#633806' },
+  terrain:  { bg: '#E6F1FB', color: '#0C447C' },
 }
 
 interface SourceCardProps {
   fiabilite: 'confirmé' | 'estimé' | 'terrain'
+  langLabel: string
   titre: string
   url: string | null
   date: string | null
   donnees: string[]
 }
 
-const SourceCard: React.FC<SourceCardProps> = ({ fiabilite, titre, url, date, donnees }) => {
+const SourceCard: React.FC<SourceCardProps> = ({ fiabilite, langLabel, titre, url, date, donnees }) => {
   const cfg = FIABILITE_CONFIG[fiabilite]
   return (
     <div style={{ background: 'white', border: '0.5px solid #E5E7EB', borderRadius: 10, padding: '12px 14px' }}>
       <span style={{ display: 'inline-block', fontSize: 10, fontWeight: 600, padding: '2px 7px', borderRadius: 4, background: cfg.bg, color: cfg.color, marginBottom: 6 }}>
-        {cfg.label}
+        {langLabel}
       </span>
       <div style={{ marginBottom: 6 }}>
         {url ? (
@@ -141,8 +155,14 @@ const CoefBadge: React.FC<{ num: string; label: string; value: string; coef: num
 // ── TravauxTab ────────────────────────────────────────────────────────────────
 
 export const TravauxTab: React.FC = () => {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const tw = t.travaux
+
+  const villeLabel  = (k: string) => lang === 'he' ? (VILLES_LABELS_HE[k] ?? VILLES_LABELS[k]) : VILLES_LABELS[k]
+  const fiabLabel   = (key: string) =>
+    key === 'confirmé' ? tw.fiabiliteConfirme :
+    key === 'estimé'   ? tw.fiabiliteEstime :
+    tw.fiabiliteTerrain
 
   const [surface,  setSurface]  = useState(80)
   const [niveau,   setNiveau]   = useState('standard')
@@ -260,7 +280,7 @@ export const TravauxTab: React.FC = () => {
           <SelectField
             label={tw.coef1}
             value={ville}
-            options={Object.entries(VILLES_COEF).map(([k, v]) => ({ value: k, label: `${VILLES_LABELS[k]}  (×${v.toFixed(2)})` }))}
+            options={Object.entries(VILLES_COEF).map(([k, v]) => ({ value: k, label: `${villeLabel(k)}  (×${v.toFixed(2)})` }))}
             onChange={setVille}
           />
 
@@ -355,7 +375,7 @@ export const TravauxTab: React.FC = () => {
           {tw.coefSection}
         </div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          <CoefBadge num="1" label={tw.coef1Name} value={VILLES_LABELS[ville]} coef={coefVille} />
+          <CoefBadge num="1" label={tw.coef1Name} value={villeLabel(ville)} coef={coefVille} />
           <CoefBadge num="2" label={tw.coef2Name} value={riskLabel}            coef={risqueData.coef} />
           <CoefBadge num="3" label={tw.coef3Name} value={accesLabels[acces].split('—')[0].trim()} coef={accesData.coef} />
           <CoefBadge num="4" label={tw.coef4Name} value={etatLabels[etatInit].split('—')[0].trim()} coef={etatData.coef} />
@@ -377,29 +397,69 @@ export const TravauxTab: React.FC = () => {
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 12 }}>
           {Object.entries(FIABILITE_CONFIG).map(([key, cfg]) => (
             <span key={key} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#6B7280' }}>
-              <span style={{ display: 'inline-block', padding: '1px 6px', borderRadius: 4, fontWeight: 600, fontSize: 10, background: cfg.bg, color: cfg.color }}>{cfg.label}</span>
+              <span style={{ display: 'inline-block', padding: '1px 6px', borderRadius: 4, fontWeight: 600, fontSize: 10, background: cfg.bg, color: cfg.color }}>{fiabLabel(key)}</span>
             </span>
           ))}
           <span style={{ fontSize: 11, color: '#9CA3AF' }}>{tw.sourcesFiabilite}</span>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 12 }}>
-          <SourceCard fiabilite="confirmé" titre="AllBatim.co.il" url="https://allbatim.com/fr/guides/cout-renovation-israel" date="Mis à jour avril 2026"
-            donnees={['Rafraîchissement : 1 200–2 200 ₪/m²','Standard : 2 500–4 500 ₪/m²','Rénovation lourde : 5 000–8 000 ₪/m²','Cuisine neuve : 30 000–80 000 ₪','Salle de bain : 20 000–50 000 ₪']} />
-          <SourceCard fiabilite="confirmé" titre="DealEstateIsrael.com" url="https://dealestateisrael.com/renovation-costs-israel/" date="2025–2026"
-            donnees={['Cosmétique : 1 000–2 500 ₪/m²','Standard complet : 3 000–5 500 ₪/m²','Gut renovation : 6 000–9 000 ₪/m²','Luxe : 9 000–14 000+ ₪/m²','90m² standard = 270 000–450 000 ₪','ROI Jérusalem rénové : 18–25% en 18 mois']} />
-          <SourceCard fiabilite="confirmé" titre="Kablay.co.il" url="https://kablay.co.il/en/category/renovation/prices" date="2026"
-            donnees={['Plateforme artisans israéliens — grilles tarifaires directes','Bureau turnkey (HVAC inclus) : à partir de 3 600 ₪/m²','Référence terrain utilisée par les kablanim locaux','Démolition partielle : 150–400 ₪/m²','Gros œuvre / béton armé : 500–900 ₪/m²']} />
-          <SourceCard fiabilite="confirmé" titre="Marshanski.com" url="https://marshanski.com/timeline-and-cost-comparison-building-new-vs-renovating-existing-homes-in-israel/" date="Mars 2026"
-            donnees={["Gut renovation : 4 000–9 000 ₪/m²","Découvertes démolition (bâtiments anciens) : +15 à +30%","Avant 1960 : risque amiante — toiture, carrelage, isolations","Avant 1990 : tableaux vétustes, plomberie fonte, humidité","Avant 2000 : parasismique partiel, simple vitrage"]} />
-          <SourceCard fiabilite="terrain" titre="Reddit r/aliyah + investisseurs terrain" url="https://www.reddit.com/r/aliyah/comments/1ttu0fm/" date="2024–2025"
-            donnees={["Budget réel 20–30% au-dessus du devis : très fréquent","Effet Madad (index construction) : impact sur chantiers longs","Écarts de devis entre kablanim : jusqu'à ×2 pour le même chantier","Sols Pierre de Jérusalem haut de gamme : 300–600 ₪/m²","Électricité tri-phasé en remplacement : 25 000–50 000 ₪"]} />
-          <SourceCard fiabilite="estimé" titre="Coefficients extrapolés (sans source directe)" url={null} date={null}
-            donnees={["Coef. localisation ×0.80–1.35 : déduits des écarts de prix au m² entre villes","Coef. âge ×1.00–1.30 : basé sur les surcoûts Marshanski et AllBatim","Coef. accessibilité ×1.00–1.14 : estimation raisonnée BTP","Coef. état initial ×0.85–1.38 : extrapolé depuis benchmarks kablanim","Répartition 9 postes (cuisine 17%, SDB 13%…) : pratique BTP israélienne"]} />
+          <SourceCard fiabilite="confirmé" langLabel={fiabLabel('confirmé')} titre="AllBatim.co.il"
+            url="https://allbatim.com/fr/guides/cout-renovation-israel"
+            date={lang === 'he' ? 'עדכון אפריל 2026' : 'Updated April 2026'}
+            donnees={lang === 'he'
+              ? ['רענון: 1,200–2,200 ₪/מ"ר','סטנדרטי: 2,500–4,500 ₪/מ"ר','שיפוץ כבד: 5,000–8,000 ₪/מ"ר','מטבח חדש: 30,000–80,000 ₪','חדר רחצה: 20,000–50,000 ₪']
+              : lang === 'en'
+              ? ['Refresh: 1,200–2,200 ₪/m²','Standard: 2,500–4,500 ₪/m²','Heavy reno: 5,000–8,000 ₪/m²','New kitchen: 30,000–80,000 ₪','Bathroom: 20,000–50,000 ₪']
+              : ['Rafraîchissement : 1 200–2 200 ₪/m²','Standard : 2 500–4 500 ₪/m²','Rénovation lourde : 5 000–8 000 ₪/m²','Cuisine neuve : 30 000–80 000 ₪','Salle de bain : 20 000–50 000 ₪']} />
+
+          <SourceCard fiabilite="confirmé" langLabel={fiabLabel('confirmé')} titre="DealEstateIsrael.com"
+            url="https://dealestateisrael.com/renovation-costs-israel/" date="2025–2026"
+            donnees={lang === 'he'
+              ? ['קוסמטי: 1,000–2,500 ₪/מ"ר','סטנדרטי מלא: 3,000–5,500 ₪/מ"ר','שיפוץ מלא (Gut): 6,000–9,000 ₪/מ"ר','יוקרה: 9,000–14,000+ ₪/מ"ר','90מ"ר סטנדרטי = 270,000–450,000 ₪','ROI ירושלים מחודשת: 18–25% ב-18 חודשים']
+              : lang === 'en'
+              ? ['Cosmetic: 1,000–2,500 ₪/m²','Full standard: 3,000–5,500 ₪/m²','Gut renovation: 6,000–9,000 ₪/m²','Luxury: 9,000–14,000+ ₪/m²','90m² standard = 270,000–450,000 ₪','Jerusalem renovated ROI: 18–25% in 18 months']
+              : ['Cosmétique : 1 000–2 500 ₪/m²','Standard complet : 3 000–5 500 ₪/m²','Gut renovation : 6 000–9 000 ₪/m²','Luxe : 9 000–14 000+ ₪/m²','90m² standard = 270 000–450 000 ₪','ROI Jérusalem rénové : 18–25% en 18 mois']} />
+
+          <SourceCard fiabilite="confirmé" langLabel={fiabLabel('confirmé')} titre="Kablay.co.il"
+            url="https://kablay.co.il/en/category/renovation/prices" date="2026"
+            donnees={lang === 'he'
+              ? ['פלטפורמת קבלנים ישראלית — טבלאות מחירים ישירות','משרד "תורנקי" (כולל מיזוג): החל מ-3,600 ₪/מ"ר','מחירי ייחוס המשמשים קבלנים מקומיים','הריסה חלקית: 150–400 ₪/מ"ר','שלד / בטון מזוין: 500–900 ₪/מ"ר']
+              : lang === 'en'
+              ? ['Israeli contractor platform — direct pricing tables','Turnkey office (HVAC incl.): from 3,600 ₪/m²','Reference pricing used by local contractors','Partial demolition: 150–400 ₪/m²','Shell / reinforced concrete: 500–900 ₪/m²']
+              : ['Plateforme artisans israéliens — grilles tarifaires directes','Bureau turnkey (HVAC inclus) : à partir de 3 600 ₪/m²','Référence terrain utilisée par les kablanim locaux','Démolition partielle : 150–400 ₪/m²','Gros œuvre / béton armé : 500–900 ₪/m²']} />
+
+          <SourceCard fiabilite="confirmé" langLabel={fiabLabel('confirmé')} titre="Marshanski.com"
+            url="https://marshanski.com/timeline-and-cost-comparison-building-new-vs-renovating-existing-homes-in-israel/"
+            date={lang === 'he' ? 'מרץ 2026' : 'March 2026'}
+            donnees={lang === 'he'
+              ? ['שיפוץ מלא (Gut): 4,000–9,000 ₪/מ"ר','ממצאי הריסה (בניינים ישנים): +15 עד +30%','לפני 1960: סיכון אסבסט — גג, ריצוף, בידוד','לפני 1990: לוחות חשמל ישנים, צנרת ברזל, לחות','לפני 2000: עמידות רעידות אדמה חלקית, זגוגית בודדת']
+              : lang === 'en'
+              ? ['Gut renovation: 4,000–9,000 ₪/m²','Demolition discoveries (old buildings): +15 to +30%','Before 1960: asbestos risk — roof, tiles, insulation','Before 1990: outdated panels, iron pipes, dampness','Before 2000: partial seismic compliance, single-pane']
+              : ['Gut renovation : 4 000–9 000 ₪/m²','Découvertes démolition (bâtiments anciens) : +15 à +30%','Avant 1960 : risque amiante — toiture, carrelage, isolations','Avant 1990 : tableaux vétustes, plomberie fonte, humidité','Avant 2000 : parasismique partiel, simple vitrage']} />
+
+          <SourceCard fiabilite="terrain" langLabel={fiabLabel('terrain')}
+            titre={lang === 'he' ? 'Reddit r/aliyah + משקיעים בשטח' : 'Reddit r/aliyah + field investors'}
+            url="https://www.reddit.com/r/aliyah/comments/1ttu0fm/" date="2024–2025"
+            donnees={lang === 'he'
+              ? ['תקציב אמיתי 20–30% מעל ההצעה: תופעה נפוצה מאוד','אפקט מדד הבנייה: השפעה על פרויקטים ארוכי טווח','פערי הצעות בין קבלנים: עד ×2 לאותו פרויקט','אבן ירושלים פרמיום: 300–600 ₪/מ"ר','החלפת חיווט לתלת-פאזי: 25,000–50,000 ₪']
+              : lang === 'en'
+              ? ['Real budget 20–30% over quote: very common','Madad index effect: impact on long projects','Quote spread between contractors: up to ×2','Premium Jerusalem stone: 300–600 ₪/m²','3-phase rewiring: 25,000–50,000 ₪']
+              : ['Budget réel 20–30% au-dessus du devis : très fréquent','Effet Madad (index construction) : impact sur chantiers longs','Écarts de devis entre kablanim : jusqu\'à ×2 pour le même chantier','Sols Pierre de Jérusalem haut de gamme : 300–600 ₪/m²','Électricité tri-phasé en remplacement : 25 000–50 000 ₪']} />
+
+          <SourceCard fiabilite="estimé" langLabel={fiabLabel('estimé')}
+            titre={lang === 'he' ? 'מקדמים מחושבים (ללא מקור ישיר)' : lang === 'en' ? 'Extrapolated coefficients (no direct source)' : 'Coefficients extrapolés (sans source directe)'}
+            url={null} date={null}
+            donnees={lang === 'he'
+              ? ['מקדם מיקום ×0.80–1.35: נגזר מפערי מחיר/מ"ר בין ערים','מקדם גיל ×1.00–1.30: מבוסס על עלויות נוספות Marshanski ו-AllBatim','מקדם נגישות ×1.00–1.14: הערכה סבירה BTP','מקדם מצב ראשוני ×0.85–1.38: מחושב מ-benchmarks קבלנים','חלוקת 9 סעיפים (מטבח 17%, חדר רחצה 13%…): נוהג BTP ישראלי']
+              : lang === 'en'
+              ? ['Location coef. ×0.80–1.35: derived from price/m² gaps between cities','Age coef. ×1.00–1.30: based on Marshanski & AllBatim overruns','Accessibility coef. ×1.00–1.14: reasoned construction estimate','Initial condition coef. ×0.85–1.38: from contractor benchmarks','9-item breakdown (kitchen 17%, bathroom 13%…): Israeli construction practice']
+              : ['Coef. localisation ×0.80–1.35 : déduits des écarts de prix au m² entre villes','Coef. âge ×1.00–1.30 : basé sur les surcoûts Marshanski et AllBatim','Coef. accessibilité ×1.00–1.14 : estimation raisonnée BTP','Coef. état initial ×0.85–1.38 : extrapolé depuis benchmarks kablanim','Répartition 9 postes (cuisine 17%, SDB 13%…) : pratique BTP israélienne']} />
         </div>
 
         <div style={{ marginTop: '1rem', background: '#FAEEDA', borderRadius: 8, padding: '10px 14px', fontSize: 12, color: '#633806', lineHeight: 1.6 }}>
-          <strong>Important :</strong> Ces estimations sont des ordres de grandeur basés sur des données de marché publiques 2025–2026. Les prix réels varient fortement selon le kablan, les matériaux choisis, la découverte de problèmes structurels, et l'évolution de l'index construction (Madad). Ce simulateur ne remplace pas un devis professionnel.{' '}
+          <strong>{lang === 'he' ? 'חשוב:' : lang === 'en' ? 'Important:' : 'Important :'}</strong>{' '}
+          {tw.sourceImportant}{' '}
           <strong>{tw.avertissementBold}</strong>
         </div>
       </div>

@@ -69,7 +69,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({ label, value, options,
         {options.map(o => <option key={String(o.value)} value={o.value}>{o.label}</option>)}
       </select>
       <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2">
-        <ChevronDown size={14} className="text-neutral-400" />
+        <ChevronDown size={16} strokeWidth={2.2} className="text-neutral-500" />
       </div>
     </div>
   </div>

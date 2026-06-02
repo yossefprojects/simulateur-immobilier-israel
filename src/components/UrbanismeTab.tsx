@@ -35,14 +35,17 @@ const ScoreRing: React.FC<{ score: number; color: string; label: string; sub: st
 
 export const UrbanismeTab: React.FC = () => {
   const { inputs, result, set } = useUrbanisme()
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const tu = t.urbanisme
 
   useEffect(() => {
     setReportSection('urbanisme', { inputs, result })
   }, [inputs, result])
 
-  const villeOptions   = Object.entries(VILLES).map(([k, v]) => ({ value: k, label: v.label }))
+  const villeOptions   = Object.entries(VILLES).map(([k, v]) => ({
+    value: k,
+    label: lang === 'he' ? (v.labelHe ?? v.label) : v.label,
+  }))
   const planOptions    = Object.entries(STATUTS_PLAN).map(([k]) => ({ value: k, label: t.statutsPlan[k as PlanKey] }))
   const accordOptions  = Object.entries(ACCORDS_MUNICIPAUX).map(([k]) => ({ value: k, label: t.accordsMunicipaux[k as AccordKey] }))
   const permisOptions  = Object.entries(STATUTS_PERMIS).map(([k]) => ({ value: k, label: t.statutsPermis[k as PermisKey] }))
@@ -184,7 +187,7 @@ export const UrbanismeTab: React.FC = () => {
             <a key={i} href={s.url} target="_blank" rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-xs text-primary hover:underline">
               <ExternalLink size={11} />
-              {s.label}
+              {lang === 'he' ? s.labelHe : lang === 'en' ? s.labelEn : s.label}
             </a>
           ))}
         </div>

@@ -33,10 +33,40 @@ export const STATUTS_PERMIS: Record<PermisKey, AccordDef> = {
 }
 
 export const SOURCES_EXTERNES = [
-  { label: 'Mavat — Plans urbanistiques',          url: 'https://mavat.iplan.gov.il'                                        },
-  { label: 'GovMap — Cadastre et zonage',          url: 'https://www.govmap.gov.il'                                         },
-  { label: 'Nadlan Gov — Transactions officielles',url: 'https://www.nadlan.gov.il'                                         },
-  { label: 'Israel Land Authority (ILA)',           url: 'https://www.gov.il/en/departments/israel_land_authority'           },
-  { label: 'CBS Israël — Statistiques',            url: 'https://www.cbs.gov.il'                                            },
-  { label: 'Banque d\'Israël — Taux et rapports',  url: 'https://www.boi.org.il/en'                                         },
+  {
+    label:   'Mavat — Plans urbanistiques',
+    labelEn: 'Mavat — Urban planning',
+    labelHe: 'Mavat — תוכניות עירוניות',
+    url: 'https://mavat.iplan.gov.il',
+  },
+  {
+    label:   'GovMap — Cadastre et zonage',
+    labelEn: 'GovMap — Cadastre & zoning',
+    labelHe: 'GovMap — קדסטר וייעוד קרקע',
+    url: 'https://www.govmap.gov.il',
+  },
+  {
+    label:   'Nadlan Gov — Transactions officielles',
+    labelEn: 'Nadlan Gov — Official transactions',
+    labelHe: 'Nadlan Gov — עסקאות רשמיות',
+    url: 'https://www.nadlan.gov.il',
+  },
+  {
+    label:   'Israel Land Authority (ILA)',
+    labelEn: 'Israel Land Authority (ILA)',
+    labelHe: 'רשות מקרקעי ישראל (רמ"י)',
+    url: 'https://www.gov.il/en/departments/israel_land_authority',
+  },
+  {
+    label:   'CBS Israël — Statistiques',
+    labelEn: 'CBS Israel — Statistics',
+    labelHe: 'הלשכה המרכזית לסטטיסטיקה (למ"ס)',
+    url: 'https://www.cbs.gov.il',
+  },
+  {
+    label:   "Banque d'Israël — Taux et rapports",
+    labelEn: 'Bank of Israel — Rates & reports',
+    labelHe: 'בנק ישראל — ריבית ודוחות',
+    url: 'https://www.boi.org.il/en',
+  },
 ]

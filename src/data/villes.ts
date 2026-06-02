@@ -1,9 +1,11 @@
 export interface QuartierData {
   prixMoyen: number
+  labelHe?:  string
 }
 
 export interface VilleData {
-  label:     string
+  label:    string
+  labelHe?: string
   quartiers: Record<string, QuartierData>
 }
 
@@ -11,97 +13,97 @@ export interface VilleData {
 
 export const VILLES: Record<string, VilleData> = {
   tlv: {
-    label: 'Tel Aviv',
+    label: 'Tel Aviv', labelHe: 'תל אביב',
     quartiers: {
-      'Florentin / Kerem HaTeimanim': { prixMoyen: 42000 },
-      'Neve Tzedek':                  { prixMoyen: 58000 },
-      'Rothschild / Centre':          { prixMoyen: 62000 },
-      'Old North':                    { prixMoyen: 46000 },
-      'Ramat Aviv':                   { prixMoyen: 38000 },
-      'Jaffa':                        { prixMoyen: 31000 },
-      'Bat Yam (frontière)':          { prixMoyen: 22000 },
+      'Florentin / Kerem HaTeimanim': { prixMoyen: 42000, labelHe: 'פלורנטין / כרם התימנים' },
+      'Neve Tzedek':                  { prixMoyen: 58000, labelHe: 'נווה צדק' },
+      'Rothschild / Centre':          { prixMoyen: 62000, labelHe: 'רוטשילד / מרכז' },
+      'Old North':                    { prixMoyen: 46000, labelHe: 'צפון ישן' },
+      'Ramat Aviv':                   { prixMoyen: 38000, labelHe: 'רמת אביב' },
+      'Jaffa':                        { prixMoyen: 31000, labelHe: 'יפו' },
+      'Bat Yam (frontière)':          { prixMoyen: 22000, labelHe: 'בת ים (גבול)' },
     },
   },
   herzliya: {
-    label: 'Herzliya',
+    label: 'Herzliya', labelHe: 'הרצליה',
     quartiers: {
-      'Herzliya Pituach': { prixMoyen: 50000 },
-      'Centre-ville':     { prixMoyen: 30000 },
-      'Nordau':           { prixMoyen: 24000 },
-      'Neve Amirim':      { prixMoyen: 20000 },
+      'Herzliya Pituach': { prixMoyen: 50000, labelHe: 'הרצליה פיתוח' },
+      'Centre-ville':     { prixMoyen: 30000, labelHe: 'מרכז העיר' },
+      'Nordau':           { prixMoyen: 24000, labelHe: 'נורדאו' },
+      'Neve Amirim':      { prixMoyen: 20000, labelHe: 'נווה אמירים' },
     },
   },
   jerusalem: {
-    label: 'Jérusalem',
+    label: 'Jérusalem', labelHe: 'ירושלים',
     quartiers: {
-      'Rehavia':          { prixMoyen: 40000 },
-      'Talbiyeh':         { prixMoyen: 44000 },
-      'German Colony':    { prixMoyen: 38000 },
-      'Har Nof':          { prixMoyen: 19000 },
-      'Katamon':          { prixMoyen: 28000 },
-      'Malha / Holyland': { prixMoyen: 25000 },
-      'Pisgat Zeev':      { prixMoyen: 16000 },
+      'Rehavia':          { prixMoyen: 40000, labelHe: 'רחביה' },
+      'Talbiyeh':         { prixMoyen: 44000, labelHe: 'טלביה' },
+      'German Colony':    { prixMoyen: 38000, labelHe: 'המושבה הגרמנית' },
+      'Har Nof':          { prixMoyen: 19000, labelHe: 'הר נוף' },
+      'Katamon':          { prixMoyen: 28000, labelHe: 'קטמון' },
+      'Malha / Holyland': { prixMoyen: 25000, labelHe: 'מלחה / הולילנד' },
+      'Pisgat Zeev':      { prixMoyen: 16000, labelHe: 'פסגת זאב' },
     },
   },
   netanya: {
-    label: 'Netanya',
+    label: 'Netanya', labelHe: 'נתניה',
     quartiers: {
-      'Ir Yamim':             { prixMoyen: 32000 },
-      'Centre / bord de mer': { prixMoyen: 27000 },
-      'Poleg':                { prixMoyen: 20000 },
-      'Agamim':               { prixMoyen: 24000 },
-      'Kiryat HaSharon':      { prixMoyen: 18000 },
+      'Ir Yamim':             { prixMoyen: 32000, labelHe: 'עיר ימים' },
+      'Centre / bord de mer': { prixMoyen: 27000, labelHe: 'מרכז / חוף הים' },
+      'Poleg':                { prixMoyen: 20000, labelHe: 'פולג' },
+      'Agamim':               { prixMoyen: 24000, labelHe: 'אגמים' },
+      'Kiryat HaSharon':      { prixMoyen: 18000, labelHe: 'קריית השרון' },
     },
   },
   raanana: {
-    label: "Ra'anana",
+    label: "Ra'anana", labelHe: 'רעננה',
     quartiers: {
-      "Centre Ra'anana": { prixMoyen: 28000 },
-      'Kfar Saba Nord':  { prixMoyen: 20000 },
-      'Neve Zemer':      { prixMoyen: 22000 },
+      "Centre Ra'anana": { prixMoyen: 28000, labelHe: 'מרכז רעננה' },
+      'Kfar Saba Nord':  { prixMoyen: 20000, labelHe: 'כפר סבא צפון' },
+      'Neve Zemer':      { prixMoyen: 22000, labelHe: 'נווה זמר' },
     },
   },
   haifa: {
-    label: 'Haïfa',
+    label: 'Haïfa', labelHe: 'חיפה',
     quartiers: {
-      'Carmel':          { prixMoyen: 22000 },
-      'Merkaz HaCarmel': { prixMoyen: 25000 },
-      'Hadar':           { prixMoyen: 15000 },
-      'Bat Galim':       { prixMoyen: 18000 },
-      'Neve Shaanan':    { prixMoyen: 16000 },
+      'Carmel':          { prixMoyen: 22000, labelHe: 'הכרמל' },
+      'Merkaz HaCarmel': { prixMoyen: 25000, labelHe: 'מרכז הכרמל' },
+      'Hadar':           { prixMoyen: 15000, labelHe: 'הדר' },
+      'Bat Galim':       { prixMoyen: 18000, labelHe: 'בת גלים' },
+      'Neve Shaanan':    { prixMoyen: 16000, labelHe: 'נווה שאנן' },
     },
   },
   beersheva: {
-    label: 'Beer Sheva',
+    label: 'Beer Sheva', labelHe: 'באר שבע',
     quartiers: {
-      'Gimmel (ancien)': { prixMoyen: 9000  },
-      'Nahal Beka':      { prixMoyen: 11000 },
-      'Ramot':           { prixMoyen: 12000 },
-      'Dalet':           { prixMoyen: 10000 },
+      'Gimmel (ancien)': { prixMoyen: 9000,  labelHe: 'גימל (ישן)' },
+      'Nahal Beka':      { prixMoyen: 11000, labelHe: 'נחל בקע' },
+      'Ramot':           { prixMoyen: 12000, labelHe: 'רמות' },
+      'Dalet':           { prixMoyen: 10000, labelHe: 'דלת' },
     },
   },
   petah_tikva: {
-    label: 'Petah Tikva',
+    label: 'Petah Tikva', labelHe: 'פתח תקווה',
     quartiers: {
-      'Centre':          { prixMoyen: 20000 },
-      'Kiryat Matalon':  { prixMoyen: 18000 },
-      'Neve Ilan':       { prixMoyen: 22000 },
+      'Centre':         { prixMoyen: 20000, labelHe: 'מרכז' },
+      'Kiryat Matalon': { prixMoyen: 18000, labelHe: 'קריית מטלון' },
+      'Neve Ilan':      { prixMoyen: 22000, labelHe: 'נווה אילן' },
     },
   },
   rishon: {
-    label: 'Rishon LeZion',
+    label: 'Rishon LeZion', labelHe: 'ראשון לציון',
     quartiers: {
-      'Centre Rishon':     { prixMoyen: 20000 },
-      'Nahalat Yehuda':    { prixMoyen: 23000 },
-      'Rehovot':           { prixMoyen: 18000 },
+      'Centre Rishon':  { prixMoyen: 20000, labelHe: 'מרכז ראשון' },
+      'Nahalat Yehuda': { prixMoyen: 23000, labelHe: 'נחלת יהודה' },
+      'Rehovot':        { prixMoyen: 18000, labelHe: 'רחובות' },
     },
   },
   ashkelon: {
-    label: 'Ashkelon',
+    label: 'Ashkelon', labelHe: 'אשקלון',
     quartiers: {
-      'Centre':      { prixMoyen: 15000 },
-      'Bord de mer': { prixMoyen: 18000 },
-      'Barnea':      { prixMoyen: 13000 },
+      'Centre':      { prixMoyen: 15000, labelHe: 'מרכז' },
+      'Bord de mer': { prixMoyen: 18000, labelHe: 'חוף הים' },
+      'Barnea':      { prixMoyen: 13000, labelHe: 'ברנע' },
     },
   },
 }

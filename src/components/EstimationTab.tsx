@@ -17,15 +17,21 @@ const EQUIP_DISPLAY_KEYS = ['ascenseur','mamad','vueMer','vueDeg','gardien','pis
 
 export const EstimationTab: React.FC = () => {
   const { inputs, result, set, setVille, toggleEquip } = useEstimation()
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const te = t.estimation
 
   useEffect(() => {
     setReportSection('estimation', { inputs, result })
   }, [inputs, result])
 
-  const quartierOptions    = Object.keys(VILLES[inputs.ville]?.quartiers ?? {}).map(q => ({ value: q, label: q }))
-  const villeOptions       = Object.entries(VILLES).map(([k, v]) => ({ value: k, label: v.label }))
+  const quartierOptions    = Object.entries(VILLES[inputs.ville]?.quartiers ?? {}).map(([q, qd]) => ({
+    value: q,
+    label: lang === 'he' ? (qd.labelHe ?? q) : q,
+  }))
+  const villeOptions       = Object.entries(VILLES).map(([k, v]) => ({
+    value: k,
+    label: lang === 'he' ? (v.labelHe ?? v.label) : v.label,
+  }))
   const typesProjetOptions = TYPES_PROJET.map((tp, i) => ({ value: tp.value, label: t.typesProjet[PROJ_KEYS[i]] }))
 
   // Options types de bien traduites

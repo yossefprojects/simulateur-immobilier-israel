@@ -141,7 +141,21 @@ function scoreColor(score: number) {
   return { bar: '#991b1b', bg: '#fef2f2', border: '#fca5a5', text: '#7f1d1d' }
 }
 
-function scoreLabel(score: number) {
+function scoreLabel(score: number, lang: 'fr' | 'en' | 'he') {
+  if (lang === 'he') {
+    if (score >= 80) return 'מצוין'
+    if (score >= 65) return 'טוב'
+    if (score >= 50) return 'בינוני'
+    if (score >= 30) return 'מסוכן'
+    return 'להימנע'
+  }
+  if (lang === 'en') {
+    if (score >= 80) return 'EXCELLENT'
+    if (score >= 65) return 'GOOD'
+    if (score >= 50) return 'MODERATE'
+    if (score >= 30) return 'RISKY'
+    return 'AVOID'
+  }
   if (score >= 80) return 'EXCELLENT'
   if (score >= 65) return 'BON'
   if (score >= 50) return 'MODÉRÉ'
@@ -159,7 +173,7 @@ function cleanText(s: string) {
   return s.replace(/\*\*/g, '').replace(/\*/g, '').trim()
 }
 
-function RenderOutput({ text }: { text: string }) {
+function RenderOutput({ text, lang }: { text: string; lang: 'fr' | 'en' | 'he' }) {
   if (!text) return null
 
   type Block =
@@ -311,8 +325,8 @@ function RenderOutput({ text }: { text: string }) {
               <div className="text-xs text-neutral-400 mt-1">/ 100</div>
             </div>
             <div className="flex-1">
-              <div className="text-xs text-neutral-400 uppercase tracking-widest mb-1">Investment Score</div>
-              <div className="text-lg font-bold mb-2" style={{ color: c.text }}>{scoreLabel(block.score)}</div>
+              <div className="text-xs text-neutral-400 uppercase tracking-widest mb-1">{lang === 'he' ? 'ציון השקעה' : 'Investment Score'}</div>
+              <div className="text-lg font-bold mb-2" style={{ color: c.text }}>{scoreLabel(block.score, lang)}</div>
               <div className="h-2 rounded-full bg-white/70 overflow-hidden">
                 <div className="h-full rounded-full transition-all" style={{ width: `${block.score}%`, background: c.bar }} />
               </div>
@@ -461,7 +475,7 @@ export function AgentTab() {
             doc.setFontSize(8)
             doc.setTextColor(...GRAY)
             doc.text('/ 100  Investment Score', M + 18, y + 7)
-            const label = score >= 80 ? 'EXCELLENT' : score >= 65 ? 'BON' : score >= 50 ? 'MODÉRÉ' : score >= 30 ? 'RISQUÉ' : 'À ÉVITER'
+            const label = scoreLabel(score, lang)
             doc.setFont('helvetica', 'bold')
             doc.setTextColor(...GOLD)
             doc.text(label, M + 18, y + 12)
@@ -840,7 +854,7 @@ export function AgentTab() {
             </div>
           </div>
           <div className="p-5">
-            <RenderOutput text={output} />
+            <RenderOutput text={output} lang={lang} />
             <div ref={outputRef} />
           </div>
         </div>

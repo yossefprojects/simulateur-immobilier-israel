@@ -348,6 +348,10 @@ export const translations = {
       coef2Name:        'Âge du bâtiment',
       coef3Name:        'Accessibilité',
       coef4Name:        'État initial',
+      fiabiliteConfirme:'✓ Confirmé',
+      fiabiliteEstime:  '~ Estimé / extrapolé',
+      fiabiliteTerrain: '↗ Retour terrain',
+      sourceImportant:  "Ces estimations sont des ordres de grandeur basés sur des données de marché publiques 2025–2026. Les prix réels varient fortement selon le kablan, les matériaux choisis, la découverte de problèmes structurels, et l'évolution de l'index construction (Madad). Ce simulateur ne remplace pas un devis professionnel.",
     },
     agent: {
       title:        'Analyste IA — Private Equity Immobilier Israël',
@@ -727,6 +731,10 @@ export const translations = {
       coef2Name:        'Building age',
       coef3Name:        'Accessibility',
       coef4Name:        'Initial condition',
+      fiabiliteConfirme:'✓ Confirmed',
+      fiabiliteEstime:  '~ Estimated / extrapolated',
+      fiabiliteTerrain: '↗ Field data',
+      sourceImportant:  'These are indicative estimates based on publicly available market data 2025–2026. Actual prices vary significantly depending on the contractor, materials, structural discoveries, and the Madad construction cost index. This simulator does not replace a professional quote.',
     },
     agent: {
       title:        'AI Analyst — Israel Real Estate Private Equity',
@@ -1106,6 +1114,10 @@ export const translations = {
       coef2Name:        'גיל הבניין',
       coef3Name:        'נגישות',
       coef4Name:        'מצב ראשוני',
+      fiabiliteConfirme:'מאושר ✓',
+      fiabiliteEstime:  '~ מוערך / מוחצן',
+      fiabiliteTerrain: '↗ משוב שטח',
+      sourceImportant:  'אלו אומדנים אינדיקטיביים המבוססים על נתוני שוק פומביים 2025–2026. המחירים האמיתיים משתנים מאוד לפי קבלן, חומרים שנבחרו, ממצאים מבניים ומדד תשומות הבנייה (מדד). סימולטור זה אינו מחליף הצעת מחיר מקצועית.',
     },
     agent: {
       title:        'אנליסט AI — נדל"ן ישראל Private Equity',
