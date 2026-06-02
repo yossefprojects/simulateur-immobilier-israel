@@ -5,6 +5,7 @@ import { UrbanismeTab }   from './components/UrbanismeTab'
 import { InvestisseurTab, PromoteurTab } from './components/FinanceTab'
 import { FiscaliteTab }   from './components/FiscaliteTab'
 import { TravauxTab }     from './components/TravauxTab'
+import { AgentTab }       from './components/AgentTab'
 import { MarketBanner }   from './components/MarketBanner'
 import { Footer }         from './components/Footer'
 import { useLang }        from './i18n/LanguageContext'
@@ -14,7 +15,7 @@ import { exportPDF }      from './utils/pdfExport'
 import { exporterExcel }  from './utils/exportExcel'
 import { lireScenarios, supprimerScenario, sauvegarderScenario, Scenario } from './utils/scenarios'
 
-type Tab = 'estimation' | 'urbanisme' | 'investisseur' | 'promoteur' | 'fiscalite' | 'travaux'
+type Tab = 'estimation' | 'urbanisme' | 'investisseur' | 'promoteur' | 'fiscalite' | 'travaux' | 'agent'
 
 const LANGS: { key: Lang; label: string }[] = [
   { key: 'fr', label: 'FR' },
@@ -264,6 +265,38 @@ const BannerTravaux = () => (
   </svg>
 )
 
+const BannerAgent = () => (
+  <svg width="100%" viewBox="0 0 680 120" preserveAspectRatio="xMidYMid slice" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+    <rect width="680" height="120" fill="#0A1A2E"/>
+    <circle cx="340" cy="60" r="52" fill="none" stroke="#1A3A5C" strokeWidth="1" opacity=".6"/>
+    <circle cx="340" cy="60" r="38" fill="none" stroke="#1A3A5C" strokeWidth=".7" opacity=".4"/>
+    <circle cx="340" cy="60" r="22" fill="#112840" stroke="#C9A84C" strokeWidth="1.5" opacity=".8"/>
+    <text x="340" y="65" fontFamily="monospace" fontSize="16" fill="#C9A84C" textAnchor="middle" fontWeight="bold">AI</text>
+    <line x1="340" y1="8" x2="340" y2="22" stroke="#C9A84C" strokeWidth="1.5" opacity=".6"/>
+    <line x1="340" y1="98" x2="340" y2="112" stroke="#C9A84C" strokeWidth="1.5" opacity=".6"/>
+    <line x1="280" y1="60" x2="294" y2="60" stroke="#C9A84C" strokeWidth="1.5" opacity=".6"/>
+    <line x1="386" y1="60" x2="400" y2="60" stroke="#C9A84C" strokeWidth="1.5" opacity=".6"/>
+    <circle cx="80"  cy="30" r="10" fill="#112840" stroke="#C9A84C" strokeWidth="1" opacity=".7"/>
+    <text x="80" y="34" fontFamily="monospace" fontSize="7" fill="#C9A84C" textAnchor="middle">ROI</text>
+    <line x1="90" y1="33" x2="200" y2="52" stroke="#C9A84C" strokeWidth=".8" strokeDasharray="3,3" opacity=".4"/>
+    <circle cx="200" cy="52" r="6" fill="#C9A84C" opacity=".4"/>
+    <rect x="420" cy="45" y="40" width="70" height="20" rx="3" fill="#112840" stroke="#1A3A5C" strokeWidth="1"/>
+    <text x="455" y="54" fontFamily="monospace" fontSize="7" fill="#85B7EB" textAnchor="middle">SCORE 78/100</text>
+    <line x1="420" y1="50" x2="386" y2="57" stroke="#85B7EB" strokeWidth=".8" strokeDasharray="3,3" opacity=".4"/>
+    <rect x="480" y="65" width="90" height="30" rx="3" fill="#0E2035" stroke="#C9A84C" strokeWidth="1" opacity=".7"/>
+    <rect x="485" y="69" width="40" height="5" rx="2" fill="#2A5080"/>
+    <rect x="485" y="77" width="60" height="5" rx="2" fill="#2A5080"/>
+    <rect x="485" y="85" width="30" height="5" rx="2" fill="#C9A84C" opacity=".5"/>
+    <rect x="50" y="68" width="100" height="28" rx="3" fill="#0E2035" stroke="#1A3A5C" strokeWidth="1" opacity=".6"/>
+    <text x="100" y="82" fontFamily="monospace" fontSize="7" fill="#C9A84C" textAnchor="middle">מס רכישה</text>
+    <text x="100" y="92" fontFamily="monospace" fontSize="8" fill="#C9A84C" textAnchor="middle" fontWeight="bold">₪240,000</text>
+    <circle cx="600" cy="35" r="14" fill="#1A3050" stroke="#C9A84C" strokeWidth="1" opacity=".8"/>
+    <text x="600" y="39" fontFamily="monospace" fontSize="8" fill="#C9A84C" textAnchor="middle" fontWeight="bold">PE</text>
+    <polyline points="50,100 130,95 210,90 290,85 370,78 450,70 530,60 610,48" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" opacity=".5"/>
+    <rect x="0" y="110" width="680" height="10" fill="#081624"/>
+  </svg>
+)
+
 const TAB_BANNERS: Record<Tab, React.ReactNode> = {
   estimation:   <BannerEstimation />,
   urbanisme:    <BannerUrbanisme />,
@@ -271,6 +304,7 @@ const TAB_BANNERS: Record<Tab, React.ReactNode> = {
   promoteur:    <BannerPromoteur />,
   fiscalite:    <BannerFiscalite />,
   travaux:      <BannerTravaux />,
+  agent:        <BannerAgent />,
 }
 
 // ── App ────────────────────────────────────────────────────────────────────────
@@ -296,6 +330,7 @@ export default function App() {
     { key: 'promoteur',    label: t.tabs.promoteur     },
     { key: 'fiscalite',    label: t.tabs.fiscalite     },
     { key: 'travaux',      label: t.tabs.travaux       },
+    { key: 'agent',        label: t.tabs.agent         },
   ]
 
   const showToast = useCallback((msg: string) => setToast(msg), [])
@@ -361,7 +396,7 @@ export default function App() {
   }
 
   const handleTabKey = useCallback((e: React.KeyboardEvent, idx: number) => {
-    const keys = ['estimation','urbanisme','investisseur','promoteur','fiscalite','travaux'] as Tab[]
+    const keys = ['estimation','urbanisme','investisseur','promoteur','fiscalite','travaux','agent'] as Tab[]
     if (e.key === 'ArrowRight') { e.preventDefault(); setActive(keys[Math.min(idx+1, keys.length-1)]) }
     if (e.key === 'ArrowLeft')  { e.preventDefault(); setActive(keys[Math.max(idx-1, 0)]) }
     if (e.key === 'Home')       { e.preventDefault(); setActive(keys[0]) }
@@ -381,6 +416,9 @@ export default function App() {
     travaux:      lang==='fr' ? 'AllBatim · Deal Estate · Kablay · Marshanski 2025–2026'
                 : lang==='en' ? 'AllBatim · Deal Estate · Kablay · Marshanski 2025–2026'
                 :               'AllBatim · Deal Estate · Kablay · Marshanski 2025–2026',
+    agent:        lang==='fr' ? 'Private Equity · Scoring investissement · Rapport complet'
+                : lang==='en' ? 'Private Equity · Investment Scoring · Full Report'
+                :               'Private Equity · ניקוד השקעה · דוח מלא',
   }
 
   return (
@@ -480,6 +518,7 @@ export default function App() {
         <div className={active === 'promoteur'    ? 'tab-content' : 'hidden'}><PromoteurTab /></div>
         <div className={active === 'fiscalite'    ? 'tab-content' : 'hidden'}><FiscaliteTab /></div>
         <div className={active === 'travaux'      ? 'tab-content' : 'hidden'}><TravauxTab /></div>
+        <div className={active === 'agent'        ? 'tab-content' : 'hidden'}><AgentTab /></div>
       </main>
 
       <Footer />
