@@ -566,4 +566,4 @@ export const translations = {
   },
 }
 
-export type Translations = typeof translations.fr
+export type Translations = Omit<typeof translations.fr, 'dir'> & { dir: 'ltr' | 'rtl' }

@@ -6,7 +6,7 @@ import { fmt, fmtM } from '../utils/formatters'
 import { useEstimation } from '../hooks/useEstimation'
 import { useLang } from '../i18n/LanguageContext'
 import { setReportSection } from '../store/reportStore'
-import { DataTable, MetricCard, ResultBox, SectionTitle, SelectField, SliderField } from './ui'
+import { MetricCard, ResultBox, SectionTitle, SelectField, SliderField } from './ui'
 
 const PROJ_KEYS = ['residClassique','residLuxe','programmeNeuf','tama38','pb','mixte'] as const
 
