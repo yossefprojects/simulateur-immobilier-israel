@@ -1,0 +1,1 @@
+const n=()=>{},e=async()=>{},o={get:(t,s)=>typeof s=="string"?n:void 0},a=new Proxy({},o),c=()=>typeof crypto<"u"?crypto.randomUUID():Math.random().toString(36).slice(2),i=()=>e,d=e,r=class{},p=n;export{r as Readable,n as access,a as default,p as execFile,n as mkdir,d as pipeline,i as promisify,c as randomUUID,n as readFile,n as rename,n as stat,n as unlink,n as writeFile};

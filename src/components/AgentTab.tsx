@@ -1,10 +1,10 @@
 import { useState, useRef, useCallback } from 'react'
 import { Send, Loader2, Trash2 } from 'lucide-react'
-import OpenAI from 'openai'
+import Anthropic from '@anthropic-ai/sdk'
 import { useLang } from '../i18n/LanguageContext'
 
-declare const __AI_BASE_URL__: string
-declare const __AI_KEY__: string
+declare const __ANTHROPIC_BASE_URL__: string
+declare const __ANTHROPIC_KEY__: string
 
 const SYSTEM_PROMPT = `Tu es un assistant IA de niveau fonds d'investissement immobilier spécialisé en Israël (Tel Aviv et grandes villes).
 
@@ -292,36 +292,39 @@ export function AgentTab() {
     abortRef.current = ctrl
 
     try {
-      const openai = new OpenAI({
-        apiKey:    __AI_KEY__,
-        baseURL:   __AI_BASE_URL__,
+      const anthropic = new Anthropic({
+        apiKey:  __ANTHROPIC_KEY__,
+        baseURL: __ANTHROPIC_BASE_URL__,
         dangerouslyAllowBrowser: true,
       })
 
-      const stream = await openai.chat.completions.create({
-        model: 'gpt-5.4',
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user',   content: input },
-        ],
-        stream: true,
-        max_completion_tokens: 2500,
+      const stream = anthropic.messages.stream({
+        model:      'claude-sonnet-4-6',
+        max_tokens: 8192,
+        system:     SYSTEM_PROMPT,
+        messages:   [{ role: 'user', content: input }],
       })
 
-      for await (const chunk of stream) {
+      for await (const event of stream) {
         if (ctrl.signal.aborted) break
-        const content = chunk.choices[0]?.delta?.content || ''
-        if (content) {
-          setOutput(prev => {
-            const next = prev + content
-            setTimeout(() => outputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 10)
-            return next
-          })
+        if (
+          event.type === 'content_block_delta' &&
+          event.delta.type === 'text_delta'
+        ) {
+          const text = event.delta.text
+          if (text) {
+            setOutput(prev => {
+              const next = prev + text
+              setTimeout(() => outputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 10)
+              return next
+            })
+          }
         }
       }
     } catch (e: unknown) {
       if ((e as { name?: string }).name !== 'AbortError') {
         setError(ta.errorMsg)
+        console.error('Claude error:', e)
       }
     } finally {
       setLoading(false)
