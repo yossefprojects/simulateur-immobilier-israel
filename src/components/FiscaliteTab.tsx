@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { fmt, fmtM } from '../utils/formatters'
+import { useLang } from '../i18n/LanguageContext'
 import { SectionTitle, DataTable } from './ui'
 
-// ── Mas Rechisha tranches 2025 ────────────────────────────────────────────────
+// ── Mas Rechisha tranches 2025 ─────────────────────────────────────────────────
 type Statut = 'resident' | 'etranger' | 'ole'
-
 interface Tranche { jusqu_a: number; taux: number }
 
 const TRANCHES_RESIDENT: Tranche[] = [
@@ -14,13 +14,12 @@ const TRANCHES_RESIDENT: Tranche[] = [
   { jusqu_a: 20_183_565, taux: 0.080 },
   { jusqu_a: Infinity,   taux: 0.100 },
 ]
-
 const TRANCHES_ETRANGER: Tranche[] = [
   { jusqu_a: 6_055_070, taux: 0.080 },
   { jusqu_a: Infinity,  taux: 0.100 },
 ]
 
-function calcMasRechisha(prix: number, statut: Statut): { tranches: { label: string; montant: number }[]; total: number } {
+function calcMasRechisha(prix: number, statut: Statut) {
   if (statut === 'ole') {
     const montant = prix * 0.005
     return { tranches: [{ label: '0.5% (Olé hadash)', montant }], total: montant }
@@ -40,14 +39,13 @@ function calcMasRechisha(prix: number, statut: Statut): { tranches: { label: str
   return { tranches: rows, total }
 }
 
-// ── Mas Shevach ───────────────────────────────────────────────────────────────
+// ── Mas Shevach ────────────────────────────────────────────────────────────────
 function calcMasShevach(prixAchat: number, prixVente: number, anneeAchat: number, residencePrincipale: boolean) {
   const plusValue = prixVente - prixAchat
   if (plusValue <= 0) return { plusValue: 0, impot: 0, exonere: false }
   const duree = new Date().getFullYear() - anneeAchat
   const exonere = residencePrincipale && duree >= 1
   let impot = exonere ? 0 : plusValue * 0.25
-  // Linearisation pre-2014 (simplifiée)
   if (anneeAchat < 2014 && !exonere) {
     const anneesAvant2014 = 2014 - anneeAchat
     const totalAnnees     = new Date().getFullYear() - anneeAchat
@@ -57,72 +55,76 @@ function calcMasShevach(prixAchat: number, prixVente: number, anneeAchat: number
   return { plusValue, impot, exonere }
 }
 
-// ── Arnona ────────────────────────────────────────────────────────────────────
+// ── Arnona ─────────────────────────────────────────────────────────────────────
 const ARNONA_RATES: Record<string, { min: number; max: number }> = {
-  'Tel Aviv':    { min: 120, max: 180 },
-  'Herzliya':   { min: 90,  max: 140 },
-  'Jérusalem':  { min: 80,  max: 120 },
-  'Netanya':    { min: 70,  max: 110 },
-  'Autre':      { min: 60,  max: 100 },
+  tel_aviv:   { min: 120, max: 180 },
+  herzliya:   { min: 90,  max: 140 },
+  jerusalem:  { min: 80,  max: 120 },
+  netanya:    { min: 70,  max: 110 },
+  autre:      { min: 60,  max: 100 },
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Component ──────────────────────────────────────────────────────────────────
 export const FiscaliteTab: React.FC = () => {
-  // Mas Rechisha
-  const [prixAchat, setPrixAchat] = useState(2_500_000)
-  const [statut, setStatut]       = useState<Statut>('resident')
+  const { t } = useLang()
+  const tf = t.fiscalite
 
-  // Mas Shevach
+  const [prixAchat, setPrixAchat] = useState(2_500_000)
+  const [statut,    setStatut]    = useState<Statut>('resident')
   const [sVente,    setSVente]    = useState(3_500_000)
   const [sAchat,    setSAchat]    = useState(2_000_000)
   const [sAnnee,    setSAnnee]    = useState(2015)
   const [sRP,       setSRP]       = useState(false)
+  const [aVille,    setAVille]    = useState('tel_aviv')
+  const [aSurface,  setASurface]  = useState(80)
 
-  // Arnona
-  const [aVille,   setAVille]    = useState('Tel Aviv')
-  const [aSurface, setASurface]  = useState(80)
+  const arnonaVilleLabels: Record<string, string> = {
+    tel_aviv:  tf.arnonaVTelAviv,
+    herzliya:  tf.arnonaVHerzliya,
+    jerusalem: tf.arnonaVJerusalem,
+    netanya:   tf.arnonaVNetanya,
+    autre:     tf.arnonaVAutre,
+  }
 
   const rechisha  = calcMasRechisha(prixAchat, statut)
   const shevach   = calcMasShevach(sAchat, sVente, sAnnee, sRP)
-  const arnonRate = ARNONA_RATES[aVille] ?? ARNONA_RATES['Autre']
+  const arnonRate = ARNONA_RATES[aVille] ?? ARNONA_RATES['autre']
   const arnonMin  = aSurface * arnonRate.min
   const arnonMax  = aSurface * arnonRate.max
-  const totalMin  = rechisha.total + (shevach.impot) + arnonMin
+  const totalMin  = rechisha.total + shevach.impot + arnonMin
   const totalPct  = prixAchat > 0 ? (rechisha.total / prixAchat) * 100 : 0
 
   return (
     <div className="grid md:grid-cols-2 gap-6">
       {/* ── LEFT ── */}
       <div>
-        {/* Mas Rechisha */}
-        <SectionTitle>Mas Rechisha — Taxe d'achat 2025</SectionTitle>
+        <SectionTitle>{tf.masRecTitle}</SectionTitle>
         <div className="mb-3">
-          <label className="block text-xs text-neutral-500 mb-1">Prix d'achat (₪)</label>
+          <label className="block text-xs text-neutral-500 mb-1">{tf.prixAchat}</label>
           <input type="number" value={prixAchat} step={50000}
             onChange={e => setPrixAchat(Number(e.target.value) || 0)}
             className="w-full rounded border border-neutral-200 px-3 py-1.5 text-sm" />
         </div>
         <div className="mb-4">
-          <label className="block text-xs text-neutral-500 mb-1">Statut de l'acquéreur</label>
+          <label className="block text-xs text-neutral-500 mb-1">{tf.statut}</label>
           <select value={statut} onChange={e => setStatut(e.target.value as Statut)}
             className="w-full appearance-none rounded border border-neutral-200 bg-white ps-3 pe-8 py-1.5 text-sm">
-            <option value="resident">Résident (premier bien)</option>
-            <option value="etranger">Non-résident (Zar)</option>
-            <option value="ole">Olé Hadash (7 ans post-Aliyah)</option>
+            <option value="resident">{tf.statutResident}</option>
+            <option value="etranger">{tf.statutEtranger}</option>
+            <option value="ole">{tf.statutOle}</option>
           </select>
         </div>
 
-        {/* Mas Shevach */}
-        <SectionTitle>Mas Shevach — Plus-value immobilière</SectionTitle>
+        <SectionTitle>{tf.masShevTitle}</SectionTitle>
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div>
-            <label className="block text-xs text-neutral-500 mb-1">Prix d'achat (₪)</label>
+            <label className="block text-xs text-neutral-500 mb-1">{tf.prixAchat}</label>
             <input type="number" value={sAchat} step={50000}
               onChange={e => setSAchat(Number(e.target.value) || 0)}
               className="w-full rounded border border-neutral-200 px-3 py-1.5 text-sm" />
           </div>
           <div>
-            <label className="block text-xs text-neutral-500 mb-1">Prix de vente (₪)</label>
+            <label className="block text-xs text-neutral-500 mb-1">{tf.prixVente}</label>
             <input type="number" value={sVente} step={50000}
               onChange={e => setSVente(Number(e.target.value) || 0)}
               className="w-full rounded border border-neutral-200 px-3 py-1.5 text-sm" />
@@ -130,7 +132,7 @@ export const FiscaliteTab: React.FC = () => {
         </div>
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div>
-            <label className="block text-xs text-neutral-500 mb-1">Année d'achat</label>
+            <label className="block text-xs text-neutral-500 mb-1">{tf.anneeAchat}</label>
             <input type="number" value={sAnnee} min={1990} max={2025}
               onChange={e => setSAnnee(Number(e.target.value) || 2015)}
               className="w-full rounded border border-neutral-200 px-3 py-1.5 text-sm" />
@@ -138,23 +140,24 @@ export const FiscaliteTab: React.FC = () => {
           <div className="flex items-end pb-1.5">
             <label className="flex items-center gap-2 text-sm cursor-pointer">
               <input type="checkbox" checked={sRP} onChange={e => setSRP(e.target.checked)} className="accent-primary" />
-              Résidence principale
+              {tf.residPrincipale}
             </label>
           </div>
         </div>
 
-        {/* Arnona */}
-        <SectionTitle>Arnona — Taxe foncière annuelle</SectionTitle>
+        <SectionTitle>{tf.arnonaTitle}</SectionTitle>
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div>
-            <label className="block text-xs text-neutral-500 mb-1">Ville</label>
+            <label className="block text-xs text-neutral-500 mb-1">{tf.ville}</label>
             <select value={aVille} onChange={e => setAVille(e.target.value)}
               className="w-full appearance-none rounded border border-neutral-200 bg-white ps-3 pe-8 py-1.5 text-sm">
-              {Object.keys(ARNONA_RATES).map(v => <option key={v}>{v}</option>)}
+              {Object.keys(ARNONA_RATES).map(k => (
+                <option key={k} value={k}>{arnonaVilleLabels[k]}</option>
+              ))}
             </select>
           </div>
           <div>
-            <label className="block text-xs text-neutral-500 mb-1">Surface (m²)</label>
+            <label className="block text-xs text-neutral-500 mb-1">{tf.surface}</label>
             <input type="number" value={aSurface} step={5}
               onChange={e => setASurface(Number(e.target.value) || 80)}
               className="w-full rounded border border-neutral-200 px-3 py-1.5 text-sm" />
@@ -164,62 +167,52 @@ export const FiscaliteTab: React.FC = () => {
 
       {/* ── RIGHT ── */}
       <div>
-        {/* Mas Rechisha result */}
-        <SectionTitle>Résultat Mas Rechisha</SectionTitle>
+        <SectionTitle>{tf.masRecResult}</SectionTitle>
         <div className="border border-neutral-100 rounded-xl p-4 mb-4">
           <DataTable rows={[
             ...rechisha.tranches.map(r => ({ label: r.label, value: fmt(Math.round(r.montant)) + ' ₪', accent: 'neg' as const })),
-            { label: 'Total Mas Rechisha', value: fmt(Math.round(rechisha.total)) + ' ₪', accent: 'neg' as const, bold: true },
-            { label: '% du prix',          value: totalPct.toFixed(2) + '%', bold: true },
+            { label: tf.totalMasRec, value: fmt(Math.round(rechisha.total)) + ' ₪', accent: 'neg' as const, bold: true },
+            { label: tf.pctPrix,     value: totalPct.toFixed(2) + '%', bold: true },
           ]} />
         </div>
 
-        {/* Mas Shevach result */}
-        <SectionTitle>Résultat Mas Shevach</SectionTitle>
+        <SectionTitle>{tf.masShevResult}</SectionTitle>
         <div className="border border-neutral-100 rounded-xl p-4 mb-4">
           {shevach.plusValue <= 0 ? (
-            <p className="text-sm text-neutral-400">Pas de plus-value (vente à perte).</p>
+            <p className="text-sm text-neutral-400">{tf.noPlusValue}</p>
           ) : shevach.exonere ? (
-            <div className="text-sm text-success font-medium">✓ Exonéré (résidence principale)</div>
+            <div className="text-sm text-success font-medium">{tf.exonere}</div>
           ) : (
             <DataTable rows={[
-              { label: 'Plus-value brute',    value: '+' + fmtM(shevach.plusValue), accent: 'pos' as const },
-              { label: 'Taux Mas Shevach',    value: '25%' },
-              { label: 'Impôt estimé',        value: fmt(Math.round(shevach.impot)) + ' ₪', accent: 'neg' as const, bold: true },
-              { label: sAnnee < 2014 ? 'Linéarisation pré-2014 appliquée' : '', value: '' },
-            ].filter(r => r.label)} />
+              { label: tf.plusValueBrute, value: '+' + fmtM(shevach.plusValue), accent: 'pos' as const },
+              { label: tf.tauxShevach,    value: '25%' },
+              { label: tf.impotEstime,    value: fmt(Math.round(shevach.impot)) + ' ₪', accent: 'neg' as const, bold: true },
+              ...(sAnnee < 2014 ? [{ label: tf.linear, value: '' }] : []),
+            ]} />
           )}
         </div>
 
-        {/* Arnona result */}
-        <SectionTitle>Arnona annuelle estimée</SectionTitle>
+        <SectionTitle>{tf.arnonaResult}</SectionTitle>
         <div className="border border-neutral-100 rounded-xl p-4 mb-4">
           <DataTable rows={[
-            { label: 'Taux moyen',         value: `${arnonRate.min} – ${arnonRate.max} ₪/m²/an` },
-            { label: 'Arnona min.',        value: fmt(Math.round(arnonMin)) + ' ₪/an' },
-            { label: 'Arnona max.',        value: fmt(Math.round(arnonMax)) + ' ₪/an', accent: 'neg' },
+            { label: tf.tauxMoyen, value: `${arnonRate.min} – ${arnonRate.max} ₪/m²/an` },
+            { label: tf.arnonaMin, value: fmt(Math.round(arnonMin)) + ' ₪/an' },
+            { label: tf.arnonaMax, value: fmt(Math.round(arnonMax)) + ' ₪/an', accent: 'neg' },
           ]} />
         </div>
 
-        {/* Total & badge */}
-        <SectionTitle>Total des taxes à prévoir</SectionTitle>
+        <SectionTitle>{tf.totalTitle}</SectionTitle>
         <div className={`rounded-xl p-4 mb-4 ${totalPct > 10 ? 'bg-red-50 border border-red-200' : 'bg-emerald-50 border border-emerald-200'}`}>
           <div className={`text-xs font-medium mb-1 ${totalPct > 10 ? 'text-red-700' : 'text-success'}`}>
-            {totalPct > 10 ? '⚠ Charges fiscales élevées (> 10%)' : '✓ Charges fiscales raisonnables'}
+            {totalPct > 10 ? tf.chargesElevees : tf.chargesRaison}
           </div>
           <div className="font-display text-2xl font-semibold">{fmtM(Math.round(totalMin))}</div>
-          <div className="text-xs text-neutral-500 mt-1">Mas Rechisha + Mas Shevach (si applicable) + Arnona min.</div>
+          <div className="text-xs text-neutral-500 mt-1">{tf.totalSub}</div>
         </div>
 
-        {/* Olim advantages */}
-        <SectionTitle>Avantages Olim Hadashim</SectionTitle>
+        <SectionTitle>{tf.olimTitle}</SectionTitle>
         <div className="space-y-2 text-sm">
-          {[
-            '✓ Mas Rechisha : 0,5% sur le 1er bien (valable 7 ans post-Aliyah)',
-            '✓ Réduction droits de douane sur effets personnels',
-            '✓ Sal Klita (subvention absorption) : ~25 000 ₪/an pendant 1 an',
-            '✓ Exonérations d\'impôt sur revenus étrangers (10 ans)',
-          ].map((item, i) => (
+          {[tf.olimB1, tf.olimB2, tf.olimB3, tf.olimB4].map((item, i) => (
             <div key={i} className="text-neutral-700 bg-neutral-50 rounded-lg px-3 py-2">{item}</div>
           ))}
           <div className="flex gap-3 mt-3">

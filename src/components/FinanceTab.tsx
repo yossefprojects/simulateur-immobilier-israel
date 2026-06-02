@@ -35,7 +35,7 @@ export const InvestisseurTab: React.FC = () => {
           value={inputs.apport} display={inputs.apport + '%'} onChange={v => set('apport', v)} />
         <div className="mb-3">
           <label className="block text-xs text-neutral-500 mb-1">
-            <Tooltip content="Taux actuel Banque d'Israël : environ 4.5–5.5% en 2025. Les non-résidents obtiennent généralement un taux de 0.5–1% supérieur.">
+            <Tooltip content={t.tooltips.taux}>
               {ti.taux}
             </Tooltip>
           </label>
@@ -65,7 +65,7 @@ export const InvestisseurTab: React.FC = () => {
           <MetricCard label={ti.rendNet}    value={fmtPct(result.rendNet)} />
           <MetricCard label={ti.mensualite} value={fmt(result.mensualite) + ' ₪'} />
           <MetricCard label={
-            <Tooltip content="Taux de Rendement Interne : taux d'actualisation qui annule la VAN. Un TRI > 8% est considéré excellent sur le marché israélien.">
+            <Tooltip content={t.tooltips.tri}>
               {ti.tri}
             </Tooltip>
           } value={fmtPct(result.tri, 1)} accent />
@@ -137,7 +137,7 @@ export const PromoteurTab: React.FC = () => {
         <NumberField label={tp.surfTerrain} value={inputs.surfTerrain} step={100} onChange={v => set('surfTerrain', v)} />
         <div className="mb-3">
           <label className="block text-xs text-neutral-500 mb-1">
-            <Tooltip content="Coefficient d'occupation du sol : ratio entre la surface de plancher constructible et la surface du terrain. Ex: COS 3 sur 1000m² = 3000m² constructibles.">
+            <Tooltip content={t.tooltips.cos}>
               {tp.cos}
             </Tooltip>
           </label>

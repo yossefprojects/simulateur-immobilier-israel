@@ -71,7 +71,7 @@ export const UrbanismeTab: React.FC = () => {
         <div className="grid grid-cols-2 gap-3">
           <div className="mb-3">
             <label className="block text-xs text-neutral-500 mb-1">
-              <Tooltip content="Références cadastrales israéliennes. Le Gush est le numéro de bloc, la Helka le numéro de parcelle. Disponibles sur GovMap.gov.il">
+              <Tooltip content={t.tooltips.cadastre}>
                 {tu.gush}
               </Tooltip>
             </label>
@@ -97,7 +97,7 @@ export const UrbanismeTab: React.FC = () => {
           onChange={v => set('etagesAut', v)} />
         <div className="mb-3">
           <label className="block text-xs text-neutral-500 mb-1">
-            <Tooltip content="Coefficient d'occupation du sol : ratio entre la surface de plancher constructible et la surface du terrain. Ex: COS 3 sur 1000m² = 3000m² constructibles.">
+            <Tooltip content={t.tooltips.cos}>
               {tu.cos}
             </Tooltip>
           </label>
@@ -110,7 +110,7 @@ export const UrbanismeTab: React.FC = () => {
         <SectionTitle>{tu.accords}</SectionTitle>
         <div className="mb-3">
           <label className="block text-xs text-neutral-500 mb-1">
-            <Tooltip content="TAMA 38 : programme national de renforcement sismique permettant d'ajouter des étages. Pinouï-Binouï : démolition-reconstruction complète avec relogement.">
+            <Tooltip content={t.tooltips.accords}>
               {tu.statutProjet}
             </Tooltip>
           </label>
