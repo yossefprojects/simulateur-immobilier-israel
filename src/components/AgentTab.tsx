@@ -1,7 +1,38 @@
-import { useState, useRef, useCallback } from 'react'
-import { Send, Loader2, Trash2, Copy, Check, FileDown } from 'lucide-react'
+import { useState, useRef, useCallback, useEffect } from 'react'
+import { Send, Loader2, Trash2, Copy, Check, FileDown, History, X, ChevronRight, Clock } from 'lucide-react'
 import jsPDF from 'jspdf'
 import { useLang } from '../i18n/LanguageContext'
+
+const HISTORY_KEY = 'agent_ia_history_v1'
+const MAX_HISTORY = 50
+
+interface HistoryItem {
+  id: string
+  title: string
+  input: string
+  output: string
+  date: number
+}
+
+function loadHistory(): HistoryItem[] {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) ?? '[]') } catch { return [] }
+}
+function saveHistory(items: HistoryItem[]) {
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(items.slice(0, MAX_HISTORY)))
+}
+function makeTitle(input: string): string {
+  const first = input.trim().split('\n')[0].replace(/[*#_]/g, '').trim()
+  return first.length > 60 ? first.slice(0, 58) + '…' : first
+}
+function fmtDate(ts: number): string {
+  const d = new Date(ts)
+  const now = new Date()
+  const diffH = (now.getTime() - ts) / 3600000
+  if (diffH < 1)   return 'il y a ' + Math.round(diffH * 60) + ' min'
+  if (diffH < 24)  return 'il y a ' + Math.round(diffH) + 'h'
+  if (diffH < 48)  return 'hier'
+  return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })
+}
 
 const SYSTEM_PROMPT = `Tu es un analyste senior de fonds de private equity immobilier spécialisé en Israël (Tel-Aviv et grandes villes).
 
@@ -310,16 +341,21 @@ function RenderOutput({ text }: { text: string }) {
 }
 
 export function AgentTab() {
-  const [input, setInput]     = useState('')
-  const [output, setOutput]   = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError]     = useState('')
-  const [copied, setCopied]   = useState(false)
-  const [pdfBusy, setPdfBusy] = useState(false)
+  const [input, setInput]         = useState('')
+  const [output, setOutput]       = useState('')
+  const [loading, setLoading]     = useState(false)
+  const [error, setError]         = useState('')
+  const [copied, setCopied]       = useState(false)
+  const [pdfBusy, setPdfBusy]     = useState(false)
+  const [history, setHistory]     = useState<HistoryItem[]>(() => loadHistory())
+  const [showHistory, setShowHistory] = useState(false)
+  const [activeId, setActiveId]   = useState<string | null>(null)
   const abortRef  = useRef<AbortController | null>(null)
   const outputRef = useRef<HTMLDivElement>(null)
   const { t }     = useLang()
   const ta        = t.agent
+
+  useEffect(() => { saveHistory(history) }, [history])
 
   const handleCopy = useCallback(async () => {
     if (!output) return
@@ -477,9 +513,11 @@ export function AgentTab() {
     setLoading(true)
     setOutput('')
     setError('')
+    setActiveId(null)
 
     const ctrl = new AbortController()
     abortRef.current = ctrl
+    let finalOutput = ''
 
     try {
       const resp = await fetch('/api/claude/v1/messages', {
@@ -525,6 +563,7 @@ export function AgentTab() {
             if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
               const text = evt.delta.text as string
               if (text) {
+                finalOutput += text
                 setOutput(prev => {
                   const next = prev + text
                   setTimeout(() => outputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 10)
@@ -542,6 +581,17 @@ export function AgentTab() {
       }
     } finally {
       setLoading(false)
+      if (finalOutput.trim()) {
+        const newItem: HistoryItem = {
+          id:     crypto.randomUUID(),
+          title:  makeTitle(input),
+          input,
+          output: finalOutput,
+          date:   Date.now(),
+        }
+        setHistory(prev => [newItem, ...prev])
+        setActiveId(newItem.id)
+      }
     }
   }, [input, loading, ta.errorMsg])
 
@@ -551,6 +601,26 @@ export function AgentTab() {
     setOutput('')
     setError('')
     setLoading(false)
+    setActiveId(null)
+  }
+
+  const loadHistoryItem = (item: HistoryItem) => {
+    setInput(item.input)
+    setOutput(item.output)
+    setError('')
+    setActiveId(item.id)
+    setShowHistory(false)
+  }
+
+  const deleteHistoryItem = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setHistory(prev => prev.filter(h => h.id !== id))
+    if (activeId === id) { setActiveId(null) }
+  }
+
+  const clearAllHistory = () => {
+    setHistory([])
+    setActiveId(null)
   }
 
   const EXAMPLES = [
@@ -561,15 +631,100 @@ export function AgentTab() {
 
   return (
     <div className="space-y-5">
+
+      {/* Header + history toggle */}
       <div className="rounded-xl p-4 border border-neutral-200" style={{ background: 'linear-gradient(135deg, #f0f5fa 0%, #f9f8f4 100%)' }}>
         <div className="flex items-center gap-2 mb-1 flex-wrap">
           <span className="text-base">🤖</span>
           <h2 className="text-sm font-bold" style={{ color: '#1A3A5C' }}>{ta.title}</h2>
-          <span className="ml-auto text-xs text-neutral-400 shrink-0">{ta.poweredBy}</span>
+          <span className="ml-auto flex items-center gap-2">
+            <button
+              onClick={() => setShowHistory(v => !v)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all"
+              style={showHistory
+                ? { background: '#1A3A5C', borderColor: '#1A3A5C', color: 'white' }
+                : { background: 'white', borderColor: '#d1d5db', color: '#374151' }}>
+              <History size={12} />
+              Historique
+              {history.length > 0 && (
+                <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-xs font-bold"
+                  style={showHistory ? { background: 'rgba(255,255,255,0.2)' } : { background: '#f3f4f6' }}>
+                  {history.length}
+                </span>
+              )}
+            </button>
+            <span className="text-xs text-neutral-400 hidden sm:block">{ta.poweredBy}</span>
+          </span>
         </div>
         <p className="text-xs text-neutral-500 leading-relaxed">{ta.subtitle}</p>
       </div>
 
+      {/* History panel */}
+      {showHistory && (
+        <div className="rounded-xl border border-neutral-200 overflow-hidden" style={{ background: '#fafaf9' }}>
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-neutral-200" style={{ background: '#f3f4f6' }}>
+            <div className="flex items-center gap-2">
+              <Clock size={13} style={{ color: '#1A3A5C' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1A3A5C' }}>
+                Analyses sauvegardées
+              </span>
+              <span className="text-xs text-neutral-400">({history.length})</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {history.length > 0 && (
+                <button onClick={clearAllHistory}
+                  className="text-xs text-red-400 hover:text-red-600 transition-colors px-2 py-1 rounded hover:bg-red-50">
+                  Tout effacer
+                </button>
+              )}
+              <button onClick={() => setShowHistory(false)}
+                className="p-1 rounded hover:bg-neutral-200 transition-colors">
+                <X size={13} className="text-neutral-400" />
+              </button>
+            </div>
+          </div>
+
+          {history.length === 0 ? (
+            <div className="px-4 py-8 text-center text-xs text-neutral-400">
+              Aucune analyse sauvegardée. Lancez votre première analyse !
+            </div>
+          ) : (
+            <div className="divide-y divide-neutral-100 max-h-72 overflow-y-auto">
+              {history.map(item => (
+                <button key={item.id} onClick={() => loadHistoryItem(item)}
+                  className="w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-white transition-colors group"
+                  style={activeId === item.id ? { background: '#eff6ff' } : {}}>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-medium text-neutral-800 truncate leading-snug" style={activeId === item.id ? { color: '#1A3A5C' } : {}}>
+                      {item.title}
+                    </div>
+                    <div className="text-xs text-neutral-400 mt-0.5 flex items-center gap-1">
+                      <Clock size={9} />
+                      {fmtDate(item.date)}
+                      {activeId === item.id && (
+                        <span className="ml-1 px-1.5 py-0.5 rounded-full text-xs font-medium" style={{ background: '#dbeafe', color: '#1d4ed8' }}>
+                          Actif
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      onClick={e => deleteHistoryItem(item.id, e)}
+                      className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-50 transition-all"
+                      title="Supprimer">
+                      <Trash2 size={11} className="text-red-400" />
+                    </button>
+                    <ChevronRight size={12} className="text-neutral-300" />
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Examples */}
       <div>
         <p className="text-xs font-semibold text-neutral-400 mb-2 uppercase tracking-wide">{ta.examplesTitle}</p>
         <div className="flex flex-wrap gap-2">
@@ -582,6 +737,7 @@ export function AgentTab() {
         </div>
       </div>
 
+      {/* Input */}
       <div className="space-y-3">
         <textarea
           value={input}
@@ -614,16 +770,22 @@ export function AgentTab() {
 
       {error && (
         <div className="p-3 rounded-xl text-sm text-red-700 bg-red-50 border border-red-200">
-          ⚠️ {error}
+          {error}
         </div>
       )}
 
+      {/* Output */}
       {output && (
         <div className="rounded-xl border border-neutral-200 bg-white overflow-hidden">
           <div className="flex items-center justify-between px-4 py-2.5 border-b border-neutral-100" style={{ background: '#f8f7f5' }}>
             <div className="flex items-center gap-2">
               <span className="text-sm">📊</span>
               <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1A3A5C' }}>Rapport d'analyse — Private Equity</span>
+              {activeId && history.find(h => h.id === activeId) && (
+                <span className="text-xs text-neutral-400">
+                  · {fmtDate(history.find(h => h.id === activeId)!.date)}
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-2">
               {loading && (
