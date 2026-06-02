@@ -1,10 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
 import { Send, Loader2, Trash2 } from 'lucide-react'
-import Anthropic from '@anthropic-ai/sdk'
 import { useLang } from '../i18n/LanguageContext'
-
-declare const __ANTHROPIC_BASE_URL__: string
-declare const __ANTHROPIC_KEY__: string
 
 const SYSTEM_PROMPT = `Tu es un assistant IA de niveau fonds d'investissement immobilier spécialisé en Israël (Tel Aviv et grandes villes).
 
@@ -292,33 +288,57 @@ export function AgentTab() {
     abortRef.current = ctrl
 
     try {
-      const anthropic = new Anthropic({
-        apiKey:  __ANTHROPIC_KEY__,
-        baseURL: __ANTHROPIC_BASE_URL__,
-        dangerouslyAllowBrowser: true,
+      const resp = await fetch('/api/claude/v1/messages', {
+        method:  'POST',
+        headers: {
+          'content-type':       'application/json',
+          'anthropic-version':  '2023-06-01',
+        },
+        body: JSON.stringify({
+          model:      'claude-sonnet-4-6',
+          max_tokens: 8192,
+          stream:     true,
+          system:     SYSTEM_PROMPT,
+          messages:   [{ role: 'user', content: input }],
+        }),
+        signal: ctrl.signal,
       })
 
-      const stream = anthropic.messages.stream({
-        model:      'claude-sonnet-4-6',
-        max_tokens: 8192,
-        system:     SYSTEM_PROMPT,
-        messages:   [{ role: 'user', content: input }],
-      })
+      if (!resp.ok || !resp.body) {
+        const errText = await resp.text().catch(() => resp.statusText)
+        throw new Error(`HTTP ${resp.status}: ${errText}`)
+      }
 
-      for await (const event of stream) {
-        if (ctrl.signal.aborted) break
-        if (
-          event.type === 'content_block_delta' &&
-          event.delta.type === 'text_delta'
-        ) {
-          const text = event.delta.text
-          if (text) {
-            setOutput(prev => {
-              const next = prev + text
-              setTimeout(() => outputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 10)
-              return next
-            })
-          }
+      const reader  = resp.body.getReader()
+      const decoder = new TextDecoder()
+      let   buffer  = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        if (ctrl.signal.aborted) { reader.cancel(); break }
+
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() ?? ''
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const payload = line.slice(6).trim()
+          if (payload === '[DONE]' || !payload) continue
+          try {
+            const evt = JSON.parse(payload)
+            if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+              const text = evt.delta.text as string
+              if (text) {
+                setOutput(prev => {
+                  const next = prev + text
+                  setTimeout(() => outputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 10)
+                  return next
+                })
+              }
+            }
+          } catch { /* ignore malformed lines */ }
         }
       }
     } catch (e: unknown) {

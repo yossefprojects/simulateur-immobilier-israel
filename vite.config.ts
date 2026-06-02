@@ -31,21 +31,42 @@ export { noop as rename, noop as unlink, noop as readFile, noop as writeFile, no
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
+
+  const anthropicBase = process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL
+    || env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL
+    || 'https://api.anthropic.com'
+
+  const anthropicKey = process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY
+    || env.AI_INTEGRATIONS_ANTHROPIC_API_KEY
+    || ''
+
   return {
     plugins: [
       stubNodeBuiltins(),
       react(),
     ],
     define: {
-      __AI_BASE_URL__:       JSON.stringify(env.AI_INTEGRATIONS_OPENAI_BASE_URL    || ''),
-      __AI_KEY__:            JSON.stringify(env.AI_INTEGRATIONS_OPENAI_API_KEY     || ''),
-      __ANTHROPIC_BASE_URL__: JSON.stringify(env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL || ''),
-      __ANTHROPIC_KEY__:     JSON.stringify(env.AI_INTEGRATIONS_ANTHROPIC_API_KEY  || ''),
+      __AI_BASE_URL__:    JSON.stringify(process.env.AI_INTEGRATIONS_OPENAI_BASE_URL  || env.AI_INTEGRATIONS_OPENAI_BASE_URL  || ''),
+      __AI_KEY__:         JSON.stringify(process.env.AI_INTEGRATIONS_OPENAI_API_KEY   || env.AI_INTEGRATIONS_OPENAI_API_KEY   || ''),
+      __ANTHROPIC_KEY__:  JSON.stringify(anthropicKey),
     },
     server: {
       host: '0.0.0.0',
       port: 5000,
       allowedHosts: true,
+      proxy: {
+        '/api/claude': {
+          target: anthropicBase,
+          changeOrigin: true,
+          rewrite: (path: string) => path.replace(/^\/api\/claude/, ''),
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq) => {
+              proxyReq.setHeader('x-api-key', anthropicKey)
+              proxyReq.setHeader('anthropic-version', '2023-06-01')
+            })
+          },
+        },
+      },
     },
   }
 })
