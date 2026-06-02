@@ -108,7 +108,9 @@ export const UrbanismeTab: React.FC = () => {
         <SectionTitle>{tu.valorisation}</SectionTitle>
         <div className="border border-gray-100 rounded-xl p-4 mb-2">
           <div className="flex items-baseline gap-3 mb-3 flex-wrap">
-            <span className="text-sm text-gray-400 line-through">{fmt(inputs.prixActuel)} ₪/m²</span>
+            {result.prixProj !== inputs.prixActuel && (
+              <span className="text-sm text-gray-400 line-through">{fmt(inputs.prixActuel)} ₪/m²</span>
+            )}
             <span className="text-2xl font-medium">{fmt(result.prixProj)} ₪/m²</span>
             {result.gainM2 > 0 && (
               <span className="text-sm font-medium text-emerald-700">+{fmt(result.gainM2)} ₪/m² (+{result.gainPct.toFixed(1)}%)</span>

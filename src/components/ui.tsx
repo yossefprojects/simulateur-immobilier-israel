@@ -1,4 +1,5 @@
 import React from 'react'
+import { ChevronDown } from 'lucide-react'
 
 // ─── SliderField ──────────────────────────────────────────────────────────────
 
@@ -46,7 +47,7 @@ export const NumberField: React.FC<NumberFieldProps> = ({ label, value, step = 1
   </div>
 )
 
-// ─── SelectField ──────────────────────────────────────────────────────────────
+// ─── SelectField — custom arrow, RTL-aware via logical properties ──────────────
 
 interface SelectFieldProps {
   label:    string
@@ -58,21 +59,26 @@ interface SelectFieldProps {
 export const SelectField: React.FC<SelectFieldProps> = ({ label, value, options, onChange }) => (
   <div className="mb-3">
     <label className="block text-xs text-gray-500 mb-1">{label}</label>
-    <select
-      value={value}
-      onChange={e => onChange(e.target.value)}
-      className="w-full rounded border border-gray-200 px-3 py-1.5 text-sm"
-    >
-      {options.map(o => <option key={String(o.value)} value={o.value}>{o.label}</option>)}
-    </select>
+    <div className="relative">
+      <select
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        className="w-full appearance-none rounded border border-gray-200 bg-white ps-3 pe-8 py-1.5 text-sm truncate"
+      >
+        {options.map(o => <option key={String(o.value)} value={o.value}>{o.label}</option>)}
+      </select>
+      <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2">
+        <ChevronDown size={14} className="text-gray-400" />
+      </div>
+    </div>
   </div>
 )
 
 // ─── MetricCard ───────────────────────────────────────────────────────────────
 
 interface MetricCardProps {
-  label:  string
-  value:  string
+  label:   string
+  value:   string
   accent?: boolean
 }
 

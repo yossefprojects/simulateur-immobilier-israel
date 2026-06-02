@@ -16,32 +16,43 @@ const LANGS: { key: Lang; label: string }[] = [
   { key: 'he', label: 'עב' },
 ]
 
-export default function App() {
-  const [active, setActive]     = useState<Tab>('estimation')
-  const [exporting, setExporting] = useState(false)
-  const { lang, setLang, t }    = useLang()
+// Unsplash photos, one per tab — 1600×320 crop for the banner
+const TAB_PHOTOS: Record<Tab, string> = {
+  estimation:
+    'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&w=1600&h=320&fit=crop&q=75',
+  urbanisme:
+    'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&w=1600&h=320&fit=crop&q=75',
+  investisseur:
+    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&w=1600&h=320&fit=crop&q=75',
+  promoteur:
+    'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&w=1600&h=320&fit=crop&q=75',
+}
 
-  const TABS: { key: Tab; label: string }[] = [
-    { key: 'estimation',   label: t.tabs.estimation   },
-    { key: 'urbanisme',    label: t.tabs.urbanisme     },
-    { key: 'investisseur', label: t.tabs.investisseur  },
-    { key: 'promoteur',    label: t.tabs.promoteur     },
+export default function App() {
+  const [active, setActive]       = useState<Tab>('estimation')
+  const [exporting, setExporting] = useState(false)
+  const { lang, setLang, t }      = useLang()
+
+  const TABS: { key: Tab; label: string; sub: string }[] = [
+    { key: 'estimation',   label: t.tabs.estimation,   sub: t.appSubtitle.split(' · ')[0] },
+    { key: 'urbanisme',    label: t.tabs.urbanisme,    sub: t.appSubtitle.split(' · ')[1] },
+    { key: 'investisseur', label: t.tabs.investisseur, sub: t.appSubtitle.split(' · ')[2] },
+    { key: 'promoteur',    label: t.tabs.promoteur,    sub: t.appSubtitle.split(' · ')[2] },
   ]
 
   const handleExport = () => {
     setExporting(true)
     setTimeout(() => {
-      try {
-        exportPDF(getReportData(), t, lang)
-      } finally {
-        setExporting(false)
-      }
+      try { exportPDF(getReportData(), t, lang) }
+      finally { setExporting(false) }
     }, 50)
   }
 
+  const activeTab = TABS.find(tb => tb.key === active)!
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* ── Header ── */}
       <header className="bg-white border-b border-gray-100 px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -53,7 +64,6 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            {/* PDF export button */}
             <button
               onClick={handleExport}
               disabled={exporting}
@@ -63,7 +73,6 @@ export default function App() {
               {exporting ? '…' : 'PDF'}
             </button>
 
-            {/* Language switcher */}
             <div className="flex items-center gap-1 border border-gray-200 rounded-lg p-0.5">
               {LANGS.map(l => (
                 <button
@@ -83,7 +92,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* Tab nav */}
+      {/* ── Tab nav ── */}
       <nav className="bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-6 flex gap-0 overflow-x-auto">
           {TABS.map(tab => (
@@ -102,7 +111,32 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Content — all tabs always mounted so the report store stays populated */}
+      {/* ── Photo banner ── */}
+      <div className="relative h-36 overflow-hidden">
+        {TABS.map(tab => (
+          <img
+            key={tab.key}
+            src={TAB_PHOTOS[tab.key]}
+            alt=""
+            aria-hidden
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+              active === tab.key ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        ))}
+        {/* gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        {/* text overlay */}
+        <div className="relative max-w-5xl mx-auto px-6 h-full flex flex-col justify-center">
+          <p className="text-white/70 text-xs font-medium uppercase tracking-widest mb-1">
+            {activeTab.sub}
+          </p>
+          <h2 className="text-white text-2xl font-medium">{activeTab.label}</h2>
+        </div>
+      </div>
+
+      {/* ── Content — all tabs always mounted so the report store stays populated ── */}
       <main className="max-w-5xl mx-auto px-6 py-6">
         <div className={active === 'estimation'   ? '' : 'hidden'}><EstimationTab /></div>
         <div className={active === 'urbanisme'    ? '' : 'hidden'}><UrbanismeTab /></div>
