@@ -127,12 +127,9 @@ export function exportPDF(store: ReportStore, t: Translations, lang: string): vo
       y,
     )
 
-    const waterfallLabels = [
-      te.baseQuartier, te.typeProgramme, te.surfaceLabel,
-      te.proxMer, te.transports, te.etageLabel, te.equipLabel,
-    ]
-    const wfRows: [string, string, Accent][] = est.result.waterfall.map((s, i) => [
-      waterfallLabels[i] ?? s.label,
+    const teMap = te as Record<string, string>
+    const wfRows: [string, string, Accent][] = est.result.waterfall.map(s => [
+      teMap[s.label] ?? s.label,
       fmt(s.prixCumul) + ' \u20aa',
       'none',
     ])

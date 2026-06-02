@@ -14,23 +14,6 @@ const PROJ_KEYS = ['residClassique','residLuxe','programmeNeuf','tama38','pb','m
 // Équipements affichés comme checkbox (parking et terrasse gérés par sliders)
 const EQUIP_DISPLAY_KEYS = ['ascenseur','mamad','vueMer','vueDeg','gardien','piscine','gym']
 
-// Mapping value → clé typesBien dans translations
-const TYPES_BIEN_TKEYS: Record<string, 'dira' | 'diratGan' | 'penthouse' | 'cottage' | 'studio'> = {
-  dira:      'dira',
-  dirat_gan: 'diratGan',
-  penthouse: 'penthouse',
-  cottage:   'cottage',
-  studio:    'studio',
-}
-
-// Mapping value → clé etatsBien dans translations
-const ETATS_BIEN_TKEYS: Record<string, 'neufPromoteur' | 'commeNeuf' | 'renove' | 'correct' | 'aRenover'> = {
-  neuf_promoteur: 'neufPromoteur',
-  comme_neuf:     'commeNeuf',
-  renove:         'renove',
-  correct:        'correct',
-  a_renover:      'aRenover',
-}
 
 export const EstimationTab: React.FC = () => {
   const { inputs, result, set, setVille, toggleEquip } = useEstimation()
@@ -74,7 +57,6 @@ export const EstimationTab: React.FC = () => {
   }
 
   const piecesDisplay  = inputs.nbPieces  <= 1 ? te.studio : `${inputs.nbPieces} ${te.pieces}`
-  const balconDisplay  = inputs.nbBalcons  === 0 ? te.aucun : `${inputs.nbBalcons} ${te.pieces === 'rooms' ? 'balcon(s)' : inputs.nbPieces <= 1 ? te.aucun : 'balcon(s)'}`
   const parkingDisplay = inputs.nbParkings === 0 ? te.aucun : `${inputs.nbParkings} ${te.placeUnit}`
 
   // Waterfall : traduit la clé wf* vers le texte de la langue courante
