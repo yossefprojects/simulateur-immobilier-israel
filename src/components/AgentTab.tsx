@@ -3,270 +3,310 @@ import { Send, Loader2, Trash2, Copy, Check, FileDown } from 'lucide-react'
 import jsPDF from 'jspdf'
 import { useLang } from '../i18n/LanguageContext'
 
-const SYSTEM_PROMPT = `Tu es un assistant IA de niveau fonds d'investissement immobilier spécialisé en Israël (Tel Aviv et grandes villes).
+const SYSTEM_PROMPT = `Tu es un analyste senior de fonds de private equity immobilier spécialisé en Israël (Tel-Aviv et grandes villes).
 
-Tu analyses des projets immobiliers complexes et tu prends des décisions d'investissement structurées comme un analyste senior de private equity immobilier.
+Pour chaque projet décrit, tu produis un rapport d'analyse complet et chiffré.
 
----
+HYPOTHESES DE BASE (marché israélien) :
+- Construction standard : 18 000 à 28 000 NIS/m2 (Tel Aviv = haut de fourchette)
+- Sous-sol : +40 % à +70 % du coût standard
+- Démolition : 800 à 1 500 NIS/m2
+- Honoraires (architecte, ingénierie, gestion) : 8 % à 12 % du coût travaux
+- Imprévus : 7 % à 10 %
+- Prix de revente marché TLV : 35 000 à 60 000 NIS/m2 selon quartier et standing
 
-# 🎯 OBJECTIF PRINCIPAL
+SCORING INVESTISSEMENT (0-100) :
+- Rentabilité (0-30 pts) : ROI > 40 % = 30 pts | 25-40 % = 22 pts | 15-25 % = 15 pts | < 15 % = 5 pts | negatif = 0 pt
+- Risque marche (0-20 pts) : TLV centre = fort potentiel | zones secondaires = risque moyen
+- Risque construction (0-20 pts) : permis accorde = faible risque | projet complexe = risque eleve
+- Securite financiere (0-15 pts) : marge elevee et stable = bon score
+- Qualite du deal (0-15 pts) : ratio achat/valeur future, coherence, potentiel revalorisation
 
-Pour chaque projet, tu dois :
+FORMAT DE REPONSE STRICT — utilise exactement ces balises, sans emoji, sans caractere special :
 
-1. Comprendre la description immobilière
-2. Extraire toutes les données pertinentes
-3. Compléter les données manquantes avec hypothèses réalistes marché Israël
-4. Calculer le coût total du projet
-5. Estimer la valeur de sortie du projet fini
-6. Calculer la rentabilité (ROI)
-7. Évaluer les risques
-8. Donner un **score d'investissement sur 100**
-9. Donner une recommandation finale claire
+## 1. RESUME DU PROJET
+[2-3 phrases synthétiques sur le projet]
 
----
+## 2. DONNEES EXTRAITES
+- Localisation : [valeur]
+- Type de projet : [valeur]
+- Surface existante : [valeur]
+- Surface projetee : [valeur]
+- Surface terrain : [valeur]
+- Prix acquisition : [valeur]
+- Permis de construire : [valeur]
+- Etages / sous-sols : [valeur]
+- Contraintes : [valeur]
 
-# 📊 DONNÉES À EXTRAIRE
+## 3. HYPOTHESES RETENUES
+- Cout construction/m2 : [valeur]
+- Cout sous-sol/m2 : [valeur]
+- Taux honoraires : [valeur]
+- Taux imprevus : [valeur]
+- Prix revente/m2 : [valeur]
 
-- Localisation (ville / quartier)
-- Type de projet (rénovation / démolition / construction neuve)
-- Surface existante (m²)
-- Surface projetée (m²)
-- Surface terrain (m²)
-- Prix d'acquisition (NIS)
-- Permis de construire (oui / non / inconnu)
-- Nombre d'étages / sous-sols / penthouse
-- Contraintes (succession, permis déjà accordé, etc.)
+## 4. ESTIMATION DES COUTS
+- Construction : [montant NIS]
+- Sous-sols : [montant NIS]
+- Demolition : [montant NIS]
+- Honoraires : [montant NIS]
+- Imprevus : [montant NIS]
+- Total travaux : [montant NIS]
 
----
+## 5. ANALYSE FINANCIERE
+- Cout acquisition : [montant NIS]
+- Cout total projet : [montant NIS]
+- Valeur de sortie estimee : [montant NIS]
+- Marge brute : [montant NIS]
+- ROI : [pourcentage]
+- Cout revient / m2 : [valeur NIS/m2]
 
-# 🧠 HYPOTHÈSES (ISRAËL / TEL AVIV)
+## 6. ANALYSE DES RISQUES
+[3-5 points de risque principaux, un par ligne, commençant par -]
 
-Tu dois appliquer des hypothèses réalistes :
+## 7. INVESTMENT SCORE
+- Rentabilite : [X]/30
+- Risque marche : [X]/20
+- Risque construction : [X]/20
+- Securite financiere : [X]/15
+- Qualite du deal : [X]/15
+- SCORE FINAL : [total sur 100]
 
-- Construction : 18 000 → 28 000 NIS/m² (Tel Aviv = haut de fourchette)
-- Sous-sol : +40% à +70% du coût standard
-- Démolition : 800 → 1 500 NIS/m²
-- Honoraires (archi + ingénierie + gestion) : 8% → 12%
-- Imprévus : 7% → 10%
-- Prix de vente marché TLV : 35 000 → 60 000 NIS/m²
+## 8. CONCLUSION
+- Statut : [EXCELLENT / BON / RISQUE MODERE / RISQUE ELEVE / A EVITER]
+- Recommandation : [1-2 phrases claires]
 
----
+REGLES ABSOLUES :
+- Chiffres précis et cohérents même si des données manquent (utiliser les hypothèses)
+- Aucun emoji, aucun symbole markdown (pas de **, pas de *, pas de #), uniquement le format ci-dessus
+- Réponse professionnelle, synthétique, orientée décision d'investissement`
 
-# 📐 CALCULS OBLIGATOIRES
-
-Tu dois calculer : Coût construction, Coût sous-sol, Coût démolition, Honoraires, Imprévus, Coût total projet, Valeur de sortie, Marge brute, ROI (%).
-
----
-
-# 🧠 SCORING INVESTISSEMENT (0–100)
-
-Tu dois calculer un Investment Score global basé sur 5 critères :
-
-1. Rentabilité (0–30 pts) : >40% ROI = 30 pts | 25–40% = 22 pts | 15–25% = 15 pts | <15% = 5 pts | négatif = 0 pts
-2. Risque marché (0–20 pts) : TLV prime = haut potentiel | zones secondaires = risque moyen | zones incertaines = faible score
-3. Risque construction (0–20 pts) : permis accordé = faible risque | projet complexe = risque élevé
-4. Sécurité financière (0–15 pts) : marge élevée et stable = bon score
-5. Qualité du deal (0–15 pts) : bon ratio achat/valeur future, cohérence, potentiel revalorisation
-
----
-
-# 📊 INTERPRÉTATION SCORE
-- 80–100 : 🟢 EXCELLENT INVESTISSEMENT
-- 65–79 : 🟡 BON INVESTISSEMENT
-- 50–64 : 🟠 RISQUE MODÉRÉ
-- 30–49 : 🔴 RISQUE ÉLEVÉ
-- <30 : ❌ À ÉVITER
-
----
-
-# 🏗️ FORMAT DE RÉPONSE OBLIGATOIRE
-
-## 1. 📌 Résumé du projet
-
-## 2. 📍 Données extraites
-
-## 3. 🧠 Hypothèses utilisées
-
-## 4. 🏗️ Estimation des coûts
-- Construction :
-- Sous-sols :
-- Démolition :
-- Honoraires :
-- Imprévus :
-
----
-
-## 5. 💰 Analyse financière
-- Coût total projet :
-- Valeur de sortie :
-- Marge brute :
-- ROI :
-
----
-
-## 6. ⚠️ Analyse des risques
-
----
-
-## 7. 🧠 Investment Score (0–100)
-- Rentabilité :
-- Risque marché :
-- Risque construction :
-- Sécurité financière :
-- Qualité du deal :
-- SCORE FINAL :
-
----
-
-## 8. 📊 Conclusion investisseur
-- Statut : (EXCELLENT / BON / MOYEN / RISQUÉ / À ÉVITER)
-- Recommandation claire
-
----
-
-# ⚠️ RÈGLES IMPORTANTES
-- Toujours produire des chiffres cohérents
-- Toujours utiliser des hypothèses réalistes Israël
-- Toujours être structuré et professionnel
-- Ne jamais répondre vaguement
-- Le scoring doit toujours être calculé, jamais ignoré`
-
-function scoreColor(score: number): string {
-  if (score >= 80) return '#22c55e'
-  if (score >= 65) return '#eab308'
-  if (score >= 50) return '#f97316'
-  if (score >= 30) return '#ef4444'
-  return '#991b1b'
+function scoreColor(score: number) {
+  if (score >= 80) return { bar: '#22c55e', bg: '#f0fdf4', border: '#86efac', text: '#15803d' }
+  if (score >= 65) return { bar: '#f59e0b', bg: '#fffbeb', border: '#fcd34d', text: '#b45309' }
+  if (score >= 50) return { bar: '#f97316', bg: '#fff7ed', border: '#fdba74', text: '#c2410c' }
+  if (score >= 30) return { bar: '#ef4444', bg: '#fef2f2', border: '#fca5a5', text: '#b91c1c' }
+  return { bar: '#991b1b', bg: '#fef2f2', border: '#fca5a5', text: '#7f1d1d' }
 }
 
-function scoreLabel(score: number): string {
-  if (score >= 80) return '🟢 EXCELLENT'
-  if (score >= 65) return '🟡 BON'
-  if (score >= 50) return '🟠 MODÉRÉ'
-  if (score >= 30) return '🔴 RISQUÉ'
-  return '❌ À ÉVITER'
+function scoreLabel(score: number) {
+  if (score >= 80) return 'EXCELLENT'
+  if (score >= 65) return 'BON'
+  if (score >= 50) return 'MODÉRÉ'
+  if (score >= 30) return 'RISQUÉ'
+  return 'À ÉVITER'
 }
 
-function renderBold(text: string, key: string): React.ReactNode {
-  const parts = text.split(/(\*\*[^*]+\*\*)/)
-  if (parts.length === 1) return text
-  return (
-    <span key={key}>
-      {parts.map((p, i) =>
-        p.startsWith('**') && p.endsWith('**')
-          ? <strong key={i} style={{ color: '#1A3A5C', fontWeight: 700 }}>{p.slice(2, -2)}</strong>
-          : p
-      )}
-    </span>
-  )
+const SECTION_COLORS: Record<number, string> = {
+  1: '#1A3A5C', 2: '#1A3A5C', 3: '#1A3A5C',
+  4: '#7c3aed', 5: '#0369a1',
+  6: '#b45309', 7: '#C9A84C', 8: '#1A3A5C',
+}
+
+function cleanText(s: string) {
+  return s.replace(/\*\*/g, '').replace(/\*/g, '').trim()
 }
 
 function RenderOutput({ text }: { text: string }) {
   if (!text) return null
-  const lines = text.split('\n')
-  const nodes: React.ReactNode[] = []
 
-  lines.forEach((line, i) => {
-    const trimmed = line.trim()
+  type Block =
+    | { kind: 'section'; num: number; title: string }
+    | { kind: 'kv'; key: string; value: string }
+    | { kind: 'score_final'; score: number }
+    | { kind: 'statut'; value: string }
+    | { kind: 'bullet'; text: string }
+    | { kind: 'para'; text: string }
+    | { kind: 'spacer' }
 
-    if (!trimmed) {
-      nodes.push(<div key={`sp${i}`} className="h-1.5" />)
-      return
+  const blocks: Block[] = []
+  let currentSectionNum = 0
+
+  for (const raw of text.split('\n')) {
+    const line = raw.trim()
+
+    if (!line) { blocks.push({ kind: 'spacer' }); continue }
+    if (line === '---') continue
+
+    if (line.startsWith('## ')) {
+      const heading = line.slice(3).trim()
+      const numMatch = heading.match(/^(\d+)\.\s*(.+)/)
+      if (numMatch) {
+        currentSectionNum = parseInt(numMatch[1])
+        blocks.push({ kind: 'section', num: currentSectionNum, title: numMatch[2].trim() })
+      } else {
+        blocks.push({ kind: 'section', num: 0, title: heading })
+      }
+      continue
     }
 
-    if (trimmed === '---') {
-      nodes.push(<div key={i} className="border-t border-neutral-200 my-3" />)
-      return
-    }
-
-    if (trimmed.startsWith('## ')) {
-      const heading = trimmed.slice(3)
-      const isScore = heading.includes('Score') || heading.includes('score')
-      nodes.push(
-        <div key={i} className={`flex items-center gap-2 mt-5 mb-2 pb-1.5 border-b ${isScore ? 'border-amber-300' : 'border-neutral-200'}`}>
-          <h3 className="text-sm font-bold uppercase tracking-wide" style={{ color: isScore ? '#C9A84C' : '#1A3A5C' }}>
-            {heading}
-          </h3>
-        </div>
-      )
-      return
-    }
-
-    if (trimmed.startsWith('- ')) {
-      const content = trimmed.slice(2)
-
+    if (line.startsWith('- ') || line.startsWith('* ')) {
+      const content = cleanText(line.slice(2))
       const scoreMatch = content.match(/^SCORE FINAL\s*:\s*(\d+)/i)
-      if (scoreMatch) {
-        const score = parseInt(scoreMatch[1])
-        const col = scoreColor(score)
-        nodes.push(
-          <div key={i} className="my-3 p-4 rounded-xl flex items-center gap-5" style={{ background: '#f9f8f6', border: `2px solid ${col}` }}>
-            <div className="text-5xl font-extrabold tabular-nums" style={{ color: col }}>{score}</div>
-            <div>
-              <div className="text-xs text-neutral-400 uppercase tracking-wide mb-1">Investment Score / 100</div>
-              <div className="text-lg font-bold" style={{ color: col }}>{scoreLabel(score)}</div>
-              <div className="mt-2 h-2 rounded-full bg-neutral-200 w-36 overflow-hidden">
-                <div className="h-full rounded-full" style={{ width: `${score}%`, background: col }} />
-              </div>
-            </div>
-          </div>
-        )
-        return
-      }
-
-      const statutMatch = content.match(/^Statut\s*:\s*(.+)/i)
-      if (statutMatch) {
-        const statut = statutMatch[1].trim().replace(/[()]/g, '').trim()
-        const isEx  = /EXCELLENT/i.test(statut)
-        const isBon = /^BON/i.test(statut)
-        const isMod = /MOYEN|MODÉR/i.test(statut)
-        const isRisk = /RISQUÉ/i.test(statut)
-        const bg = isEx ? '#dcfce7' : isBon ? '#fef9c3' : isMod ? '#ffedd5' : isRisk ? '#fee2e2' : '#fecaca'
-        const fg = isEx ? '#15803d' : isBon ? '#a16207' : isMod ? '#c2410c' : isRisk ? '#b91c1c' : '#7f1d1d'
-        nodes.push(
-          <span key={i} className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold mt-1 mb-1" style={{ background: bg, color: fg }}>
-            {statut}
-          </span>
-        )
-        return
-      }
+      if (scoreMatch) { blocks.push({ kind: 'score_final', score: parseInt(scoreMatch[1]) }); continue }
 
       const colonIdx = content.indexOf(':')
-      if (colonIdx > 0 && colonIdx < 50) {
+      if (colonIdx > 0 && colonIdx < 55) {
         const k = content.slice(0, colonIdx).trim()
         const v = content.slice(colonIdx + 1).trim()
         if (v) {
-          const isMonetary = /₪|NIS|M₪/.test(v)
-          const isPct = v.includes('%')
-          nodes.push(
-            <div key={i} className="flex justify-between items-start py-1.5 text-sm border-b border-neutral-100 gap-3">
-              <span className="text-neutral-500 shrink-0">{renderBold(k, `k${i}`)}</span>
-              <span className="font-semibold text-right" style={{ color: isMonetary ? '#C9A84C' : isPct ? '#1A3A5C' : '#334155' }}>
-                {renderBold(v, `v${i}`)}
-              </span>
-            </div>
-          )
-          return
+          if (/^Statut$/i.test(k)) {
+            blocks.push({ kind: 'statut', value: v.replace(/[()[\]/]/g, '').trim() })
+          } else {
+            blocks.push({ kind: 'kv', key: k, value: v })
+          }
+          continue
         }
       }
+      blocks.push({ kind: 'bullet', text: content })
+      continue
+    }
 
+    blocks.push({ kind: 'para', text: cleanText(line) })
+  }
+
+  // group consecutive kv blocks inside the same section into cards
+  type GroupedBlock =
+    | Block
+    | { kind: 'kv_group'; items: { key: string; value: string }[]; sectionNum: number }
+
+  const grouped: GroupedBlock[] = []
+  let i = 0
+  while (i < blocks.length) {
+    const b = blocks[i]
+    if (b.kind === 'kv') {
+      const group: { key: string; value: string }[] = []
+      while (i < blocks.length && blocks[i].kind === 'kv') {
+        const kv = blocks[i] as { kind: 'kv'; key: string; value: string }
+        group.push({ key: kv.key, value: kv.value })
+        i++
+      }
+      grouped.push({ kind: 'kv_group', items: group, sectionNum: currentSectionNum })
+    } else {
+      grouped.push(b)
+      i++
+    }
+  }
+
+  const nodes: React.ReactNode[] = []
+  let sectionNum = 0
+
+  grouped.forEach((block, idx) => {
+    if (block.kind === 'spacer') {
+      nodes.push(<div key={idx} className="h-1" />)
+      return
+    }
+
+    if (block.kind === 'section') {
+      sectionNum = block.num
+      const col = SECTION_COLORS[sectionNum] ?? '#1A3A5C'
+      const isScore = sectionNum === 7
       nodes.push(
-        <div key={i} className="flex items-start gap-2 py-0.5 text-sm text-neutral-700">
-          <span className="mt-0.5 shrink-0 text-xs" style={{ color: '#C9A84C' }}>▸</span>
-          <span>{renderBold(content, `b${i}`)}</span>
+        <div key={idx} className="flex items-center gap-3 mt-6 mb-3">
+          {block.num > 0 && (
+            <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-bold shrink-0"
+              style={{ background: col }}>{block.num}</span>
+          )}
+          <h3 className="text-xs font-bold uppercase tracking-widest"
+            style={{ color: isScore ? '#C9A84C' : col }}>
+            {block.title}
+          </h3>
+          <div className="flex-1 h-px" style={{ background: isScore ? '#fde68a' : '#e5e7eb' }} />
         </div>
       )
       return
     }
 
-    nodes.push(
-      <p key={i} className="text-sm text-neutral-700 leading-relaxed my-0.5">
-        {renderBold(trimmed, `p${i}`)}
-      </p>
-    )
+    if (block.kind === 'kv_group') {
+      const isFinance   = [4,5].includes(sectionNum)
+      const isScore7    = sectionNum === 7
+      nodes.push(
+        <div key={idx} className="rounded-lg overflow-hidden mb-3 border border-neutral-100">
+          {block.items.map((item, j) => {
+            const isMonetary = /NIS|₪|M₪|\d.*NIS/.test(item.value)
+            const isPct      = item.value.includes('%')
+            const isLast     = j === block.items.length - 1
+            const scorePartMatch = item.value.match(/^(\d+)\/(\d+)$/)
+            return (
+              <div key={j} className={`flex items-start justify-between px-3 py-2 text-sm gap-4 ${!isLast ? 'border-b border-neutral-100' : ''} ${j % 2 === 0 ? 'bg-white' : 'bg-neutral-50/60'}`}>
+                <span className="text-neutral-500 text-xs shrink-0 pt-0.5 min-w-0">{item.key}</span>
+                {scorePartMatch ? (
+                  <span className="flex items-center gap-1.5 font-semibold text-xs" style={{ color: '#C9A84C' }}>
+                    <span className="text-base font-bold">{scorePartMatch[1]}</span>
+                    <span className="text-neutral-400">/ {scorePartMatch[2]}</span>
+                  </span>
+                ) : (
+                  <span className="font-semibold text-right text-xs"
+                    style={{ color: isMonetary && isFinance ? '#C9A84C' : isPct ? '#1A3A5C' : isScore7 ? '#C9A84C' : '#1e293b' }}>
+                    {item.value}
+                  </span>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )
+      return
+    }
+
+    if (block.kind === 'score_final') {
+      const c = scoreColor(block.score)
+      nodes.push(
+        <div key={idx} className="my-4 p-4 rounded-xl" style={{ background: c.bg, border: `1.5px solid ${c.border}` }}>
+          <div className="flex items-center gap-4">
+            <div className="text-center">
+              <div className="text-5xl font-black tabular-nums leading-none" style={{ color: c.bar }}>{block.score}</div>
+              <div className="text-xs text-neutral-400 mt-1">/ 100</div>
+            </div>
+            <div className="flex-1">
+              <div className="text-xs text-neutral-400 uppercase tracking-widest mb-1">Investment Score</div>
+              <div className="text-lg font-bold mb-2" style={{ color: c.text }}>{scoreLabel(block.score)}</div>
+              <div className="h-2 rounded-full bg-white/70 overflow-hidden">
+                <div className="h-full rounded-full transition-all" style={{ width: `${block.score}%`, background: c.bar }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+      return
+    }
+
+    if (block.kind === 'statut') {
+      const v   = block.value.toUpperCase()
+      const isEx = v.includes('EXCELLENT')
+      const isBon = v.startsWith('BON')
+      const isMod = /MODERE|MODERÉ/.test(v)
+      const isRisk = v.includes('RISQUE') && !isMod
+      const bg = isEx ? '#dcfce7' : isBon ? '#fef9c3' : isMod ? '#ffedd5' : isRisk ? '#fee2e2' : '#fef2f2'
+      const fg = isEx ? '#15803d' : isBon ? '#a16207' : isMod ? '#c2410c' : '#b91c1c'
+      nodes.push(
+        <div key={idx} className="my-2">
+          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold tracking-wide" style={{ background: bg, color: fg }}>
+            {block.value}
+          </span>
+        </div>
+      )
+      return
+    }
+
+    if (block.kind === 'bullet') {
+      nodes.push(
+        <div key={idx} className="flex items-start gap-2.5 py-1 text-sm text-neutral-700">
+          <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: '#C9A84C' }} />
+          <span className="leading-relaxed">{block.text}</span>
+        </div>
+      )
+      return
+    }
+
+    if (block.kind === 'para') {
+      nodes.push(
+        <p key={idx} className="text-sm text-neutral-600 leading-relaxed my-1">{block.text}</p>
+      )
+    }
   })
 
-  return <div className="space-y-0.5">{nodes}</div>
+  return <div>{nodes}</div>
 }
 
 export function AgentTab() {
