@@ -8,9 +8,9 @@ const DEFAULT_QUARTIER = Object.keys(VILLES['tlv'].quartiers)[0]
 
 const DEFAULT_EQ: Equipements = {
   ascenseur: false,
-  parking:   true,
+  parking:   false,   // géré par nbParkings — évite le double comptage
   mamad:     true,
-  terrasse:  false,
+  terrasse:  false,   // géré par nbBalcons — évite le double comptage
   vueMer:    false,
   vueDeg:    false,
   gardien:   false,
@@ -20,14 +20,21 @@ const DEFAULT_EQ: Equipements = {
 
 export function useEstimation() {
   const [inputs, setInputs] = useState<EstimationInputs>({
-    ville:          DEFAULT_VILLE,
-    quartier:       DEFAULT_QUARTIER,
-    distanceMer:    3,
-    distanceTransp: 5,
-    typeProjet:     1.00,
-    surface:        80,
-    etage:          5,
-    equipements:    DEFAULT_EQ,
+    ville:             DEFAULT_VILLE,
+    quartier:          DEFAULT_QUARTIER,
+    distanceMer:       3,
+    distanceTransp:    5,
+    typeProjet:        1.00,
+    surface:           80,
+    etage:             5,
+    equipements:       DEFAULT_EQ,
+    // ── Nouveaux champs Nadlan/Yadata ──
+    typeBien:          'dira',
+    etatBien:          'correct',
+    nbPieces:          3,
+    nbBalcons:         0,
+    nbParkings:        0,
+    anneeConstruction: 2000,
   })
 
   const result = useMemo(() => calcEstimation(inputs), [inputs])

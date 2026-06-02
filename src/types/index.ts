@@ -13,14 +13,21 @@ export interface Equipements {
 }
 
 export interface EstimationInputs {
-  ville:          string
-  quartier:       string
-  distanceMer:    number
-  distanceTransp: number
-  typeProjet:     number
-  surface:        number
-  etage:          number
-  equipements:    Equipements
+  ville:               string
+  quartier:            string
+  distanceMer:         number
+  distanceTransp:      number
+  typeProjet:          number
+  surface:             number
+  etage:               number
+  equipements:         Equipements
+  // ── Nouveaux champs (moteur Nadlan/Yadata) ──
+  typeBien:            string
+  etatBien:            string
+  nbPieces:            number
+  nbBalcons:           number
+  nbParkings:          number
+  anneeConstruction:   number
 }
 
 export interface EstimationResult {

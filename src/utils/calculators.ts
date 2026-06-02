@@ -1,4 +1,8 @@
-import { coefEtage, coefMer, coefSurface, coefTransport, EQUIPEMENTS } from '../data/coefficients'
+import {
+  coefEtage, coefMer, coefSurface, coefTransport, EQUIPEMENTS,
+  coefPieces, coefBalcon, coefParking, coefAnneeConstruction,
+  TYPES_BIEN, ETATS_BIEN,
+} from '../data/coefficients'
 import { ACCORDS_MUNICIPAUX, STATUTS_PERMIS, STATUTS_PLAN } from '../data/accords'
 import { VILLES } from '../data/villes'
 import type {
@@ -18,39 +22,79 @@ export function calcEstimation(inputs: EstimationInputs): EstimationResult | nul
   if (!quartier) return null
 
   const base = quartier.prixMoyen
-  const cs   = coefSurface(inputs.surface)
-  const cm   = coefMer(inputs.distanceMer)
-  const ct   = coefTransport(inputs.distanceTransp)
-  const ce   = coefEtage(inputs.etage)
-  const tp   = inputs.typeProjet
 
-  let cq = 1.0
+  // ── Coefficients existants ────────────────────────────────────────────────
+  const cTypeProg  = inputs.typeProjet
+  const cSurface   = coefSurface(inputs.surface)
+  const cMer       = coefMer(inputs.distanceMer)
+  const cTransport = coefTransport(inputs.distanceTransp)
+  const cEtage     = coefEtage(inputs.etage)
+
+  let cEquip = 1.0
   for (const eq of EQUIPEMENTS) {
     if (inputs.equipements[eq.key as keyof typeof inputs.equipements]) {
-      cq += eq.bonus
+      cEquip += eq.bonus
     }
   }
 
-  const coefTotal = tp * cs * cm * ct * ce * cq
+  // ── Nouveaux coefficients ─────────────────────────────────────────────────
+  const typeBienDef = TYPES_BIEN.find(t => t.value === inputs.typeBien)
+  const cTypeBien   = typeBienDef ? typeBienDef.coef : 1.00
 
+  const etatDef = ETATS_BIEN.find(e => e.value === inputs.etatBien)
+  const cEtat   = etatDef ? etatDef.coef : 1.00
+
+  const cPieces = inputs.nbPieces != null ? coefPieces(inputs.nbPieces) : 1.00
+  const cBalcon = inputs.nbBalcons != null ? coefBalcon(inputs.nbBalcons) : 1.00
+  const cParking = inputs.nbParkings != null ? coefParking(inputs.nbParkings) : 1.00
+  const cAnnee  = inputs.anneeConstruction ? coefAnneeConstruction(inputs.anneeConstruction) : 1.00
+
+  // Retire le bonus parking de l'ancien système si nbParkings est renseigné
+  // (évite le double comptage)
+  const cEquipFinal = inputs.nbParkings != null && inputs.equipements.parking
+    ? cEquip - 0.10
+    : cEquip
+
+  // ── Coefficient total ─────────────────────────────────────────────────────
+  const coefTotal =
+    cTypeProg
+    * cTypeBien
+    * cSurface
+    * cMer
+    * cTransport
+    * cEtage
+    * cEquipFinal
+    * cEtat
+    * cPieces
+    * cBalcon
+    * cParking
+    * cAnnee
+
+  const prixM2    = Math.round(base * coefTotal)
+  const prixTotal = Math.round(prixM2 * inputs.surface)
+
+  // ── Waterfall (filtre les coefs neutres = 1.00) ───────────────────────────
   const steps: { label: string; coef: number }[] = [
-    { label: 'Base quartier',    coef: 1   },
-    { label: 'Type programme',   coef: tp  },
-    { label: 'Surface',          coef: cs  },
-    { label: 'Proximité mer',    coef: cm  },
-    { label: 'Transports',       coef: ct  },
-    { label: 'Étage',            coef: ce  },
-    { label: 'Équipements',      coef: cq  },
-  ]
+    { label: 'Base quartier',      coef: 1          },
+    { label: 'Type programme',     coef: cTypeProg  },
+    { label: 'Type de bien',       coef: cTypeBien  },
+    { label: 'Surface',            coef: cSurface   },
+    { label: 'État du bien',       coef: cEtat      },
+    { label: 'Nombre de pièces',   coef: cPieces    },
+    { label: 'Proximité mer',      coef: cMer       },
+    { label: 'Transports',         coef: cTransport },
+    { label: 'Étage',              coef: cEtage     },
+    { label: 'Balcon / terrasse',  coef: cBalcon    },
+    { label: 'Parking',            coef: cParking   },
+    { label: 'Équipements',        coef: cEquipFinal},
+    { label: 'Année construction', coef: cAnnee     },
+  ].filter(s => s.coef !== 1.00 || s.label === 'Base quartier')
 
   let running = base
   const waterfall: WaterfallStep[] = steps.map((s, i) => {
     if (i > 0) running = Math.round(running * s.coef)
     return { label: s.label, coef: s.coef, prixCumul: Math.round(running) }
   })
-
-  const prixM2    = Math.round(base * coefTotal)
-  const prixTotal = Math.round(prixM2 * inputs.surface)
 
   return { prixM2, prixTotal, coefTotal, waterfall }
 }
