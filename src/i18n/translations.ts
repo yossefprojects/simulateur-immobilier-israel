@@ -12,6 +12,7 @@ export const translations = {
       investisseur: 'Analyse investisseur',
       promoteur:    'Bilan promoteur',
       fiscalite:    'Fiscalité',
+      travaux:      'Coût des travaux',
     },
     market: {
       date:         'Marché au',
@@ -239,6 +240,7 @@ export const translations = {
       investisseur: 'Investor analysis',
       promoteur:    "Developer P&L",
       fiscalite:    'Taxation',
+      travaux:      'Renovation costs',
     },
     market: {
       date:         'Market as of',
@@ -466,6 +468,7 @@ export const translations = {
       investisseur: 'ניתוח למשקיע',
       promoteur:    'מאזן יזם',
       fiscalite:    'מיסוי',
+      travaux:      'עלות שיפוץ',
     },
     market: {
       date:         'שוק נכון ל',

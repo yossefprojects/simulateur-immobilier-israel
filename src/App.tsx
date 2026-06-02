@@ -4,6 +4,7 @@ import { EstimationTab }  from './components/EstimationTab'
 import { UrbanismeTab }   from './components/UrbanismeTab'
 import { InvestisseurTab, PromoteurTab } from './components/FinanceTab'
 import { FiscaliteTab }   from './components/FiscaliteTab'
+import { TravauxTab }     from './components/TravauxTab'
 import { MarketBanner }   from './components/MarketBanner'
 import { Footer }         from './components/Footer'
 import { useLang }        from './i18n/LanguageContext'
@@ -13,7 +14,7 @@ import { exportPDF }      from './utils/pdfExport'
 import { exporterExcel }  from './utils/exportExcel'
 import { lireScenarios, supprimerScenario, sauvegarderScenario, Scenario } from './utils/scenarios'
 
-type Tab = 'estimation' | 'urbanisme' | 'investisseur' | 'promoteur' | 'fiscalite'
+type Tab = 'estimation' | 'urbanisme' | 'investisseur' | 'promoteur' | 'fiscalite' | 'travaux'
 
 const LANGS: { key: Lang; label: string }[] = [
   { key: 'fr', label: 'FR' },
@@ -219,12 +220,57 @@ const BannerFiscalite = () => (
   </svg>
 )
 
+const BannerTravaux = () => (
+  <svg width="100%" viewBox="0 0 680 120" preserveAspectRatio="xMidYMid slice" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+    <rect width="680" height="120" fill="#0C1E30"/>
+    <rect x="40"  y="30" width="180" height="80" rx="3" fill="#112840" stroke="#2A5080" strokeWidth="1"/>
+    <rect x="40"  y="30" width="180" height="18" rx="3" fill="#1A3A5C"/>
+    <text x="130" y="44" fontFamily="monospace" fontSize="9" fill="#C9A84C" textAnchor="middle" fontWeight="bold">DEVIS KABLAN</text>
+    <rect x="52" y="58" width="50" height="2.5" rx="1" fill="#2A5080"/>
+    <rect x="52" y="64" width="80" height="2.5" rx="1" fill="#2A5080"/>
+    <rect x="52" y="70" width="65" height="2.5" rx="1" fill="#2A5080"/>
+    <rect x="52" y="76" width="90" height="2.5" rx="1" fill="#2A5080"/>
+    <rect x="52" y="82" width="55" height="2.5" rx="1" fill="#2A5080"/>
+    <text x="130" y="102" fontFamily="monospace" fontSize="11" fill="#C9A84C" textAnchor="middle" fontWeight="bold">₪ 320,000</text>
+    <line x1="240" y1="25" x2="240" y2="115" stroke="#1A3A5C" strokeWidth="1.5" strokeDasharray="4,3" opacity=".6"/>
+    <line x1="255" y1="25" x2="255" y2="115" stroke="#1A3A5C" strokeWidth="1.5" strokeDasharray="4,3" opacity=".4"/>
+    <rect x="270" y="20" width="6" height="90" fill="#C9A84C" opacity=".7"/>
+    <rect x="280" y="35" width="6" height="75" fill="#C9A84C" opacity=".5"/>
+    <rect x="290" y="25" width="6" height="85" fill="#2A5080" opacity=".8"/>
+    <rect x="300" y="45" width="6" height="65" fill="#C9A84C" opacity=".6"/>
+    <rect x="310" y="30" width="6" height="80" fill="#2A5080" opacity=".7"/>
+    <rect x="320" y="55" width="6" height="55" fill="#C9A84C" opacity=".4"/>
+    <rect x="330" y="40" width="6" height="70" fill="#C9A84C" opacity=".8"/>
+    <text x="300" y="115" fontFamily="monospace" fontSize="7" fill="#C9A84C" opacity=".6" textAnchor="middle">postes</text>
+    <rect x="360" y="15" width="280" height="90" rx="4" fill="none" stroke="#1A3A5C" strokeWidth=".8" opacity=".5"/>
+    <text x="370" y="30" fontFamily="monospace" fontSize="8" fill="#C9A84C" opacity=".8">🍳 Cuisine</text>
+    <rect x="430" y="22" width="80" height="5" rx="2" fill="#C9A84C" opacity=".25"/>
+    <rect x="430" y="22" width="64" height="5" rx="2" fill="#C9A84C" opacity=".6"/>
+    <text x="516" y="28" fontFamily="monospace" fontSize="7" fill="#C9A84C">20%</text>
+    <text x="370" y="45" fontFamily="monospace" fontSize="8" fill="#85B7EB" opacity=".8">🚿 SDB</text>
+    <rect x="430" y="37" width="80" height="5" rx="2" fill="#85B7EB" opacity=".2"/>
+    <rect x="430" y="37" width="48" height="5" rx="2" fill="#85B7EB" opacity=".5"/>
+    <text x="516" y="43" fontFamily="monospace" fontSize="7" fill="#85B7EB">15%</text>
+    <text x="370" y="60" fontFamily="monospace" fontSize="8" fill="#C9A84C" opacity=".8">🪵 Revêtements</text>
+    <rect x="430" y="52" width="80" height="5" rx="2" fill="#C9A84C" opacity=".2"/>
+    <rect x="430" y="52" width="58" height="5" rx="2" fill="#C9A84C" opacity=".5"/>
+    <text x="516" y="58" fontFamily="monospace" fontSize="7" fill="#C9A84C">18%</text>
+    <text x="370" y="75" fontFamily="monospace" fontSize="8" fill="#85B7EB" opacity=".8">⚡ Électricité</text>
+    <rect x="430" y="67" width="80" height="5" rx="2" fill="#85B7EB" opacity=".2"/>
+    <rect x="430" y="67" width="38" height="5" rx="2" fill="#85B7EB" opacity=".4"/>
+    <text x="516" y="73" fontFamily="monospace" fontSize="7" fill="#85B7EB">12%</text>
+    <text x="370" y="90" fontFamily="monospace" fontSize="8" fill="#C9A84C" opacity=".5">🔧 🚪 🖌️ ...</text>
+    <rect x="0" y="110" width="680" height="10" fill="#081624"/>
+  </svg>
+)
+
 const TAB_BANNERS: Record<Tab, React.ReactNode> = {
   estimation:   <BannerEstimation />,
   urbanisme:    <BannerUrbanisme />,
   investisseur: <BannerInvestisseur />,
   promoteur:    <BannerPromoteur />,
   fiscalite:    <BannerFiscalite />,
+  travaux:      <BannerTravaux />,
 }
 
 // ── App ────────────────────────────────────────────────────────────────────────
@@ -249,6 +295,7 @@ export default function App() {
     { key: 'investisseur', label: t.tabs.investisseur  },
     { key: 'promoteur',    label: t.tabs.promoteur     },
     { key: 'fiscalite',    label: t.tabs.fiscalite     },
+    { key: 'travaux',      label: t.tabs.travaux       },
   ]
 
   const showToast = useCallback((msg: string) => setToast(msg), [])
@@ -314,7 +361,7 @@ export default function App() {
   }
 
   const handleTabKey = useCallback((e: React.KeyboardEvent, idx: number) => {
-    const keys = ['estimation','urbanisme','investisseur','promoteur','fiscalite'] as Tab[]
+    const keys = ['estimation','urbanisme','investisseur','promoteur','fiscalite','travaux'] as Tab[]
     if (e.key === 'ArrowRight') { e.preventDefault(); setActive(keys[Math.min(idx+1, keys.length-1)]) }
     if (e.key === 'ArrowLeft')  { e.preventDefault(); setActive(keys[Math.max(idx-1, 0)]) }
     if (e.key === 'Home')       { e.preventDefault(); setActive(keys[0]) }
@@ -331,6 +378,9 @@ export default function App() {
     fiscalite:    lang==='fr' ? 'Mas Rechisha · Mas Shevach · Arnona'
                 : lang==='en' ? 'Purchase tax · Capital gains · Property tax'
                 :               'מס רכישה · מס שבח · ארנונה',
+    travaux:      lang==='fr' ? 'AllBatim · Deal Estate · Kablay · Marshanski 2025–2026'
+                : lang==='en' ? 'AllBatim · Deal Estate · Kablay · Marshanski 2025–2026'
+                :               'AllBatim · Deal Estate · Kablay · Marshanski 2025–2026',
   }
 
   return (
@@ -429,6 +479,7 @@ export default function App() {
         <div className={active === 'investisseur' ? 'tab-content' : 'hidden'}><InvestisseurTab /></div>
         <div className={active === 'promoteur'    ? 'tab-content' : 'hidden'}><PromoteurTab /></div>
         <div className={active === 'fiscalite'    ? 'tab-content' : 'hidden'}><FiscaliteTab /></div>
+        <div className={active === 'travaux'      ? 'tab-content' : 'hidden'}><TravauxTab /></div>
       </main>
 
       <Footer />
