@@ -101,12 +101,13 @@ export const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children
 interface ResultBoxProps {
   main:    string
   sub:     string
+  label?:  string
   badges?: { text: string; color: string }[]
 }
 
-export const ResultBox: React.FC<ResultBoxProps> = ({ main, sub, badges }) => (
+export const ResultBox: React.FC<ResultBoxProps> = ({ main, sub, label, badges }) => (
   <div className="bg-neutral-50 rounded-xl p-4 mb-4 border border-neutral-100">
-    <div className="text-xs text-neutral-500 mb-1">Prix estimé</div>
+    {label && <div className="text-xs text-neutral-500 mb-1">{label}</div>}
     <div className="font-display text-4xl font-semibold tabular-nums text-primary">{main}</div>
     <div className="text-sm text-neutral-500 mt-1">{sub}</div>
     {badges && (

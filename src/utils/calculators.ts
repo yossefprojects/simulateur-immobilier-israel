@@ -74,21 +74,22 @@ export function calcEstimation(inputs: EstimationInputs): EstimationResult | nul
   const prixTotal = Math.round(prixM2 * inputs.surface)
 
   // ── Waterfall (filtre les coefs neutres = 1.00) ───────────────────────────
+  // Les labels sont des clés de traduction (wf*) → traduits dans EstimationTab
   const steps: { label: string; coef: number }[] = [
-    { label: 'Base quartier',      coef: 1          },
-    { label: 'Type programme',     coef: cTypeProg  },
-    { label: 'Type de bien',       coef: cTypeBien  },
-    { label: 'Surface',            coef: cSurface   },
-    { label: 'État du bien',       coef: cEtat      },
-    { label: 'Nombre de pièces',   coef: cPieces    },
-    { label: 'Proximité mer',      coef: cMer       },
-    { label: 'Transports',         coef: cTransport },
-    { label: 'Étage',              coef: cEtage     },
-    { label: 'Balcon / terrasse',  coef: cBalcon    },
-    { label: 'Parking',            coef: cParking   },
-    { label: 'Équipements',        coef: cEquipFinal},
-    { label: 'Année construction', coef: cAnnee     },
-  ].filter(s => s.coef !== 1.00 || s.label === 'Base quartier')
+    { label: 'wfBaseQuartier', coef: 1          },
+    { label: 'wfTypeProg',     coef: cTypeProg  },
+    { label: 'wfTypeBien',     coef: cTypeBien  },
+    { label: 'wfSurface',      coef: cSurface   },
+    { label: 'wfEtatBien',     coef: cEtat      },
+    { label: 'wfPieces',       coef: cPieces    },
+    { label: 'wfMer',          coef: cMer       },
+    { label: 'wfTransport',    coef: cTransport },
+    { label: 'wfEtage',        coef: cEtage     },
+    { label: 'wfBalcon',       coef: cBalcon    },
+    { label: 'wfParking',      coef: cParking   },
+    { label: 'wfEquipements',  coef: cEquipFinal},
+    { label: 'wfAnnee',        coef: cAnnee     },
+  ].filter(s => s.coef !== 1.00 || s.label === 'wfBaseQuartier')
 
   let running = base
   const waterfall: WaterfallStep[] = steps.map((s, i) => {

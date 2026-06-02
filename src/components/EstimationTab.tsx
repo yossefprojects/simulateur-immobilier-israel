@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { EQUIPEMENTS, TYPES_PROJET, TYPES_BIEN, ETATS_BIEN } from '../data/coefficients'
+import { EQUIPEMENTS, TYPES_PROJET } from '../data/coefficients'
 import { VILLES } from '../data/villes'
 import type { Equipements } from '../types'
 import { fmt, fmtM } from '../utils/formatters'
@@ -11,9 +11,26 @@ import { Tooltip } from './Tooltip'
 
 const PROJ_KEYS = ['residClassique','residLuxe','programmeNeuf','tama38','pb','mixte'] as const
 
-// Equipements que l'on affiche toujours comme checkbox
-// (parking et terrasse sont remplacés par des sliders dédiés)
+// Équipements affichés comme checkbox (parking et terrasse gérés par sliders)
 const EQUIP_DISPLAY_KEYS = ['ascenseur','mamad','vueMer','vueDeg','gardien','piscine','gym']
+
+// Mapping value → clé typesBien dans translations
+const TYPES_BIEN_TKEYS: Record<string, 'dira' | 'diratGan' | 'penthouse' | 'cottage' | 'studio'> = {
+  dira:      'dira',
+  dirat_gan: 'diratGan',
+  penthouse: 'penthouse',
+  cottage:   'cottage',
+  studio:    'studio',
+}
+
+// Mapping value → clé etatsBien dans translations
+const ETATS_BIEN_TKEYS: Record<string, 'neufPromoteur' | 'commeNeuf' | 'renove' | 'correct' | 'aRenover'> = {
+  neuf_promoteur: 'neufPromoteur',
+  comme_neuf:     'commeNeuf',
+  renove:         'renove',
+  correct:        'correct',
+  a_renover:      'aRenover',
+}
 
 export const EstimationTab: React.FC = () => {
   const { inputs, result, set, setVille, toggleEquip } = useEstimation()
@@ -27,8 +44,24 @@ export const EstimationTab: React.FC = () => {
   const quartierOptions    = Object.keys(VILLES[inputs.ville]?.quartiers ?? {}).map(q => ({ value: q, label: q }))
   const villeOptions       = Object.entries(VILLES).map(([k, v]) => ({ value: k, label: v.label }))
   const typesProjetOptions = TYPES_PROJET.map((tp, i) => ({ value: tp.value, label: t.typesProjet[PROJ_KEYS[i]] }))
-  const typesBienOptions   = TYPES_BIEN.map(tb => ({ value: tb.value, label: tb.label }))
-  const etatsOptions       = ETATS_BIEN.map(e  => ({ value: e.value,  label: e.label  }))
+
+  // Options types de bien traduites
+  const typesBienOptions = [
+    { value: 'dira',      label: t.typesBien.dira      },
+    { value: 'dirat_gan', label: t.typesBien.diratGan  },
+    { value: 'penthouse', label: t.typesBien.penthouse  },
+    { value: 'cottage',   label: t.typesBien.cottage    },
+    { value: 'studio',    label: t.typesBien.studio     },
+  ]
+
+  // Options états du bien traduites
+  const etatsOptions = [
+    { value: 'neuf_promoteur', label: t.etatsBien.neufPromoteur },
+    { value: 'comme_neuf',     label: t.etatsBien.commeNeuf     },
+    { value: 'renove',         label: t.etatsBien.renove         },
+    { value: 'correct',        label: t.etatsBien.correct        },
+    { value: 'a_renover',      label: t.etatsBien.aRenover       },
+  ]
 
   const equipLabels: Record<string, string> = {
     ascenseur: t.equipements.ascenseur,
@@ -40,9 +73,17 @@ export const EstimationTab: React.FC = () => {
     gym:       t.equipements.gym,
   }
 
-  const piecesDisplay = inputs.nbPieces <= 1 ? 'Studio' : `${inputs.nbPieces} pièces`
-  const balconDisplay = inputs.nbBalcons === 0 ? 'Aucun' : `${inputs.nbBalcons} balcon(s)`
-  const parkingDisplay = inputs.nbParkings === 0 ? 'Aucun' : `${inputs.nbParkings} place(s)`
+  const piecesDisplay  = inputs.nbPieces  <= 1 ? te.studio : `${inputs.nbPieces} ${te.pieces}`
+  const balconDisplay  = inputs.nbBalcons  === 0 ? te.aucun : `${inputs.nbBalcons} ${te.pieces === 'rooms' ? 'balcon(s)' : inputs.nbPieces <= 1 ? te.aucun : 'balcon(s)'}`
+  const parkingDisplay = inputs.nbParkings === 0 ? te.aucun : `${inputs.nbParkings} ${te.placeUnit}`
+
+  // Waterfall : traduit la clé wf* vers le texte de la langue courante
+  const wfTrans = te as Record<string, string>
+  const wfLabel = (key: string) => wfTrans[key] || key
+
+  const balconDisplayFinal = inputs.nbBalcons === 0
+    ? te.aucun
+    : `${inputs.nbBalcons} balcon(s)`
 
   return (
     <div className="grid md:grid-cols-2 gap-6">
@@ -79,11 +120,11 @@ export const EstimationTab: React.FC = () => {
         </div>
 
         {/* Type de bien */}
-        <SelectField label="Type de bien" value={inputs.typeBien} options={typesBienOptions}
+        <SelectField label={te.typeBien} value={inputs.typeBien} options={typesBienOptions}
           onChange={v => set('typeBien', v)} />
 
         {/* État du bien */}
-        <SelectField label="État du bien" value={inputs.etatBien} options={etatsOptions}
+        <SelectField label={te.etatBien} value={inputs.etatBien} options={etatsOptions}
           onChange={v => set('etatBien', v)} />
 
         {/* Surface + étage */}
@@ -95,22 +136,22 @@ export const EstimationTab: React.FC = () => {
           onChange={v => set('etage', v)} />
 
         {/* Nombre de pièces */}
-        <SliderField label="Nombre de pièces (חדרים)" min={1} max={7} step={0.5}
+        <SliderField label={te.nbPieces} min={1} max={7} step={0.5}
           value={inputs.nbPieces} display={piecesDisplay}
           onChange={v => set('nbPieces', v)} />
 
         {/* Balcon / terrasse */}
-        <SliderField label="Balcon / terrasse (מרפסת)" min={0} max={3} step={1}
-          value={inputs.nbBalcons} display={balconDisplay}
+        <SliderField label={te.balcon} min={0} max={3} step={1}
+          value={inputs.nbBalcons} display={balconDisplayFinal}
           onChange={v => set('nbBalcons', v)} />
 
         {/* Parking */}
-        <SliderField label="Parking (חנייה)" min={0} max={2} step={1}
+        <SliderField label={te.parkingLabel} min={0} max={2} step={1}
           value={inputs.nbParkings} display={parkingDisplay}
           onChange={v => set('nbParkings', v)} />
 
         {/* Année de construction */}
-        <SliderField label="Année de construction" min={1950} max={2025} step={5}
+        <SliderField label={te.anneeConstr} min={1950} max={2025} step={5}
           value={inputs.anneeConstruction} display={String(inputs.anneeConstruction)}
           onChange={v => set('anneeConstruction', v)} />
 
@@ -139,6 +180,7 @@ export const EstimationTab: React.FC = () => {
           <>
             <ResultBox
               main={fmtM(result.prixTotal)}
+              label={te.prixEstime}
               sub={`${te.fourchette} : ${fmtM(Math.round(result.prixTotal * 0.92))} – ${fmtM(Math.round(result.prixTotal * 1.08))}`}
               badges={[
                 { text: fmt(result.prixM2) + ' ₪/' + te.m2,              color: 'bg-blue-50 text-blue-800' },
@@ -154,7 +196,7 @@ export const EstimationTab: React.FC = () => {
                 const colorClass = i === 0 ? 'bg-neutral-300' : step.coef > 1 ? 'bg-success' : step.coef < 1 ? 'bg-warning' : 'bg-neutral-300'
                 return (
                   <div key={i} className="flex items-center gap-2 text-xs">
-                    <div className="w-36 text-neutral-500 shrink-0 truncate">{step.label}</div>
+                    <div className="w-36 text-neutral-500 shrink-0 truncate">{wfLabel(step.label)}</div>
                     <div className="flex-1 h-2 bg-neutral-100 rounded-full overflow-hidden">
                       <div className={`h-full rounded-full waterfall-bar ${colorClass}`}
                         style={{ width: `${Math.min(pct, 100)}%`, opacity: 0.45 + i * 0.06 }} />
