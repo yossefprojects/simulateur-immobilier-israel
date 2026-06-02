@@ -241,7 +241,7 @@ export function exportPDF(store: ReportStore, t: Translations, lang: string): vo
       startY: y,
       margin: { left: M, right: M },
       tableWidth: W - M * 2,
-      head: [['Variation', tp.caRow, tp.margeBrute, '%']],
+      head: [[tp.variation, tp.caRow, tp.margeBrute, '%']],
       body: prom.result.sensitivity.map(s => [
         (s.variation >= 0 ? '+' : '') + s.variation + '%',
         fmtM(s.ca),
@@ -275,5 +275,10 @@ export function exportPDF(store: ReportStore, t: Translations, lang: string): vo
     doc.text(`${p} / ${pageCount}`, W - M, 292, { align: 'right' })
   }
 
-  doc.save('simulation-immobilier-israel.pdf')
+  const filenames: Record<string, string> = {
+    fr: 'rapport-immobilier-israel.pdf',
+    en: 'israel-real-estate-report.pdf',
+    he: 'israel-real-estate-report.pdf',
+  }
+  doc.save(filenames[lang] ?? 'rapport-immobilier-israel.pdf')
 }

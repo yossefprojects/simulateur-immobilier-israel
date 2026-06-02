@@ -175,6 +175,7 @@ export const translations = {
       portage:        'Portage financier',
       caRow:          "Chiffre d'affaires",
       sensib:         'Sensibilité prix de vente',
+      variation:      'Variation',
     },
     typesProjet: {
       residClassique: 'Résidentiel classique',
@@ -403,6 +404,7 @@ export const translations = {
       portage:        'Carry cost',
       caRow:          'Revenue',
       sensib:         'Sale price sensitivity',
+      variation:      'Variation',
     },
     typesProjet: {
       residClassique: 'Standard residential',
@@ -631,6 +633,7 @@ export const translations = {
       portage:        'עלות מימון',
       caRow:          'הכנסות',
       sensib:         'רגישות מחיר מכירה',
+      variation:      'שינוי',
     },
     typesProjet: {
       residClassique: 'מגורים רגיל',
