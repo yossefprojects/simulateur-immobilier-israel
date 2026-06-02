@@ -485,17 +485,39 @@ export default function App() {
       {/* Tab nav */}
       <nav className="bg-white border-b border-neutral-200 shadow-sm" role="tablist">
         <div className="max-w-5xl mx-auto px-6 flex overflow-x-auto">
-          {TABS.map((tab, idx) => (
-            <button key={tab.key} role="tab" aria-selected={active === tab.key}
-              onClick={() => setActive(tab.key)}
-              onKeyDown={e => handleTabKey(e, idx)}
-              className={`px-4 py-3 text-sm border-b-2 transition-colors whitespace-nowrap focus:outline-none ${
-                active === tab.key ? 'font-semibold text-primary' : 'border-transparent text-neutral-500 hover:text-primary'
-              }`}
-              style={active === tab.key ? { borderBottomColor: '#C9A84C' } : {}}>
-              {tab.label}
-            </button>
-          ))}
+          {TABS.map((tab, idx) => {
+            const isAgent  = tab.key === 'agent'
+            const isActive = active === tab.key
+            return (
+              <button key={tab.key} role="tab" aria-selected={isActive}
+                onClick={() => setActive(tab.key)}
+                onKeyDown={e => handleTabKey(e, idx)}
+                className={`px-4 py-3 text-sm border-b-2 transition-all whitespace-nowrap focus:outline-none ${
+                  isActive
+                    ? 'font-semibold'
+                    : 'border-transparent hover:text-primary'
+                } ${isAgent && !isActive ? 'font-semibold' : ''}`}
+                style={
+                  isAgent
+                    ? isActive
+                      ? { borderBottomColor: '#C9A84C', color: '#C9A84C', background: 'linear-gradient(to bottom, #fffbf0, #fff8e1)' }
+                      : { borderBottomColor: '#e8c96a', color: '#a07800', background: 'linear-gradient(to bottom, #fffdf5, #fffaec)', borderBottomWidth: 2 }
+                    : isActive
+                      ? { borderBottomColor: '#C9A84C', color: '#1A3A5C' }
+                      : { color: '#737373' }
+                }>
+                {isAgent
+                  ? <span className="flex items-center gap-1.5">
+                      <span style={{ fontSize: 13 }}>✦</span>
+                      {tab.label}
+                      <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide"
+                        style={{ background: '#C9A84C', color: '#fff', lineHeight: 1.4 }}>AI</span>
+                    </span>
+                  : tab.label
+                }
+              </button>
+            )
+          })}
         </div>
       </nav>
 
