@@ -107,12 +107,17 @@ export const FiscaliteTab: React.FC = () => {
         </div>
         <div className="mb-4">
           <label className="block text-xs text-neutral-500 mb-1">{tf.statut}</label>
-          <select value={statut} onChange={e => setStatut(e.target.value as Statut)}
-            className="w-full appearance-none rounded border border-neutral-200 bg-white ps-3 pe-8 py-1.5 text-sm">
-            <option value="resident">{tf.statutResident}</option>
-            <option value="etranger">{tf.statutEtranger}</option>
-            <option value="ole">{tf.statutOle}</option>
-          </select>
+          <div className="relative">
+            <select value={statut} onChange={e => setStatut(e.target.value as Statut)}
+              className="w-full appearance-none rounded border border-neutral-200 bg-white pl-3 pr-10 py-1.5 text-sm">
+              <option value="resident">{tf.statutResident}</option>
+              <option value="etranger">{tf.statutEtranger}</option>
+              <option value="ole">{tf.statutOle}</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round"/></svg>
+            </div>
+          </div>
         </div>
 
         <SectionTitle>{tf.masShevTitle}</SectionTitle>
@@ -149,12 +154,17 @@ export const FiscaliteTab: React.FC = () => {
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div>
             <label className="block text-xs text-neutral-500 mb-1">{tf.ville}</label>
-            <select value={aVille} onChange={e => setAVille(e.target.value)}
-              className="w-full appearance-none rounded border border-neutral-200 bg-white ps-3 pe-8 py-1.5 text-sm">
-              {Object.keys(ARNONA_RATES).map(k => (
-                <option key={k} value={k}>{arnonaVilleLabels[k]}</option>
-              ))}
-            </select>
+            <div className="relative">
+              <select value={aVille} onChange={e => setAVille(e.target.value)}
+                className="w-full appearance-none rounded border border-neutral-200 bg-white pl-3 pr-10 py-1.5 text-sm">
+                {Object.keys(ARNONA_RATES).map(k => (
+                  <option key={k} value={k}>{arnonaVilleLabels[k]}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round"/></svg>
+              </div>
+            </div>
           </div>
           <div>
             <label className="block text-xs text-neutral-500 mb-1">{tf.surface}</label>

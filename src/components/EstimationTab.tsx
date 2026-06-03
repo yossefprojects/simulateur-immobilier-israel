@@ -98,10 +98,10 @@ export const EstimationTab: React.FC = () => {
           </label>
           <div className="relative">
             <select value={inputs.typeProjet} onChange={e => set('typeProjet', parseFloat(e.target.value))}
-              className="w-full appearance-none rounded border border-neutral-200 bg-white ps-3 pe-8 py-1.5 text-sm truncate">
+              className="w-full appearance-none rounded border border-neutral-200 bg-white pl-3 pr-10 py-1.5 text-sm truncate">
               {typesProjetOptions.map(o => <option key={String(o.value)} value={o.value}>{o.label}</option>)}
             </select>
-            <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2">
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round"/></svg>
             </div>
           </div>

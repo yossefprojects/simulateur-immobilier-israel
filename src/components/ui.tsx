@@ -64,7 +64,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({ label, value, options,
       <select
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-full appearance-none rounded border border-neutral-200 bg-white pl-3 pr-8 py-1.5 text-sm truncate"
+        className="w-full appearance-none rounded border border-neutral-200 bg-white pl-3 pr-10 py-1.5 text-sm truncate"
       >
         {options.map(o => <option key={String(o.value)} value={o.value}>{o.label}</option>)}
       </select>
