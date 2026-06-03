@@ -572,13 +572,13 @@ export default function App() {
 
       {/* SVG Banner (tool views only) */}
       {active !== 'home' && (
-        <div className="h-36 overflow-hidden relative">
+        <div className="h-24 sm:h-32 md:h-36 lg:h-40 overflow-hidden relative">
           {TAB_BANNERS[active as Tab]}
           <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
           <div className="relative max-w-5xl mx-auto px-6 h-full flex flex-col justify-center">
-            <p className="text-white/60 text-xs font-medium uppercase tracking-widest mb-1">{bannerSub[active as Tab]}</p>
-            <h2 className="text-white text-2xl font-semibold">{activeTab?.label}</h2>
+            <p className="text-white/60 text-[10px] sm:text-xs font-medium uppercase tracking-widest mb-0.5 sm:mb-1">{bannerSub[active as Tab]}</p>
+            <h2 className="text-white text-lg sm:text-2xl font-semibold">{activeTab?.label}</h2>
           </div>
         </div>
       )}
