@@ -6,6 +6,10 @@ export const translations = {
     langLabel: 'FR',
     appTitle: 'Simulateur Immobilier Israël',
     appSubtitle: 'Valorisation marché · Potentiel urbanistique · Analyse financière',
+    saveBtn: 'Sauvegarder',
+    saveTitle: 'Sauvegarder ce scénario',
+    scenariosBtn: 'Historique',
+    scenariosTitle: 'Mes scénarios',
     tabs: {
       estimation:   'Estimation',
       urbanisme:    'Potentiel urbanistique',
@@ -389,6 +393,10 @@ export const translations = {
     langLabel: 'EN',
     appTitle: 'Israel Real Estate Simulator',
     appSubtitle: 'Market valuation · Urban potential · Financial analysis',
+    saveBtn: 'Save',
+    saveTitle: 'Save this scenario',
+    scenariosBtn: 'History',
+    scenariosTitle: 'My scenarios',
     tabs: {
       estimation:   'Valuation',
       urbanisme:    'Urban potential',
@@ -772,6 +780,10 @@ export const translations = {
     langLabel: 'עב',
     appTitle: 'סימולטור נדל"ן ישראל',
     appSubtitle: 'הערכת שווי שוק · פוטנציאל תכנוני · ניתוח פיננסי',
+    saveBtn: 'שמירה',
+    saveTitle: 'שמירת תרחיש זה',
+    scenariosBtn: 'היסטוריה',
+    scenariosTitle: 'התרחישים שלי',
     tabs: {
       estimation:   'הערכת שווי',
       urbanisme:    'פוטנציאל תכנוני',

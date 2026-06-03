@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Download, FileSpreadsheet, History, X, Trash2 } from 'lucide-react'
+import { Download, FileSpreadsheet, History, X, Trash2, Globe, Save } from 'lucide-react'
 import { EstimationTab }  from './components/EstimationTab'
 import { UrbanismeTab }   from './components/UrbanismeTab'
 import { InvestisseurTab, PromoteurTab } from './components/FinanceTab'
@@ -449,26 +449,8 @@ export default function App() {
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
-            <button onClick={() => setSaveModal(true)} title="Sauvegarder ce scénario"
-              className="px-2.5 py-1.5 rounded-lg text-sm text-white/80 hover:bg-white/10 transition-colors">
-              💾
-            </button>
-            <button onClick={() => setShowScenarios(true)} title="Mes scénarios"
-              className="px-2.5 py-1.5 rounded-lg text-white/80 hover:bg-white/10 transition-colors">
-              <History size={15} />
-            </button>
-            <button onClick={handleExportExcel} disabled={exportingXls} title="Export Excel"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-50"
-              style={{ background: 'rgba(255,255,255,0.12)', color: 'white' }}>
-              <FileSpreadsheet size={13} />
-              {exportingXls ? '…' : 'XLS'}
-            </button>
-            <button onClick={handleExport} disabled={exporting}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50"
-              style={{ background: '#C9A84C', color: '#1A3A5C' }}>
-              {exporting ? <><span className="spinner" /> …</> : <><Download size={13} /> PDF</>}
-            </button>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <Globe size={16} className="text-white/70" />
             <div className="flex items-center rounded-lg p-0.5" style={{ background: 'rgba(255,255,255,0.12)' }}>
               {LANGS.map(l => (
                 <button key={l.key} onClick={() => setLang(l.key)}
@@ -533,8 +515,34 @@ export default function App() {
         </div>
       </div>
 
+      {/* Action bar */}
+      <div className="max-w-5xl mx-auto px-6 pt-5">
+        <div className="flex items-center justify-end gap-2 flex-wrap">
+          <button onClick={() => setSaveModal(true)} title={t.saveTitle}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 text-neutral-600 hover:bg-neutral-100 transition-colors">
+            <Save size={14} />
+            {t.saveBtn}
+          </button>
+          <button onClick={() => setShowScenarios(true)} title={t.scenariosTitle}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 text-neutral-600 hover:bg-neutral-100 transition-colors">
+            <History size={14} />
+            {t.scenariosBtn}
+          </button>
+          <button onClick={handleExportExcel} disabled={exportingXls} title="Export Excel"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 text-neutral-600 hover:bg-neutral-100 transition-colors disabled:opacity-50">
+            <FileSpreadsheet size={14} />
+            {exportingXls ? '…' : 'XLS'}
+          </button>
+          <button onClick={handleExport} disabled={exporting}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50"
+            style={{ background: '#C9A84C', color: '#1A3A5C' }}>
+            {exporting ? <><span className="spinner" /> …</> : <><Download size={14} /> PDF</>}
+          </button>
+        </div>
+      </div>
+
       {/* Content */}
-      <main className="max-w-5xl mx-auto px-6 py-6" role="tabpanel">
+      <main className="max-w-5xl mx-auto px-6 pt-4 pb-6" role="tabpanel">
         <div className={active === 'estimation'   ? 'tab-content' : 'hidden'}><EstimationTab /></div>
         <div className={active === 'urbanisme'    ? 'tab-content' : 'hidden'}><UrbanismeTab /></div>
         <div className={active === 'investisseur' ? 'tab-content' : 'hidden'}><InvestisseurTab /></div>
