@@ -84,6 +84,8 @@ export const QuickAccess: React.FC<{ onNavigate: (tab: Tool) => void }> = ({ onN
   const { t } = useLang()
   const h = t.home
 
+  const isRtl = t.dir === 'rtl'
+
   const items: { icon: string; title: string; sub: string; tab: Tool }[] = [
     { icon: '🏢', title: t.tabs.estimation,   sub: h.subEstimation,   tab: 'estimation'   },
     { icon: '📈', title: t.tabs.investisseur, sub: h.subInvestisseur, tab: 'investisseur' },
@@ -91,33 +93,47 @@ export const QuickAccess: React.FC<{ onNavigate: (tab: Tool) => void }> = ({ onN
     { icon: '⚖️', title: t.tabs.fiscalite,    sub: h.subFiscalite,    tab: 'fiscalite'    },
     { icon: '🔨', title: t.tabs.travaux,      sub: h.subTravaux,      tab: 'travaux'      },
     { icon: '🗺️', title: t.tabs.urbanisme,    sub: h.subUrbanisme,    tab: 'urbanisme'    },
-    { icon: '✦',  title: t.tabs.agent,        sub: h.subAgent,        tab: 'agent'        },
   ]
 
   return (
     <div className="mt-7">
+      {/* Agent IA — full-width bar */}
+      <button onClick={() => onNavigate('agent')}
+        className="w-full flex items-center gap-4 rounded-xl p-4 mb-4 transition-all hover:-translate-y-0.5"
+        style={{
+          background: 'linear-gradient(135deg, #1A3A5C 0%, #0F2235 100%)',
+          border: '1px solid #C9A84C',
+          textAlign: isRtl ? 'right' : 'left',
+          flexDirection: isRtl ? 'row-reverse' : 'row',
+        }}>
+        <div className="flex items-center justify-center rounded-full shrink-0"
+          style={{ width: 42, height: 42, background: 'rgba(201,168,76,0.18)', color: '#C9A84C', fontSize: 20 }}>✦</div>
+        <div className="flex-1 min-w-0">
+          <div className="text-[15px] font-semibold" style={{ color: '#fff' }}>{t.tabs.agent}</div>
+          <div className="text-[12px] leading-snug" style={{ color: '#8aa0b8' }}>{h.subAgent}</div>
+        </div>
+        <ArrowRight size={18} style={{ color: '#C9A84C' }} className={`shrink-0 ${isRtl ? 'rotate-180' : ''}`} />
+      </button>
+
       <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-3 text-center">
         {h.chooseTool}
       </p>
       <div className="grid gap-2.5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
-        {items.map(item => {
-          const isAgent = item.tab === 'agent'
-          return (
-            <button key={item.tab} onClick={() => onNavigate(item.tab)}
-              className="group rounded-xl p-3 transition-all hover:-translate-y-0.5"
-              style={{
-                background: isAgent ? 'linear-gradient(135deg, #fffdf5, #fff6e0)' : 'white',
-                border: isAgent ? '1px solid #e8c96a' : '1px solid #E5E7EB',
-                textAlign: t.dir === 'rtl' ? 'right' : 'left',
-              }}
-              onMouseEnter={e => { if (!isAgent) e.currentTarget.style.borderColor = '#C9A84C' }}
-              onMouseLeave={e => { if (!isAgent) e.currentTarget.style.borderColor = '#E5E7EB' }}>
-              <div className="text-xl mb-1.5">{isAgent ? <span style={{ color: '#C9A84C' }}>✦</span> : item.icon}</div>
-              <div className="text-[13px] font-semibold mb-0.5" style={{ color: '#1A3A5C' }}>{item.title}</div>
-              <div className="text-[11px] leading-snug text-neutral-500">{item.sub}</div>
-            </button>
-          )
-        })}
+        {items.map(item => (
+          <button key={item.tab} onClick={() => onNavigate(item.tab)}
+            className="group rounded-xl p-3 transition-all hover:-translate-y-0.5"
+            style={{
+              background: 'white',
+              border: '1px solid #E5E7EB',
+              textAlign: isRtl ? 'right' : 'left',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = '#C9A84C' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = '#E5E7EB' }}>
+            <div className="text-xl mb-1.5">{item.icon}</div>
+            <div className="text-[13px] font-semibold mb-0.5" style={{ color: '#1A3A5C' }}>{item.title}</div>
+            <div className="text-[11px] leading-snug text-neutral-500">{item.sub}</div>
+          </button>
+        ))}
       </div>
     </div>
   )
