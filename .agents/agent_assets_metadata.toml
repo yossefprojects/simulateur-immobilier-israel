@@ -6,3 +6,9 @@ id = "1cAtK9FLVpsafBIJ8EoUq"
 uri = "file://exports/NadlanConnect-brief.md"
 type = "text"
 title = "NadlanConnect — Cahier des charges de démarrage (V1)"
+
+[[outputs]]
+id = "kZa75qbwOIvOE5HEiJ3RM"
+uri = "file://exports/NadlanConnect-brief.pdf"
+type = "pdf"
+title = "NadlanConnect — Cahier des charges (PDF téléchargeable)"
