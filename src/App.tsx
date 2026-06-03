@@ -545,8 +545,6 @@ export default function App() {
                   ? <span className="flex items-center gap-1.5">
                       <span style={{ fontSize: 13 }}>✦</span>
                       {tab.label}
-                      <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide"
-                        style={{ background: '#C9A84C', color: '#fff', lineHeight: 1.4 }}>AI</span>
                     </span>
                   : tab.label
                 }
