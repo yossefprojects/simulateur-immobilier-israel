@@ -11,7 +11,7 @@ export const HeroSection: React.FC<{ onCTA: () => void }> = ({ onCTA }) => {
 
   const stats = [
     { val: '50 000+', lbl: h.stat1 },
-    { val: '10',      lbl: h.stat2 },
+    { val: '12',      lbl: h.stat2 },
     { val: '7',       lbl: h.stat3 },
   ]
 

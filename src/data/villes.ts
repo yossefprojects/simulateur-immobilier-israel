@@ -106,4 +106,21 @@ export const VILLES: Record<string, VilleData> = {
       'Barnea':      { prixMoyen: 13000, labelHe: 'ברנע' },
     },
   },
+  bat_yam: {
+    label: 'Bat Yam', labelHe: 'בת ים',
+    quartiers: {
+      'Bord de mer':   { prixMoyen: 28000, labelHe: 'חוף הים' },
+      'Centre-ville':  { prixMoyen: 24000, labelHe: 'מרכז העיר' },
+      'Ramat Yosef':   { prixMoyen: 21000, labelHe: 'רמת יוסף' },
+      'Pardes Katz':   { prixMoyen: 19000, labelHe: 'פרדס כץ' },
+    },
+  },
+  ben_shemen: {
+    label: 'Ben Shemen', labelHe: 'בן שמן',
+    quartiers: {
+      'Moshav Ben Shemen':      { prixMoyen: 26000, labelHe: 'מושב בן שמן' },
+      'Kfar HaNoar Ben Shemen': { prixMoyen: 22000, labelHe: 'כפר הנוער בן שמן' },
+      'Ginaton (voisinage)':    { prixMoyen: 24000, labelHe: 'גינתון (סביבה)' },
+    },
+  },
 }
