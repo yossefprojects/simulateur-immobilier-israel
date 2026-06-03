@@ -109,6 +109,12 @@ FORMAT DE REPONSE STRICT — utilise exactement ces balises, sans emoji, sans ca
 - ROI : [pourcentage]
 - Cout revient / m2 : [valeur NIS/m2]
 
+DETAIL DU CALCUL :
+- **Cout de construction habitable :** [surface habitable x prix/m2 = montant NIS]
+- **Cout des sous-sols / parkings :** [surface x prix/m2 = montant NIS]
+- **Chiffre d'affaires previsionnel (revente) :** [surface projetee x prix/m2 = montant NIS]
+- **Note sur le permis :** [si permis accorde, expliquer l'avantage : gain de ~3 ans et reduction du risque ; sinon indiquer le risque procedural]
+
 ## 6. ANALYSE DES RISQUES
 [3-5 points de risque principaux, un par ligne, commençant par -]
 
@@ -126,7 +132,8 @@ FORMAT DE REPONSE STRICT — utilise exactement ces balises, sans emoji, sans ca
 
 REGLES ABSOLUES :
 - Chiffres précis et cohérents même si des données manquent (utiliser les hypothèses)
-- Aucun emoji, aucun symbole markdown (pas de **, pas de *, pas de #), uniquement le format ci-dessus
+- Aucun emoji. N'utilise le gras "**...**" QUE pour les sous-titres des bullets "DETAIL DU CALCUL" de la section 5. Partout ailleurs, aucun symbole markdown (pas de *, pas de #), uniquement le format ci-dessus.
+- Formate tous les grands nombres avec des espaces pour les milliers (ex : 26 000 000 NIS) et écris toujours "NIS", jamais le symbole ₪.
 - Réponse professionnelle, synthétique, orientée décision d'investissement`
 
 function makeSystemPrompt(lang: 'fr' | 'en' | 'he'): string {
@@ -443,124 +450,216 @@ export function AgentTab() {
     try {
       const doc   = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
       const W     = 210
-      const M     = 14
+      const M     = 16
       const maxW  = W - M * 2
-      const BLUE  : [number,number,number] = [26, 58, 92]
+      const NAVY  : [number,number,number] = [26, 58, 92]
       const GOLD  : [number,number,number] = [201, 168, 76]
-      const GRAY  : [number,number,number] = [80, 80, 80]
-      const BLACK : [number,number,number] = [30, 30, 30]
+      const GRAY  : [number,number,number] = [90, 90, 90]
+      const BLACK : [number,number,number] = [33, 37, 41]
+      const LINE  : [number,number,number] = [224, 224, 224]
+
+      // Normalise le texte pour la police PDF (Helvetica/WinAnsi) : supprime les
+      // glyphes non supportés (₪, puces unicode, espaces fines, signes maths…).
+      const sanitize = (s: string) => s
+        .replace(/\u20AA/g, ' NIS')
+        .replace(/[\u202F\u00A0\u2007\u2008\u2009\u2006\u2005]/g, ' ')
+        .replace(/\u2212/g, '-')
+        .replace(/[\u2013\u2014]/g, '-')
+        .replace(/[\u2018\u2019\u2032]/g, "'")
+        .replace(/[\u201C\u201D]/g, '"')
+        .replace(/[\u25B8\u25BA\u2023\u2022\u25AA\u25CF\u25A0\u00AA\u00BA]/g, '-')
+        .replace(/\u00D7/g, 'x')
+        .replace(/\u2026/g, '...')
+        .replace(/ {2,}/g, ' ')
+        .trim()
 
       let y = 18
-      const newPage = () => { doc.addPage(); y = 18 }
-      const guard   = (h: number) => { if (y + h > 278) newPage() }
+      const newPage = () => { doc.addPage(); y = 20 }
+      const guard   = (h: number) => { if (y + h > 276) newPage() }
 
-      doc.setFillColor(...BLUE)
-      doc.rect(0, 0, W, 22, 'F')
+      // ── En-tête ──
+      doc.setFillColor(...NAVY)
+      doc.rect(0, 0, W, 24, 'F')
       doc.setTextColor(255, 255, 255)
-      doc.setFontSize(11)
+      doc.setFontSize(12)
       doc.setFont('helvetica', 'bold')
-      doc.text('SIMULATEUR IMMOBILIER ISRAËL — RAPPORT AGENT IA', M, 10)
+      doc.text('SIMULATEUR IMMOBILIER ISRAEL  —  RAPPORT AGENT IA', M, 11)
       doc.setFontSize(7.5)
       doc.setFont('helvetica', 'normal')
-      doc.text(`Généré le ${new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' })}  ·  Claude · Replit AI`, M, 17)
-      y = 30
+      doc.text(`Genere le ${new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' })}   ·   Analyse financiere & promotion immobiliere`, M, 18)
+      doc.setFillColor(...GOLD)
+      doc.rect(0, 24, W, 1, 'F')
+      y = 34
+
+      // Découpe une ligne en segments normal / gras (**...**)
+      const richSegs = (text: string) => text
+        .split(/(\*\*[^*]+\*\*)/g)
+        .filter(Boolean)
+        .map(p => (p.startsWith('**') && p.endsWith('**'))
+          ? { t: p.slice(2, -2), b: true }
+          : { t: p, b: false })
+
+      // Écrit du texte avec gras inline + retour à la ligne automatique
+      const drawRich = (text: string, x: number, width: number, size: number, color: [number,number,number], gap = 4.4, guardFirst = true) => {
+        doc.setFontSize(size)
+        const words: { w: string; b: boolean }[] = []
+        richSegs(sanitize(text)).forEach(s =>
+          s.t.split(/(\s+)/).forEach(tok => { if (tok.length) words.push({ w: tok, b: s.b }) }))
+        let cx = x
+        if (guardFirst) guard(gap)
+        for (const { w, b } of words) {
+          doc.setFont('helvetica', b ? 'bold' : 'normal')
+          const ww = doc.getTextWidth(w)
+          if (cx + ww > x + width && cx > x) {
+            y += gap; guard(gap); cx = x
+            if (/^\s+$/.test(w)) continue
+          }
+          doc.setTextColor(...color)
+          doc.text(w, cx, y + 3.2)
+          cx += ww
+        }
+        y += gap
+      }
 
       const lines = output.split('\n')
+      let firstSection = true
       for (const rawLine of lines) {
         const line = rawLine.trim()
-        if (!line) { y += 2; continue }
-        if (line === '---') { guard(4); doc.setDrawColor(...GOLD); doc.setLineWidth(0.3); doc.line(M, y, W - M, y); y += 4; continue }
+        if (!line)          { y += 1.8; continue }
+        if (line === '---') { continue }
 
+        // ── Titre de section : "## n. TITRE" ──
         if (line.startsWith('## ')) {
-          const title = line.slice(3)
-          guard(10)
-          doc.setFillColor(...BLUE)
-          doc.rect(M, y, maxW, 7, 'F')
-          doc.setTextColor(255, 255, 255)
-          doc.setFontSize(8.5)
+          y += firstSection ? 0 : 3
+          firstSection = false
+          guard(13)
           doc.setFont('helvetica', 'bold')
-          doc.text(title.toUpperCase(), M + 3, y + 5)
-          doc.setTextColor(...BLACK)
-          y += 10
+          doc.setFontSize(10.5)
+          doc.setTextColor(...NAVY)
+          doc.text(sanitize(line.slice(3)).toUpperCase(), M, y + 4)
+          doc.setDrawColor(...GOLD)
+          doc.setLineWidth(0.5)
+          doc.line(M, y + 6.4, M + maxW, y + 6.4)
+          y += 11
           continue
         }
 
         if (line.startsWith('- ')) {
           const content = line.slice(2)
+
+          // ── Carte Investment Score ──
           const scoreMatch = content.match(/^SCORE FINAL\s*:\s*(\d+)/i)
           if (scoreMatch) {
             const score = parseInt(scoreMatch[1])
-            guard(18)
-            doc.setFillColor(245, 245, 240)
-            doc.setDrawColor(...GOLD)
-            doc.setLineWidth(0.5)
-            doc.roundedRect(M, y, maxW, 14, 2, 2, 'FD')
-            doc.setTextColor(...GOLD)
-            doc.setFontSize(18)
+            const band  = score >= 70 ? { bg: [232,245,233] as [number,number,number], fg: [27,94,32]  as [number,number,number] }
+                        : score >= 45 ? { bg: [255,243,224] as [number,number,number], fg: [180,83,9]  as [number,number,number] }
+                        :               { bg: [253,235,235] as [number,number,number], fg: [153,27,27] as [number,number,number] }
+            guard(28)
+            doc.setFillColor(...band.bg)
+            doc.setDrawColor(...band.fg)
+            doc.setLineWidth(0.4)
+            doc.roundedRect(M, y, maxW, 23, 3, 3, 'FD')
+            doc.setTextColor(...band.fg)
             doc.setFont('helvetica', 'bold')
-            doc.text(String(score), M + 5, y + 10)
+            doc.setFontSize(36)
+            const sw = doc.getTextWidth(String(score))
+            doc.text(String(score), M + 9, y + 16)
+            doc.setFontSize(10)
+            doc.text('/100', M + 9 + sw + 2, y + 16)
+            doc.setFont('helvetica', 'normal')
             doc.setFontSize(8)
             doc.setTextColor(...GRAY)
-            doc.text('/ 100  Investment Score', M + 18, y + 7)
-            const label = scoreLabel(score, lang)
+            doc.text('INVESTMENT SCORE', M + 52, y + 9.5)
             doc.setFont('helvetica', 'bold')
-            doc.setTextColor(...GOLD)
-            doc.text(label, M + 18, y + 12)
-            y += 18
+            doc.setFontSize(15)
+            doc.setTextColor(...band.fg)
+            doc.text(scoreLabel(score, lang), M + 52, y + 17)
+            y += 28
             continue
           }
 
+          // ── Ligne clé : valeur ──
           const colonIdx = content.indexOf(':')
-          if (colonIdx > 0 && colonIdx < 50) {
-            const k = content.slice(0, colonIdx).trim()
-            const v = content.slice(colonIdx + 1).trim()
+          if (colonIdx > 0 && colonIdx < 46 && !content.slice(0, colonIdx).includes('**')) {
+            const k = sanitize(content.slice(0, colonIdx).trim())
+            const v = sanitize(content.slice(colonIdx + 1).trim())
             if (v) {
-              const wrapped = doc.splitTextToSize(v, maxW * 0.5)
-              const h = Math.max(6, wrapped.length * 4.5)
+              const wrapped = doc.splitTextToSize(v, maxW * 0.52)
+              const h = Math.max(6.5, wrapped.length * 4.4 + 2)
               guard(h)
-              doc.setFontSize(8)
+              doc.setFontSize(8.2)
               doc.setFont('helvetica', 'bold')
-              doc.setTextColor(...BLUE)
+              doc.setTextColor(...NAVY)
               doc.text(k, M, y + 4)
               doc.setFont('helvetica', 'normal')
-              const isGold = /₪|NIS|M₪/.test(v)
+              const isGold = /\bNIS\b/.test(v)
               doc.setTextColor(isGold ? GOLD[0] : BLACK[0], isGold ? GOLD[1] : BLACK[1], isGold ? GOLD[2] : BLACK[2])
               doc.text(wrapped, W - M, y + 4, { align: 'right' })
-              doc.setDrawColor(230, 230, 230)
+              doc.setDrawColor(...LINE)
               doc.setLineWidth(0.2)
-              doc.line(M, y + h - 0.5, W - M, y + h - 0.5)
+              doc.line(M, y + h - 0.8, W - M, y + h - 0.8)
               y += h
               continue
             }
           }
 
-          const bulletWrapped = doc.splitTextToSize('▸ ' + content.replace(/\*\*/g, ''), maxW - 5)
-          const bh = Math.max(5, bulletWrapped.length * 4.5)
-          guard(bh)
-          doc.setFontSize(8)
-          doc.setFont('helvetica', 'normal')
-          doc.setTextColor(...GRAY)
-          doc.text(bulletWrapped, M + 3, y + 4)
-          y += bh
+          // ── Puce enrichie (gras inline supporté) ──
+          guard(5)                       // garantit que la puce et sa 1re ligne tiennent ensemble
+          doc.setFillColor(...GOLD)
+          doc.circle(M + 1.1, y + 1.6, 0.8, 'F')
+          drawRich(content, M + 4.5, maxW - 4.5, 8.2, GRAY, 4.4, false)
+          y += 1.2
           continue
         }
 
-        const paraWrapped = doc.splitTextToSize(line.replace(/\*\*/g, ''), maxW)
-        const ph = Math.max(5, paraWrapped.length * 4.5)
-        guard(ph)
-        doc.setFontSize(8)
-        doc.setFont('helvetica', 'normal')
-        doc.setTextColor(...BLACK)
-        doc.text(paraWrapped, M, y + 4)
-        y += ph
+        // ── Sous-titre en capitales (ex : "DETAIL DU CALCUL :") ──
+        if (line === line.toUpperCase() && /[A-Z]/.test(line) && line.length < 70) {
+          y += 2
+          guard(7)
+          doc.setFont('helvetica', 'bold')
+          doc.setFontSize(8.2)
+          doc.setTextColor(...NAVY)
+          doc.text(sanitize(line.replace(/:$/, '')), M, y + 3.5)
+          y += 6.5
+          continue
+        }
+
+        // ── Paragraphe ──
+        guard(5)
+        drawRich(line, M, maxW, 8.2, BLACK)
+        y += 1
       }
 
+      // ── Annexe : annonce analysée (police réduite, en fin de document) ──
+      if (input.trim()) {
+        y += 5
+        guard(16)
+        doc.setFont('helvetica', 'bold')
+        doc.setFontSize(10.5)
+        doc.setTextColor(...NAVY)
+        doc.text('ANNEXE  —  ANNONCE ANALYSEE', M, y + 4)
+        doc.setDrawColor(...GOLD)
+        doc.setLineWidth(0.5)
+        doc.line(M, y + 6.4, M + maxW, y + 6.4)
+        y += 11
+        const annex = doc.splitTextToSize(sanitize(input.trim()), maxW)
+        doc.setFont('helvetica', 'normal')
+        doc.setFontSize(7.4)
+        doc.setTextColor(...GRAY)
+        for (const ln of annex) { guard(4); doc.text(ln, M, y + 3); y += 4 }
+      }
+
+      // ── Pied de page ──
       const totalPages = (doc as jsPDF & { internal: { getNumberOfPages: () => number } }).internal.getNumberOfPages()
       for (let i = 1; i <= totalPages; i++) {
         doc.setPage(i)
+        doc.setDrawColor(...LINE)
+        doc.setLineWidth(0.2)
+        doc.line(M, 288, W - M, 288)
         doc.setFontSize(7)
+        doc.setFont('helvetica', 'normal')
         doc.setTextColor(160, 160, 160)
-        doc.text('Simulateur Immobilier Israël  ·  Analyse indicative non contractuelle', M, 292)
+        doc.text('Simulateur Immobilier Israel   ·   Analyse indicative non contractuelle', M, 292)
         doc.text(`${i} / ${totalPages}`, W - M, 292, { align: 'right' })
       }
 
@@ -568,7 +667,7 @@ export function AgentTab() {
     } finally {
       setPdfBusy(false)
     }
-  }, [output, pdfBusy])
+  }, [output, pdfBusy, input, lang])
 
   const analyze = useCallback(async () => {
     if (!input.trim() || loading) return
