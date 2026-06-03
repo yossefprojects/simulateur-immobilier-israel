@@ -309,7 +309,7 @@ const TAB_BANNERS: Record<Tab, React.ReactNode> = {
 
 // ── App ────────────────────────────────────────────────────────────────────────
 export default function App() {
-  const [active, setActive]           = useState<Tab>('estimation')
+  const [active, setActive]           = useState<Tab>('agent')
   const [exporting, setExporting]     = useState(false)
   const [exportingXls, setExportingXls] = useState(false)
   const [toast, setToast]             = useState<string | null>(null)
