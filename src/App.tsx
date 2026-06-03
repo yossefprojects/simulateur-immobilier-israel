@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Download, FileSpreadsheet, History, X, Trash2, Globe, Save, MoreVertical } from 'lucide-react'
 import { EstimationTab }  from './components/EstimationTab'
 import { UrbanismeTab }   from './components/UrbanismeTab'
@@ -18,6 +18,18 @@ import { lireScenarios, supprimerScenario, sauvegarderScenario, Scenario } from 
 
 type Tab = 'estimation' | 'urbanisme' | 'investisseur' | 'promoteur' | 'fiscalite' | 'travaux' | 'agent'
 type View = Tab | 'home'
+
+// ── Routing (clean per-tab URLs : /estimation, /fiscalite, …) ───────────────────
+const TAB_KEYS: Tab[] = ['estimation', 'urbanisme', 'investisseur', 'promoteur', 'fiscalite', 'travaux', 'agent']
+
+function viewToPath(v: View): string {
+  return v === 'home' ? '/' : `/${v}`
+}
+
+function pathToView(pathname: string): View {
+  const slug = pathname.replace(/^\/+|\/+$/g, '').toLowerCase()
+  return (TAB_KEYS as string[]).includes(slug) ? (slug as View) : 'home'
+}
 
 const LANGS: { key: Lang; label: string }[] = [
   { key: 'fr', label: 'FR' },
@@ -311,7 +323,7 @@ const TAB_BANNERS: Record<Tab, React.ReactNode> = {
 
 // ── App ────────────────────────────────────────────────────────────────────────
 export default function App() {
-  const [active, setActive]           = useState<View>('home')
+  const [active, setActive]           = useState<View>(() => pathToView(window.location.pathname))
   const [exporting, setExporting]     = useState(false)
   const [exportingXls, setExportingXls] = useState(false)
   const [toast, setToast]             = useState<string | null>(null)
@@ -326,6 +338,34 @@ export default function App() {
   useEffect(() => {
     if (showScenarios) setScenarios(lireScenarios())
   }, [showScenarios])
+
+  // Synchronise l'URL avec l'onglet actif (URL propre par onglet)
+  const routerReady = useRef(false)
+  useEffect(() => {
+    const target  = viewToPath(active)
+    const current = window.location.pathname
+    if (!routerReady.current) {
+      // 1er rendu : canonicalise l'URL sans créer d'entrée d'historique,
+      // en conservant search (ex. ?prompt= lu par AgentTab) et hash.
+      routerReady.current = true
+      if (current !== target) {
+        window.history.replaceState(null, '', target + window.location.search + window.location.hash)
+      }
+      return
+    }
+    // Navigation utilisateur entre onglets : nouvelle entrée d'historique.
+    if (current !== target) {
+      window.history.pushState(null, '', target + window.location.hash)
+    }
+    window.scrollTo({ top: 0 })
+  }, [active])
+
+  // Navigation navigateur (boutons précédent / suivant)
+  useEffect(() => {
+    const onPop = () => setActive(pathToView(window.location.pathname))
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
 
   const TABS: { key: Tab; label: string }[] = [
     { key: 'estimation',   label: t.tabs.estimation   },
@@ -409,6 +449,13 @@ export default function App() {
   }, [])
 
   const activeTab = TABS.find(tb => tb.key === active)
+
+  // Titre d'onglet propre (favoris / partage)
+  useEffect(() => {
+    const base = 'Israel Real Estate Simulator'
+    document.title = active === 'home' ? base : `${activeTab?.label ?? ''} — ${base}`
+  }, [active, activeTab])
+
   const subParts  = t.appSubtitle.split(' · ')
   const bannerSub: Record<Tab, string> = {
     estimation:   subParts[0] ?? '',
