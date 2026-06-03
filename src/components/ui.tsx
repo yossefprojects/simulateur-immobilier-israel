@@ -64,11 +64,11 @@ export const SelectField: React.FC<SelectFieldProps> = ({ label, value, options,
       <select
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-full appearance-none rounded border border-neutral-200 bg-white ps-3 pe-8 py-1.5 text-sm truncate"
+        className="w-full appearance-none rounded border border-neutral-200 bg-white pl-3 pr-8 py-1.5 text-sm truncate"
       >
         {options.map(o => <option key={String(o.value)} value={o.value}>{o.label}</option>)}
       </select>
-      <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2">
+      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
         <ChevronDown size={16} strokeWidth={2.2} className="text-neutral-500" />
       </div>
     </div>
