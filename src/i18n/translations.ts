@@ -14,6 +14,13 @@ export const translations = {
     langTitle: 'Choisir la langue',
     exportXls: 'Exporter XLS',
     exportPdf: 'Exporter PDF',
+    footer: {
+      subNadlan:    'Source des transactions',
+      subCbs:       'Indices officiels',
+      subGovmap:    'Données cadastrales',
+      subMavat:     'Plans urbanistiques',
+      disclaimer:   "Les estimations sont fournies à titre indicatif. Pour toute décision d'investissement, consultez un expert immobilier certifié. Données basées sur les transactions Nadlan Gov et l'indice CBS.",
+    },
     home: {
       eyebrow:      'Marché immobilier israélien',
       title1:       'Estimez, investissez,',
@@ -424,6 +431,13 @@ export const translations = {
     langTitle: 'Choose language',
     exportXls: 'Export XLS',
     exportPdf: 'Export PDF',
+    footer: {
+      subNadlan:    'Transaction source',
+      subCbs:       'Official indices',
+      subGovmap:    'Cadastral maps',
+      subMavat:     'Urban planning',
+      disclaimer:   'Estimates are provided for informational purposes only. For any investment decision, consult a certified real estate expert. Data based on Nadlan Gov transactions and the CBS index.',
+    },
     home: {
       eyebrow:      'Israeli real estate market',
       title1:       'Estimate, invest,',
@@ -834,6 +848,13 @@ export const translations = {
     langTitle: 'בחירת שפה',
     exportXls: 'ייצוא XLS',
     exportPdf: 'ייצוא PDF',
+    footer: {
+      subNadlan:    'מקור העסקאות',
+      subCbs:       'מדדים רשמיים',
+      subGovmap:    'מפות קדסטר',
+      subMavat:     'תכנון עירוני',
+      disclaimer:   'ההערכות ניתנות לצורך מידע בלבד. לכל החלטת השקעה, יש להתייעץ עם מומחה נדל"ן מוסמך. הנתונים מבוססים על עסקאות Nadlan Gov ומדד הלמ"ס.',
+    },
     home: {
       eyebrow:      'שוק הנדל"ן הישראלי',
       title1:       'להעריך, להשקיע,',
