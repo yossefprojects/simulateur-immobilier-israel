@@ -392,6 +392,23 @@ export function AgentTab() {
 
   useEffect(() => { saveHistory(history) }, [history])
 
+  // Pré-remplissage depuis NadlanConnect :
+  // 1) paramètre URL `?prompt=...` au chargement
+  // 2) postMessage { type: 'NADLAN_LISTING', prompt } depuis le site NadlanConnect
+  useEffect(() => {
+    const urlPrompt = new URLSearchParams(window.location.search).get('prompt')
+    if (urlPrompt) setInput(urlPrompt)
+
+    const onMessage = (e: MessageEvent) => {
+      if (e.origin !== 'https://nadlan-connect.replit.app') return
+      if (e.data?.type === 'NADLAN_LISTING' && typeof e.data.prompt === 'string') {
+        setInput(e.data.prompt)
+      }
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [])
+
   const handleCopy = useCallback(async () => {
     if (!output) return
     try {
