@@ -8,13 +8,13 @@ interface LangCtx {
 }
 
 const LanguageContext = createContext<LangCtx>({
-  lang: 'fr',
+  lang: 'en',
   setLang: () => {},
-  t: translations.fr,
+  t: translations.en,
 })
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [lang, setLang] = useState<Lang>('fr')
+  const [lang, setLang] = useState<Lang>('en')
   const t = translations[lang]
   return (
     <LanguageContext.Provider value={{ lang, setLang, t }}>
