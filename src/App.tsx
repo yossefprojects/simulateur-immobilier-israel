@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Download, FileSpreadsheet, History, X, Trash2, Globe, Save } from 'lucide-react'
+import { Download, FileSpreadsheet, History, X, Trash2, Globe, Save, MoreVertical } from 'lucide-react'
 import { EstimationTab }  from './components/EstimationTab'
 import { UrbanismeTab }   from './components/UrbanismeTab'
 import { InvestisseurTab, PromoteurTab } from './components/FinanceTab'
@@ -7,6 +7,7 @@ import { FiscaliteTab }   from './components/FiscaliteTab'
 import { TravauxTab }     from './components/TravauxTab'
 import { AgentTab }       from './components/AgentTab'
 import { MarketBanner }   from './components/MarketBanner'
+import { HeroSection, QuickAccess } from './components/HeroSection'
 import { Footer }         from './components/Footer'
 import { useLang }        from './i18n/LanguageContext'
 import { Lang }           from './i18n/translations'
@@ -16,6 +17,7 @@ import { exporterExcel }  from './utils/exportExcel'
 import { lireScenarios, supprimerScenario, sauvegarderScenario, Scenario } from './utils/scenarios'
 
 type Tab = 'estimation' | 'urbanisme' | 'investisseur' | 'promoteur' | 'fiscalite' | 'travaux' | 'agent'
+type View = Tab | 'home'
 
 const LANGS: { key: Lang; label: string }[] = [
   { key: 'fr', label: 'FR' },
@@ -309,7 +311,7 @@ const TAB_BANNERS: Record<Tab, React.ReactNode> = {
 
 // ── App ────────────────────────────────────────────────────────────────────────
 export default function App() {
-  const [active, setActive]           = useState<Tab>('agent')
+  const [active, setActive]           = useState<View>('home')
   const [exporting, setExporting]     = useState(false)
   const [exportingXls, setExportingXls] = useState(false)
   const [toast, setToast]             = useState<string | null>(null)
@@ -317,6 +319,7 @@ export default function App() {
   const [scenarios, setScenarios]     = useState<Scenario[]>([])
   const [saveModal, setSaveModal]     = useState(false)
   const [saveName, setSaveName]       = useState('')
+  const [menuOpen, setMenuOpen]       = useState(false)
   const { lang, setLang, t }          = useLang()
 
   useEffect(() => {
@@ -404,7 +407,7 @@ export default function App() {
     if (e.key === 'End')        { e.preventDefault(); setActive(keys[keys.length-1]) }
   }, [])
 
-  const activeTab = TABS.find(tb => tb.key === active)!
+  const activeTab = TABS.find(tb => tb.key === active)
   const subParts  = t.appSubtitle.split(' · ')
   const bannerSub: Record<Tab, string> = {
     estimation:   subParts[0] ?? '',
@@ -429,7 +432,7 @@ export default function App() {
       {/* Header */}
       <header style={{ background: '#1A3A5C' }} className="px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-3 flex-wrap">
-          <div className="flex items-center gap-3">
+          <button onClick={() => setActive('home')} className="flex items-center gap-3 text-start" title={t.appTitle}>
             <svg width="32" height="32" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
               <rect width="52" height="52" rx="10" fill="#C9A84C"/>
               <rect x="13" y="8" width="26" height="36" rx="2" fill="#0F2235"/>
@@ -447,7 +450,7 @@ export default function App() {
               <h1 className="text-lg font-semibold text-white">{t.appTitle}</h1>
               <p className="text-xs text-white/60 hidden sm:block">{t.appSubtitle}</p>
             </div>
-          </div>
+          </button>
 
           <div className="flex items-center gap-1.5 shrink-0">
             <Globe size={16} className="text-white/70" />
@@ -460,6 +463,40 @@ export default function App() {
                   {l.label}
                 </button>
               ))}
+            </div>
+
+            {/* Kebab menu */}
+            <div className="relative">
+              <button onClick={() => setMenuOpen(o => !o)} title={t.menuLabel} aria-label={t.menuLabel}
+                aria-haspopup="menu" aria-expanded={menuOpen}
+                className="ml-1 p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors">
+                <MoreVertical size={18} />
+              </button>
+              {menuOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
+                  <div className="absolute end-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-neutral-100 py-1.5 z-50">
+                    <button onClick={() => { setMenuOpen(false); setSaveModal(true) }}
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
+                      <Save size={15} className="text-neutral-400" /> {t.saveBtn}
+                    </button>
+                    <button onClick={() => { setMenuOpen(false); setShowScenarios(true) }}
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
+                      <History size={15} className="text-neutral-400" /> {t.scenariosBtn}
+                    </button>
+                    <div className="h-px bg-neutral-100 my-1" />
+                    <button onClick={() => { setMenuOpen(false); handleExportExcel() }} disabled={exportingXls}
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 disabled:opacity-50">
+                      <FileSpreadsheet size={15} className="text-neutral-400" /> {exportingXls ? '…' : t.exportXls}
+                    </button>
+                    <button onClick={() => { setMenuOpen(false); handleExport() }} disabled={exporting}
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-sm font-medium hover:bg-neutral-50 disabled:opacity-50"
+                      style={{ color: '#a07800' }}>
+                      <Download size={15} /> {exporting ? '…' : t.exportPdf}
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -504,45 +541,29 @@ export default function App() {
         </div>
       </nav>
 
-      {/* SVG Banner */}
-      <div className="h-36 overflow-hidden relative">
-        {TAB_BANNERS[active]}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-        <div className="relative max-w-5xl mx-auto px-6 h-full flex flex-col justify-center">
-          <p className="text-white/60 text-xs font-medium uppercase tracking-widest mb-1">{bannerSub[active]}</p>
-          <h2 className="text-white text-2xl font-semibold">{activeTab.label}</h2>
+      {/* SVG Banner (tool views only) */}
+      {active !== 'home' && (
+        <div className="h-36 overflow-hidden relative">
+          {TAB_BANNERS[active as Tab]}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+          <div className="relative max-w-5xl mx-auto px-6 h-full flex flex-col justify-center">
+            <p className="text-white/60 text-xs font-medium uppercase tracking-widest mb-1">{bannerSub[active as Tab]}</p>
+            <h2 className="text-white text-2xl font-semibold">{activeTab?.label}</h2>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Action bar */}
-      <div className="max-w-5xl mx-auto px-6 pt-5">
-        <div className="flex items-center justify-end gap-2 flex-wrap">
-          <button onClick={() => setSaveModal(true)} title={t.saveTitle}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 text-neutral-600 hover:bg-neutral-100 transition-colors">
-            <Save size={14} />
-            {t.saveBtn}
-          </button>
-          <button onClick={() => setShowScenarios(true)} title={t.scenariosTitle}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 text-neutral-600 hover:bg-neutral-100 transition-colors">
-            <History size={14} />
-            {t.scenariosBtn}
-          </button>
-          <button onClick={handleExportExcel} disabled={exportingXls} title="Export Excel"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 text-neutral-600 hover:bg-neutral-100 transition-colors disabled:opacity-50">
-            <FileSpreadsheet size={14} />
-            {exportingXls ? '…' : 'XLS'}
-          </button>
-          <button onClick={handleExport} disabled={exporting}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50"
-            style={{ background: '#C9A84C', color: '#1A3A5C' }}>
-            {exporting ? <><span className="spinner" /> …</> : <><Download size={14} /> PDF</>}
-          </button>
-        </div>
-      </div>
+      {/* Home landing */}
+      {active === 'home' && (
+        <main className="max-w-5xl mx-auto px-6 pt-6 pb-8">
+          <HeroSection onCTA={() => setActive('estimation')} />
+          <QuickAccess onNavigate={setActive} />
+        </main>
+      )}
 
-      {/* Content */}
-      <main className="max-w-5xl mx-auto px-6 pt-4 pb-6" role="tabpanel">
+      {/* Tool content (kept mounted to preserve state) */}
+      <main className={active === 'home' ? 'hidden' : 'max-w-5xl mx-auto px-6 pt-5 pb-6'} role="tabpanel">
         <div className={active === 'estimation'   ? 'tab-content' : 'hidden'}><EstimationTab /></div>
         <div className={active === 'urbanisme'    ? 'tab-content' : 'hidden'}><UrbanismeTab /></div>
         <div className={active === 'investisseur' ? 'tab-content' : 'hidden'}><InvestisseurTab /></div>

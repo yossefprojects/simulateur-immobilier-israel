@@ -12,10 +12,13 @@ description: Full design overhaul decisions and constraints for the Israel real 
 - Both fonts loaded via Google Fonts in `index.html`
 
 ## Key Architecture
-- 5 tabs: estimation / urbanisme / investisseur / promoteur / fiscalite
-- All 5 tabs always mounted (hidden divs) so reportStore stays populated for PDF/Excel
+- 7 tabs: estimation / urbanisme / investisseur / promoteur / fiscalite / travaux / agent
+- `active` state is `View = Tab | 'home'`; default is `'home'` (a landing view, NOT a tab)
+- Home view renders `HeroSection` + `QuickAccess` (src/components/HeroSection.tsx); CTA + grid cards call setActive(tab) to enter tools. Clicking the header logo returns to 'home'.
+- All tab panels stay mounted (hidden divs) even on 'home' so reportStore stays populated for PDF/Excel; the per-tab SVG banner only renders when `active !== 'home'`.
+- Header has: clickable logo (→home), Globe+language selector, and a kebab (MoreVertical) dropdown with Save/History/XLS/PDF (replaced the old standalone action bar).
+- MarketBanner = single compact dark line (#0F2235 bg, gold values) above header; Footer at bottom.
 - Tab banners: inline React JSX SVG components (BannerEstimation, etc.) defined in App.tsx
-- MarketBanner above header, Footer at bottom
 
 ## JSX / TypeScript Gotchas
 - Hebrew `ממ"ד` inside JSX string attributes: use template literal `{``...ממ"ד...``}` NOT `\"` inside double-quoted attribute (causes babel parse error)
