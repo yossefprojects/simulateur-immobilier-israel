@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { Send, Loader2, Trash2, Copy, Check, FileDown, History, X, ChevronRight, Clock } from 'lucide-react'
+import { Send, Loader2, Trash2, Copy, Check, FileDown, History, X, ChevronRight, ChevronDown, Sliders, Clock } from 'lucide-react'
 import jsPDF from 'jspdf'
 import { useLang } from '../i18n/LanguageContext'
 
@@ -46,95 +46,125 @@ function fmtDate(ts: number, lang: 'fr' | 'en' | 'he' = 'fr'): string {
   return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })
 }
 
-const BASE_PROMPT = `Tu es un analyste senior de fonds de private equity immobilier spécialisé en Israël (Tel-Aviv et grandes villes).
+const BASE_PROMPT = `Tu es un expert en évaluation immobilière agréé en Israël (שמאי מקרקעין מוסמך). Tu maîtrises les méthodes officielles reconnues par le Conseil des Shamaïm (מועצת שמאי המקרקעין בישראל), le droit foncier israélien, la fiscalité immobilière et les données de marché Nadlan Gov.
 
-Pour chaque projet décrit, tu produis un rapport d'analyse complet et chiffré.
+RÔLE ET LIMITES :
+Tu es un outil d'aide à la décision, pas un Shamai agréé officiel. Tes évaluations sont indicatives, basées sur des données publiques (Nadlan Gov, CBS, BOI) et des méthodes reconnues. Elles ne remplacent pas un rapport de Shamai légalement signé (requis notamment pour un prêt hypothécaire). Rappelle cette limite une seule fois, brièvement, en première ligne du rapport.
 
-HYPOTHESES DE BASE — REGLES DE CALCUL FINANCIER IMPERATIVES (marché Tel-Aviv) :
-- Cout de construction / rénovation : fixe-le à 18 000 NIS/m2 pour du standing standard à élevé. N'applique 28 000 NIS/m2 QUE si le texte mentionne explicitement du "Très Grand Luxe / Ultra-Premium".
-- Cout des sous-sols / parkings excavés : forfait réaliste de 15 000 NIS/m2 (jamais de coûts disproportionnés, sauf contrainte technique majeure spécifiée).
-- Démolition : 800 à 1 500 NIS/m2
-- Honoraires + imprévus : 15 % des coûts de construction (poste unique "Honoraires/Imprévus").
-- Prix de revente marché TLV : 55 000 à 60 000 NIS/m2 en zone prime (ex. Dizengoff), 35 000 à 60 000 NIS/m2 selon quartier et standing.
+SI INFORMATIONS MANQUANTES :
+Ne bloque jamais. Calcule avec les données disponibles en posant des hypothèses raisonnables, et indique clairement ce qui est estimé. Tu peux lister en fin de rapport les informations à fournir pour affiner.
 
-CALCUL DU ROI (impératif) :
-- Chiffre d'affaires (vente) = Surface projetee totale habitable × Prix moyen du m2 du quartier.
-- Cout total = Prix d'acquisition + Couts de construction + Honoraires/Imprevus (15 %).
-- ROI brut = ((Chiffre d'affaires − Cout total) / Cout total) × 100.
+MÉTHODES D'ÉVALUATION (applique la plus pertinente, priorité au comparatif) :
+1. Comparative (שיטת ההשוואה) — priorité : Valeur = Prix médian m2 quartier x Surface x coef. étage x état x vue x équipements x âge x type x pièces.
+2. Revenu (שיטת ההכנסות) — si loué/investissement : Valeur = Loyer annuel net / Taux de capitalisation (2,5 a 4,5 %).
+3. Résiduelle (שיטת העודף) — si terrain/développement : Valeur terrain = CA projet - coûts construction - frais (15-20 %) - marge promoteur (20-30 %) - financement.
+4. Coût (שיטת העלות) — si bien très spécifique ou neuf.
 
-VALORISATION DES ACQUIS :
-- Si un permis de construire est "déjà accordé", valorise cet actif positivement dans la note globale (gain de ~3 ans de procédures, réduction nette du risque construction).
+PRIX MÉDIANS DE RÉFÉRENCE (Nadlan Gov Q1 2025, NIS/m2) :
+Tel Aviv Neve Tzedek 58 000 ; Rothschild/Centre 62 000 ; Florentin 42 000 ; Old North 46 000 ; Ramat Aviv 38 000 ; Jaffa 31 000 ; Herzliya Pituach 50 000 ; Herzliya Centre 30 000 ; Jérusalem Rehavia/Talbiyeh 42 000 ; German Colony 38 000 ; Katamon 28 000 ; Netanya Ir Yamim 32 000 ; Netanya bord de mer 27 000 ; Ra'anana Centre 28 000 ; Haïfa Merkaz HaCarmel 25 000 ; Beer Sheva Ramot 12 000 ; Nahal Beka 11 000. Si le quartier est inconnu, estime par comparaison avec une zone proche et signale-le.
 
-SCORING INVESTISSEMENT (0-100) :
-- Rentabilité (0-30 pts) : ROI > 40 % = 30 pts | 25-40 % = 22 pts | 15-25 % = 15 pts | < 15 % = 5 pts | negatif = 0 pt
-- Risque marche (0-20 pts) : TLV centre = fort potentiel | zones secondaires = risque moyen
-- Risque construction (0-20 pts) : permis accorde = faible risque | projet complexe = risque eleve
-- Securite financiere (0-15 pts) : marge elevee et stable = bon score
-- Qualite du deal (0-15 pts) : ratio achat/valeur future, coherence, potentiel revalorisation
+COEFFICIENTS D'AJUSTEMENT :
+Étage : RDC x0,90 ; 1-2 x0,95 ; 3-5 x1,00 ; 6-10 x1,05 ; 11+ x1,10.
+État : neuf x1,16 ; comme neuf x1,08 ; rénové x1,03 ; correct x1,00 ; à rénover x0,87.
+Vue mer directe x1,15 a x1,25. Parking +1 x1,06 ; +2 x1,10. Balcon 1 x1,04 ; 2+ x1,07. Mamad x1,03.
+Âge : <3 ans x1,10 ; 3-10 x1,04 ; 10-25 x1,00 ; 25-40 x0,96 ; >40 x0,92.
+Type : appartement x1,00 ; penthouse x1,32 ; villa x1,20 ; appart. jardin x0,92.
+Pièces : studio x1,14 ; 2P x1,07 ; 3P x1,00 ; 4P x0,97 ; 5P+ x0,94.
 
-FORMAT DE REPONSE STRICT — utilise exactement ces balises, sans emoji, sans caractere special :
+FISCALITÉ (obligatoire dans tout rapport) :
+Mas Rechisha (מס רכישה) résident, bien principal : 0 % jusqu'à 1 978 745 ; 3,5 % jusqu'à 2 347 040 ; 5 % jusqu'à 6 055 070 ; 8 % jusqu'à 20 183 565 ; 10 % au-delà. Investisseur (2e bien +) : 8 % jusqu'à 6 055 070 puis 10 %. Olim hadashim (עולים חדשים) : 0,5 % jusqu'à 1 978 745 (réduction 7 ans).
+Mas Shevach (מס שבח) : 25 % sur la plus-value réelle indexée CBS ; exonération résidence principale possible (habité 18 mois, délai 4 ans).
+Heitel Hashvacha (היטל השבחה) : 50 % de la plus-value créée par un changement de plan (תב"ע), dû à la vente ou à l'obtention du permis.
 
-## 1. RESUME DU PROJET
-[2-3 phrases synthétiques sur le projet]
+URBANISME :
+TAMA 38/1 (תמ"א 38, renforcement + étages) bonus +15 a +25 % ; TAMA 38/2 (démolition-reconstruction) +25 a +45 %. Éligibilité : immeuble construit avant 1980, accord 66 % des copropriétaires.
+Pinouï-Binouï (פינוי בינוי) : zone municipale de démolition-reconstruction, bonus foncier +40 a +80 %.
+Score urbanistique (0-100) : TAMA 38 actif +25 ; zone Pinouï-Binouï +35 ; droits à construire restants >30 % +20 ; plan récent (<5 ans) +10 ; permis accordé +10 (maximum 100).
 
-## 2. DONNEES EXTRAITES
-- Localisation : [valeur]
-- Type de projet : [valeur]
-- Surface existante : [valeur]
-- Surface projetee : [valeur]
-- Surface terrain : [valeur]
-- Prix acquisition : [valeur]
-- Permis de construire : [valeur]
-- Etages / sous-sols : [valeur]
-- Contraintes : [valeur]
+TERMES HÉBREUX : inclus toujours le terme technique hébreu entre parenthèses, quelle que soit la langue du rapport.
 
-## 3. HYPOTHESES RETENUES
-- Cout construction/m2 : [valeur]
-- Cout sous-sol/m2 : [valeur]
-- Honoraires/Imprevus : 15 %
-- Prix revente/m2 : [valeur]
+FORMAT DE RÉPONSE STRICT — respecte EXACTEMENT ces balises. Aucun emoji. Aucun tableau. Aucun symbole markdown sauf "## " pour les titres de section et "- " pour les listes. Écris tous les grands nombres avec des espaces de milliers (ex : 5 800 000 NIS) et toujours "NIS", jamais le symbole ₪.
 
-## 4. ESTIMATION DES COUTS
-- Construction : [montant NIS]
-- Sous-sols : [montant NIS]
-- Demolition : [montant NIS]
-- Honoraires/Imprevus (15 %) : [montant NIS]
-- Total travaux : [montant NIS]
+Première ligne du rapport (une seule fois) :
+Rapport indicatif — ne remplace pas un rapport de Shamai (שמאות) légalement signé.
 
-## 5. ANALYSE FINANCIERE
-- Cout acquisition : [montant NIS]
-- Cout total projet : [montant NIS]
-- Valeur de sortie estimee : [montant NIS]
-- Marge brute : [montant NIS]
-- ROI : [pourcentage]
-- Cout revient / m2 : [valeur NIS/m2]
+## 1. IDENTIFICATION DU BIEN
+- Adresse : [valeur]
+- Type : [valeur]
+- Surface : [X m2]
+- Étage : [X / X étages]
+- Année de construction : [valeur]
+- État : [valeur]
+- Gush / Helka (גוש/חלקה) : [si connu, sinon Non communiqué]
 
-DETAIL DU CALCUL :
-- **Cout de construction habitable :** [surface habitable x prix/m2 = montant NIS]
-- **Cout des sous-sols / parkings :** [surface x prix/m2 = montant NIS]
-- **Chiffre d'affaires previsionnel (revente) :** [surface projetee x prix/m2 = montant NIS]
-- **Note sur le permis :** [si permis accorde, expliquer l'avantage : gain de ~3 ans et reduction du risque ; sinon indiquer le risque procedural]
+## 2. VALEUR VÉNALE ESTIMÉE
+- Prix estimé : [X NIS]
+- Fourchette : [X - Y NIS]
+- Prix au m2 estimé : [X NIS/m2]
+- Prix au m2 marché (quartier) : [X NIS/m2]
+- Méthode principale : [comparative / revenu / résiduelle / coût]
+DÉCOMPOSITION DES COEFFICIENTS :
+- Base quartier : [X NIS/m2]
+- État : [xX]
+- Étage : [xX]
+- Équipements : [xX]
+- Âge : [xX]
+- Coefficient total : [xX]
 
-## 6. ANALYSE DES RISQUES
-[3-5 points de risque principaux, un par ligne, commençant par -]
+## 3. ANALYSE DE MARCHÉ
+- Tendance du quartier (12 mois) : [hausse / stabilité / baisse]
+- Comparables récents : [2-3 transactions, ou données limitées]
+- Délai de vente moyen estimé : [X semaines]
+- Liquidité : [forte / moyenne / faible] - [justification courte]
 
-## 7. INVESTMENT SCORE
-- Rentabilite : [X]/30
-- Risque marche : [X]/20
-- Risque construction : [X]/20
-- Securite financiere : [X]/15
-- Qualite du deal : [X]/15
-- SCORE FINAL : [total sur 100]
+## 4. ANALYSE FISCALE
+POUR L'ACHETEUR :
+- Mas Rechisha (מס רכישה) : [X NIS] ([X] %)
+- Si olim hadashim (עולים חדשים) : [X NIS]
+- Frais notaire et enregistrement : [X NIS]
+- Coût total acquisition : [X NIS]
+POUR LE VENDEUR :
+- Prix d'acquisition présumé : [X NIS]
+- Plus-value estimée : [X NIS]
+- Mas Shevach (מס שבח) : [X NIS] ([X] %)
+- Exonération résidence principale : [Oui / Non / Partielle]
+- Heitel Hashvacha (היטל השבחה) : [X NIS, ou Non applicable]
+- Produit net vendeur estimé : [X NIS]
 
-## 8. CONCLUSION
-- Statut : [EXCELLENT / BON / RISQUE MODERE / RISQUE ELEVE / A EVITER]
-- Recommandation : [1-2 phrases claires]
+## 5. POTENTIEL URBANISTIQUE
+- Score urbanistique (תכנוני) : [X]/100
+- Éligibilité TAMA 38 (תמ"א 38) : [Oui / Non / À vérifier] - [+X %]
+- Zone Pinouï-Binouï (פינוי בינוי) : [Oui / Non / À vérifier] - [+X %]
+- Droits à construire restants (זכויות בנייה) : [X m2 ou %]
+- Valeur avec potentiel réalisé : [X NIS]
 
-REGLES ABSOLUES :
-- Chiffres précis et cohérents même si des données manquent (utiliser les hypothèses)
-- Aucun emoji. N'utilise le gras "**...**" QUE pour les sous-titres des bullets "DETAIL DU CALCUL" de la section 5. Partout ailleurs, aucun symbole markdown (pas de *, pas de #), uniquement le format ci-dessus.
-- Formate tous les grands nombres avec des espaces pour les milliers (ex : 26 000 000 NIS) et écris toujours "NIS", jamais le symbole ₪.
-- Réponse professionnelle, synthétique, orientée décision d'investissement`
+## 6. ANALYSE INVESTISSEMENT
+- Loyer mensuel marché estimé : [X NIS/mois]
+- Rendement brut : [X] %
+- Rendement net : [X] %
+- Cash-flow mensuel (crédit 70 % / 25 ans) : [X NIS/mois]
+- Prix de sortie à 10 ans (+3 %/an) : [X NIS]
+- TRI estimé sur 10 ans : [X] %
+- SCORE FINAL : [note sur 100]
+
+## 7. POINTS D'ATTENTION
+- [point ou risque à vérifier 1]
+- [point ou risque à vérifier 2]
+- [point ou risque à vérifier 3]
+- [point ou risque à vérifier 4]
+
+## 8. RECOMMANDATION FINALE
+- Statut : [ACHETER / VENDRE / ATTENDRE / DÉVELOPPER]
+- Justification : [2-3 phrases synthétiques basées sur l'ensemble de l'analyse]
+
+RÈGLES ABSOLUES :
+- Conserve les marqueurs "SCORE FINAL :" et "Statut :" exactement (le rendu de l'interface en dépend).
+- Fournis toujours la section 6 (estime le loyer de marché même si le bien n'est pas loué).
+- Chiffres précis et cohérents même avec des données manquantes (hypothèses claires).
+- Aucun emoji, aucun tableau, aucun astérisque. Uniquement "## " et "- ".
+- Grands nombres avec espaces de milliers, toujours "NIS", jamais ₪.
+- Termes techniques hébreux entre parenthèses.
+- Ton expert, précis, honnête sur les incertitudes ; toujours utile malgré les limites des données.`
 
 function makeSystemPrompt(lang: 'fr' | 'en' | 'he'): string {
   const directive: Record<string, string> = {
@@ -178,7 +208,7 @@ function scoreLabel(score: number, lang: 'fr' | 'en' | 'he') {
 const SECTION_COLORS: Record<number, string> = {
   1: '#1A3A5C', 2: '#1A3A5C', 3: '#1A3A5C',
   4: '#7c3aed', 5: '#0369a1',
-  6: '#b45309', 7: '#C9A84C', 8: '#1A3A5C',
+  6: '#C9A84C', 7: '#b91c1c', 8: '#1A3A5C',
 }
 
 function cleanText(s: string) {
@@ -278,7 +308,7 @@ function RenderOutput({ text, lang }: { text: string; lang: 'fr' | 'en' | 'he' }
     if (block.kind === 'section') {
       sectionNum = block.num
       const col = SECTION_COLORS[sectionNum] ?? '#1A3A5C'
-      const isScore = sectionNum === 7
+      const isScore = sectionNum === 6
       nodes.push(
         <div key={idx} className="flex items-center gap-3 mt-6 mb-3">
           {block.num > 0 && (
@@ -296,8 +326,7 @@ function RenderOutput({ text, lang }: { text: string; lang: 'fr' | 'en' | 'he' }
     }
 
     if (block.kind === 'kv_group') {
-      const isFinance   = [4,5].includes(sectionNum)
-      const isScore7    = sectionNum === 7
+      const isFinance   = [2,4,5,6].includes(sectionNum)
       nodes.push(
         <div key={idx} className="rounded-lg overflow-hidden mb-3 border border-neutral-100">
           {block.items.map((item, j) => {
@@ -315,7 +344,7 @@ function RenderOutput({ text, lang }: { text: string; lang: 'fr' | 'en' | 'he' }
                   </span>
                 ) : (
                   <span className="font-semibold text-right text-xs"
-                    style={{ color: isMonetary && isFinance ? '#C9A84C' : isPct ? '#1A3A5C' : isScore7 ? '#C9A84C' : '#1e293b' }}>
+                    style={{ color: isMonetary && isFinance ? '#C9A84C' : isPct ? '#1A3A5C' : '#1e293b' }}>
                     {item.value}
                   </span>
                 )}
@@ -351,12 +380,20 @@ function RenderOutput({ text, lang }: { text: string; lang: 'fr' | 'en' | 'he' }
 
     if (block.kind === 'statut') {
       const v   = block.value.toUpperCase()
-      const isEx = v.includes('EXCELLENT')
-      const isBon = v.startsWith('BON')
-      const isMod = /MODERE|MODERÉ/.test(v)
-      const isRisk = v.includes('RISQUE') && !isMod
-      const bg = isEx ? '#dcfce7' : isBon ? '#fef9c3' : isMod ? '#ffedd5' : isRisk ? '#fee2e2' : '#fef2f2'
-      const fg = isEx ? '#15803d' : isBon ? '#a16207' : isMod ? '#c2410c' : '#b91c1c'
+      // Recommandation Shamai : ACHETER / VENDRE / ATTENDRE / DÉVELOPPER (FR/EN/HE)
+      const isBuy     = /ACHETER|ACHAT|BUY|לקנות|קני/.test(v)
+      const isSell    = /VENDRE|SELL|למכור|מכיר/.test(v)
+      const isWait    = /ATTENDRE|WAIT|HOLD|להמתין|המתנ|להחזיק/.test(v)
+      const isDevelop = /DÉVELOPPER|DEVELOPPER|DEVELOP|לפתח|פיתוח/.test(v)
+      // Anciens statuts conservés pour compatibilité
+      const isEx   = v.includes('EXCELLENT') || v.includes('מצוין')
+      const isBon  = v.startsWith('BON') || v.includes('GOOD') || v.includes('טוב')
+      const isMod  = /MODERE|MODERÉ|MODERATE|בינוני/.test(v)
+      const isRisk = /RISQUE|RISKY|מסוכן|AVOID|ÉVITER|EVITER|להימנע/.test(v) && !isMod
+      const bg = isBuy ? '#dcfce7' : isDevelop ? '#ede9fe' : isWait ? '#ffedd5' : isSell ? '#dbeafe'
+               : isEx ? '#dcfce7' : isBon ? '#fef9c3' : isMod ? '#ffedd5' : isRisk ? '#fee2e2' : '#f1f5f9'
+      const fg = isBuy ? '#15803d' : isDevelop ? '#6d28d9' : isWait ? '#c2410c' : isSell ? '#1d4ed8'
+               : isEx ? '#15803d' : isBon ? '#a16207' : isMod ? '#c2410c' : isRisk ? '#b91c1c' : '#1A3A5C'
       nodes.push(
         <div key={idx} className="my-2">
           <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold tracking-wide" style={{ background: bg, color: fg }}>
@@ -396,6 +433,8 @@ export function AgentTab() {
   const [pdfBusy, setPdfBusy]     = useState(false)
   const [history, setHistory]     = useState<HistoryItem[]>(() => loadHistory())
   const [showHistory, setShowHistory] = useState(false)
+  const [showQuick, setShowQuick] = useState(false)
+  const [quick, setQuick]         = useState<Record<string, string>>({})
   const [activeId, setActiveId]   = useState<string | null>(null)
   const abortRef  = useRef<AbortController | null>(null)
   const outputRef = useRef<HTMLDivElement>(null)
@@ -461,6 +500,9 @@ export function AgentTab() {
       // Normalise le texte pour la police PDF (Helvetica/WinAnsi) : supprime les
       // glyphes non supportés (₪, puces unicode, espaces fines, signes maths…).
       const sanitize = (s: string) => s
+        // Helvetica (WinAnsi) ne supporte pas l'hébreu : retire les parenthèses
+        // contenant un terme hébreu (ex : "Mas Rechisha (מס רכישה)" -> "Mas Rechisha").
+        .replace(/\s*\([^)]*[\u0590-\u05FF][^)]*\)/g, '')
         .replace(/\u20AA/g, ' NIS')
         .replace(/[\u202F\u00A0\u2007\u2008\u2009\u2006\u2005]/g, ' ')
         .replace(/\u2212/g, '-')
@@ -483,10 +525,10 @@ export function AgentTab() {
       doc.setTextColor(255, 255, 255)
       doc.setFontSize(12)
       doc.setFont('helvetica', 'bold')
-      doc.text('SIMULATEUR IMMOBILIER ISRAEL  —  RAPPORT AGENT IA', M, 11)
+      doc.text('RAPPORT D\'EVALUATION IMMOBILIERE  —  AGENT SHAMAI IA', M, 11)
       doc.setFontSize(7.5)
       doc.setFont('helvetica', 'normal')
-      doc.text(`Genere le ${new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' })}   ·   Analyse financiere & promotion immobiliere`, M, 18)
+      doc.text(`Genere le ${new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' })}   ·   Estimation indicative (ne remplace pas un Shamai agree)`, M, 18)
       doc.setFillColor(...GOLD)
       doc.rect(0, 24, W, 1, 'F')
       y = 34
@@ -637,7 +679,7 @@ export function AgentTab() {
         doc.setFont('helvetica', 'bold')
         doc.setFontSize(10.5)
         doc.setTextColor(...NAVY)
-        doc.text('ANNEXE  —  ANNONCE ANALYSEE', M, y + 4)
+        doc.text('ANNEXE  —  DONNEES DU BIEN', M, y + 4)
         doc.setDrawColor(...GOLD)
         doc.setLineWidth(0.5)
         doc.line(M, y + 6.4, M + maxW, y + 6.4)
@@ -663,7 +705,7 @@ export function AgentTab() {
         doc.text(`${i} / ${totalPages}`, W - M, 292, { align: 'right' })
       }
 
-      doc.save(`rapport-agent-ia-${Date.now()}.pdf`)
+      doc.save(`rapport-shamai-${Date.now()}.pdf`)
     } finally {
       setPdfBusy(false)
     }
@@ -788,7 +830,27 @@ export function AgentTab() {
     { label: ta.ex1, text: ta.ex1text },
     { label: ta.ex2, text: ta.ex2text },
     { label: ta.ex3, text: ta.ex3text },
+    { label: ta.ex4, text: ta.ex4text },
   ]
+
+  const QUICK_KEYS = ['ville', 'type', 'surface', 'etage', 'annee', 'etat', 'objectif'] as const
+
+  const composeQuick = () => {
+    const f = ta.quick.fields as Record<string, { label: string; ph: string }>
+    const lines = QUICK_KEYS
+      .filter(k => quick[k]?.trim())
+      .map(k => `- ${f[k].label} : ${quick[k].trim()}`)
+    if (lines.length === 0) return
+    const free = input.trim()
+    const msg = [
+      ta.quick.intro,
+      ...lines,
+      free ? `\n${ta.quick.more} : ${free}` : '',
+      `\n${ta.quick.reportLine}`,
+    ].filter(Boolean).join('\n').trim()
+    setInput(msg)
+    setShowQuick(false)
+  }
 
   return (
     <div className="space-y-5">
@@ -896,6 +958,49 @@ export function AgentTab() {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Quick fields */}
+      <div className="rounded-xl border border-neutral-200 overflow-hidden">
+        <button
+          onClick={() => setShowQuick(v => !v)}
+          className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-semibold uppercase tracking-wide transition-colors"
+          style={{ color: '#1A3A5C', background: '#f8f7f5' }}>
+          <span className="flex items-center gap-2">
+            <Sliders size={13} /> {ta.quick.title}
+          </span>
+          <ChevronDown size={14} className={`transition-transform ${showQuick ? 'rotate-180' : ''}`} />
+        </button>
+        {showQuick && (
+          <div className="p-4 border-t border-neutral-100 bg-white">
+            <p className="text-xs text-neutral-400 mb-3">{ta.quick.hint}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {QUICK_KEYS.map(k => {
+                const f = (ta.quick.fields as Record<string, { label: string; ph: string }>)[k]
+                return (
+                  <div key={k} className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-neutral-500">{f.label}</label>
+                    <input
+                      type="text"
+                      value={quick[k] ?? ''}
+                      onChange={e => setQuick(q => ({ ...q, [k]: e.target.value }))}
+                      placeholder={f.ph}
+                      className="rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:outline-none focus:border-amber-400 transition-colors"
+                    />
+                  </div>
+                )
+              })}
+            </div>
+            <div className="flex justify-end mt-3">
+              <button
+                onClick={composeQuick}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-white transition-all"
+                style={{ background: '#C9A84C' }}>
+                <ChevronRight size={13} /> {ta.quick.compose}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Input */}
