@@ -397,8 +397,13 @@ export function AgentTab() {
   // 1) paramètre URL `?prompt=...` au chargement
   // 2) postMessage { type: 'NADLAN_LISTING', prompt } depuis le site NadlanConnect
   useEffect(() => {
-    const urlPrompt = new URLSearchParams(window.location.search).get('prompt')
-    if (urlPrompt) setInput(urlPrompt)
+    if (window.location.search) {
+      const urlPrompt = new URLSearchParams(window.location.search).get('prompt')
+      if (urlPrompt) setInput(urlPrompt)
+      // Nettoie l'URL : on retire la query string (params NadlanConnect)
+      // tout en conservant le chemin et le hash (utilisé pour le partage).
+      window.history.replaceState(null, '', window.location.pathname + window.location.hash)
+    }
 
     const onMessage = (e: MessageEvent) => {
       if (e.origin !== 'https://nadlan-connect.replit.app') return
