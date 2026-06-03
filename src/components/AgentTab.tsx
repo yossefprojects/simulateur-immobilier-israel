@@ -51,6 +51,7 @@ const BASE_PROMPT = `Tu es un analyste senior de fonds de private equity immobil
 Pour chaque projet décrit, tu produis un rapport d'analyse complet et chiffré.
 
 HYPOTHESES DE BASE (marché israélien) :
+- Cout des travaux : compte une moyenne de 15 000 NIS/m2 (sauf indication contraire dans le projet)
 - Construction standard : 18 000 à 28 000 NIS/m2 (Tel Aviv = haut de fourchette)
 - Sous-sol : +40 % à +70 % du coût standard
 - Démolition : 800 à 1 500 NIS/m2
