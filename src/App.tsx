@@ -454,42 +454,33 @@ export default function App() {
           </button>
 
           <div className="flex items-center gap-1.5 shrink-0">
-            {/* Platform access — disabled until NadlanConnect goes live.
-                When ready: remove `disabled` and add an `href` (turn into <a>). */}
-            <button
-              disabled
-              title={t.platformSoon}
-              aria-label={`NadlanConnect — ${t.platformSoon}`}
+            {/* Platform access — NadlanConnect is live. */}
+            <a
+              href="https://nadlan-connect.replit.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              title={t.platformOpen}
+              aria-label={`NadlanConnect — ${t.platformOpen}`}
               style={{
-                opacity: 0.6,
-                cursor: 'not-allowed',
                 background: '#1A3A5C',
                 color: 'white',
-                border: '1px solid rgba(255,255,255,0.15)',
+                border: '1px solid rgba(201,168,76,0.5)',
                 borderRadius: 8,
                 padding: '8px 12px',
                 fontSize: 13,
+                textDecoration: 'none',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 8,
+                transition: 'background 0.2s, border-color 0.2s',
               }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#234a73'; e.currentTarget.style.borderColor = '#C9A84C' }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#1A3A5C'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.5)' }}
             >
               <span aria-hidden="true">🏗️</span>
               <span className="hidden sm:inline">NadlanConnect</span>
-              <span
-                style={{
-                  background: '#C9A84C',
-                  color: '#1A3A5C',
-                  fontSize: 10,
-                  fontWeight: 700,
-                  padding: '2px 6px',
-                  borderRadius: 10,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {t.platformSoon}
-              </span>
-            </button>
+              <span aria-hidden="true" style={{ color: '#C9A84C', fontSize: 12 }}>↗</span>
+            </a>
 
             {/* Language selector */}
             <div className="relative">

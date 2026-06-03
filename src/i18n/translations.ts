@@ -12,7 +12,7 @@ export const translations = {
     scenariosTitle: 'Mes scénarios',
     menuLabel: 'Menu',
     langTitle: 'Choisir la langue',
-    platformSoon: 'Bientôt disponible',
+    platformOpen: 'Accéder à la plateforme',
     exportXls: 'Exporter XLS',
     exportPdf: 'Exporter PDF',
     footer: {
@@ -432,7 +432,7 @@ export const translations = {
     scenariosTitle: 'My scenarios',
     menuLabel: 'Menu',
     langTitle: 'Choose language',
-    platformSoon: 'Coming soon',
+    platformOpen: 'Open the platform',
     exportXls: 'Export XLS',
     exportPdf: 'Export PDF',
     footer: {
@@ -852,7 +852,7 @@ export const translations = {
     scenariosTitle: 'התרחישים שלי',
     menuLabel: 'תפריט',
     langTitle: 'בחירת שפה',
-    platformSoon: 'בקרוב',
+    platformOpen: 'כניסה לפלטפורמה',
     exportXls: 'ייצוא XLS',
     exportPdf: 'ייצוא PDF',
     footer: {
