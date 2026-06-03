@@ -320,6 +320,7 @@ export default function App() {
   const [saveModal, setSaveModal]     = useState(false)
   const [saveName, setSaveName]       = useState('')
   const [menuOpen, setMenuOpen]       = useState(false)
+  const [langOpen, setLangOpen]       = useState(false)
   const { lang, setLang, t }          = useLang()
 
   useEffect(() => {
@@ -453,16 +454,30 @@ export default function App() {
           </button>
 
           <div className="flex items-center gap-1.5 shrink-0">
-            <Globe size={16} className="text-white/70" />
-            <div className="flex items-center rounded-lg p-0.5" style={{ background: 'rgba(255,255,255,0.12)' }}>
-              {LANGS.map(l => (
-                <button key={l.key} onClick={() => setLang(l.key)}
-                  className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
-                    lang === l.key ? 'bg-white text-primary' : 'text-white/70 hover:text-white'
-                  }`}>
-                  {l.label}
-                </button>
-              ))}
+            {/* Language selector */}
+            <div className="relative">
+              <button onClick={() => setLangOpen(o => !o)} title={t.langTitle} aria-label={t.langTitle}
+                aria-haspopup="menu" aria-expanded={langOpen}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors">
+                <Globe size={16} />
+                <span className="text-xs font-medium">{LANGS.find(l => l.key === lang)?.label}</span>
+              </button>
+              {langOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setLangOpen(false)} />
+                  <div className="absolute end-0 mt-2 w-32 bg-white rounded-xl shadow-xl border border-neutral-100 py-1.5 z-50">
+                    {LANGS.map(l => (
+                      <button key={l.key} onClick={() => { setLang(l.key); setLangOpen(false) }}
+                        className={`w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-neutral-50 ${
+                          lang === l.key ? 'font-semibold text-primary' : 'text-neutral-700'
+                        }`}>
+                        {l.label}
+                        {lang === l.key && <span style={{ color: '#C9A84C' }}>✓</span>}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Kebab menu */}

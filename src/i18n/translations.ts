@@ -11,6 +11,7 @@ export const translations = {
     scenariosBtn: 'Historique',
     scenariosTitle: 'Mes scénarios',
     menuLabel: 'Menu',
+    langTitle: 'Choisir la langue',
     exportXls: 'Exporter XLS',
     exportPdf: 'Exporter PDF',
     home: {
@@ -420,6 +421,7 @@ export const translations = {
     scenariosBtn: 'History',
     scenariosTitle: 'My scenarios',
     menuLabel: 'Menu',
+    langTitle: 'Choose language',
     exportXls: 'Export XLS',
     exportPdf: 'Export PDF',
     home: {
@@ -829,6 +831,7 @@ export const translations = {
     scenariosBtn: 'היסטוריה',
     scenariosTitle: 'התרחישים שלי',
     menuLabel: 'תפריט',
+    langTitle: 'בחירת שפה',
     exportXls: 'ייצוא XLS',
     exportPdf: 'ייצוא PDF',
     home: {
