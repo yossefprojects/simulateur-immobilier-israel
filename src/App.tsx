@@ -436,7 +436,7 @@ export default function App() {
           <button onClick={() => setActive('home')} className="flex items-center gap-3 text-start" title={t.appTitle}>
             <img src="/logo.png" width={36} height={36} alt={t.appTitle} className="shrink-0 rounded-lg" />
             <div>
-              <h1 className="text-lg font-semibold text-white">{t.appTitle}</h1>
+              <h1 className="text-xl font-serif text-white">{t.appTitle}</h1>
               <p className="text-xs text-white/60 hidden sm:block">{t.appSubtitle}</p>
             </div>
           </button>
@@ -466,7 +466,7 @@ export default function App() {
               onMouseLeave={e => { e.currentTarget.style.background = '#1A3A5C'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.5)' }}
             >
               <span aria-hidden="true">🏗️</span>
-              <span className="hidden sm:inline">NadlanConnect</span>
+              <span className="hidden sm:inline font-serif" style={{ fontSize: 15 }}>NadlanConnect</span>
               <span aria-hidden="true" style={{ color: '#C9A84C', fontSize: 12 }}>↗</span>
             </a>
 
