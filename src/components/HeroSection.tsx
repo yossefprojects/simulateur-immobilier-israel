@@ -38,7 +38,6 @@ export const HeroSection: React.FC<{ onCTA: () => void }> = ({ onCTA }) => {
         {/* Eyebrow */}
         <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 mb-4"
           style={{ background: 'rgba(201,168,76,0.15)', border: '1px solid rgba(201,168,76,0.3)' }}>
-          <span className="text-sm">🇮🇱</span>
           <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#C9A84C' }}>
             {h.eyebrow}
           </span>
