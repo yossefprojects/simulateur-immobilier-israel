@@ -19,6 +19,10 @@ import { lireScenarios, supprimerScenario, sauvegarderScenario, Scenario } from 
 type Tab = 'estimation' | 'urbanisme' | 'investisseur' | 'promoteur' | 'fiscalite' | 'travaux' | 'agent'
 type View = Tab | 'home'
 
+// URL de la future plateforme B2B2C (projet Replit séparé).
+// Remplacez cette valeur par l'adresse réelle une fois la plateforme publiée.
+const PLATFORM_URL = 'https://example.com'
+
 const LANGS: { key: Lang; label: string }[] = [
   { key: 'fr', label: 'FR' },
   { key: 'en', label: 'EN' },
@@ -454,6 +458,27 @@ export default function App() {
           </button>
 
           <div className="flex items-center gap-1.5 shrink-0">
+            {/* Platform access */}
+            <a
+              href={PLATFORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={t.platformTitle}
+              aria-label={t.platformTitle}
+              className="flex items-center gap-1.5 pl-2 pr-2.5 py-1.5 rounded-lg font-semibold text-xs transition-colors hover:brightness-95"
+              style={{ background: '#C9A84C', color: '#0F2235' }}
+            >
+              <svg width="16" height="16" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                <rect x="13" y="8" width="26" height="36" rx="2" fill="#0F2235"/>
+                <rect x="17" y="13" width="7" height="7" rx="1" fill="#C9A84C"/>
+                <rect x="28" y="13" width="7" height="7" rx="1" fill="#C9A84C"/>
+                <rect x="17" y="23" width="7" height="7" rx="1" fill="#C9A84C"/>
+                <rect x="28" y="23" width="7" height="7" rx="1" fill="#C9A84C"/>
+                <polyline points="5,47 13,42 21,44.5 30,39 47,43" stroke="#0F2235" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              </svg>
+              <span className="hidden sm:inline">{t.platformBtn}</span>
+            </a>
+
             {/* Language selector */}
             <div className="relative">
               <button onClick={() => setLangOpen(o => !o)} title={t.langTitle} aria-label={t.langTitle}
