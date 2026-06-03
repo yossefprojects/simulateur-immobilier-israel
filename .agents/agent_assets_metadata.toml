@@ -12,3 +12,51 @@ id = "kZa75qbwOIvOE5HEiJ3RM"
 uri = "file://exports/NadlanConnect-brief.pdf"
 type = "pdf"
 title = "NadlanConnect — Cahier des charges (PDF téléchargeable)"
+
+[[outputs]]
+id = "yLQW5bdZMXRa_VuWKEy2g"
+uri = "file://exports/logos/logo-gold.svg"
+type = "image"
+title = "Logo — version dorée (SVG vectoriel)"
+
+[[outputs]]
+id = "D8xaDlCkZNuI8PGXmNq5J"
+uri = "file://exports/logos/logo-gold-512.png"
+type = "image"
+title = "Logo doré — 512px (PNG transparent)"
+
+[[outputs]]
+id = "G5R4g5ttkf5TWk3soYPtk"
+uri = "file://exports/logos/logo-navy.svg"
+type = "image"
+title = "Logo — version navy (SVG vectoriel)"
+
+[[outputs]]
+id = "izLXodoaggUIfC_8jFDT_"
+uri = "file://exports/logos/logo-navy-512.png"
+type = "image"
+title = "Logo navy — 512px (PNG transparent)"
+
+[[outputs]]
+id = "ltnbPdV43MV0XwkN2XABW"
+uri = "file://exports/logos/favicon-512.png"
+type = "image"
+title = "Favicon — 512px"
+
+[[outputs]]
+id = "HqWr2SlynqjWGzS26fSiR"
+uri = "file://exports/logos/favicon-180.png"
+type = "image"
+title = "Favicon — 180px (Apple touch icon)"
+
+[[outputs]]
+id = "4EBOUr83aKRrgHm1GmIRL"
+uri = "file://exports/logos/favicon-32.png"
+type = "image"
+title = "Favicon — 32px"
+
+[[outputs]]
+id = "5bRIJ5pHzlNxRgEJQ_C2z"
+uri = "file://exports/logos/favicon-16.png"
+type = "image"
+title = "Favicon — 16px"
