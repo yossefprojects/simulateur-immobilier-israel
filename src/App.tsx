@@ -434,19 +434,7 @@ export default function App() {
       <header style={{ background: '#1A3A5C' }} className="px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-3 flex-wrap">
           <button onClick={() => setActive('home')} className="flex items-center gap-3 text-start" title={t.appTitle}>
-            <svg width="32" height="32" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-              <rect width="52" height="52" rx="10" fill="#C9A84C"/>
-              <rect x="13" y="8" width="26" height="36" rx="2" fill="#0F2235"/>
-              <rect x="17" y="13" width="7" height="7" rx="1" fill="#C9A84C"/>
-              <rect x="28" y="13" width="7" height="7" rx="1" fill="#C9A84C"/>
-              <rect x="17" y="23" width="7" height="7" rx="1" fill="#C9A84C"/>
-              <rect x="28" y="23" width="7" height="7" rx="1" fill="#C9A84C"/>
-              <rect x="17" y="33" width="7" height="7" rx="1" fill="#C9A84C" opacity="0.5"/>
-              <rect x="28" y="33" width="7" height="7" rx="1" fill="#C9A84C" opacity="0.5"/>
-              <rect x="24.5" y="2" width="3" height="8" fill="#0F2235"/>
-              <circle cx="26" cy="2.5" r="3" fill="#0F2235"/>
-              <polyline points="5,47 13,42 21,44.5 30,39 47,43" stroke="#0F2235" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.5"/>
-            </svg>
+            <img src="/logo.png" width={36} height={36} alt={t.appTitle} className="shrink-0 rounded-lg" />
             <div>
               <h1 className="text-lg font-semibold text-white">{t.appTitle}</h1>
               <p className="text-xs text-white/60 hidden sm:block">{t.appSubtitle}</p>
