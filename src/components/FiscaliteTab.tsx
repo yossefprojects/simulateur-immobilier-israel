@@ -61,6 +61,8 @@ const ARNONA_RATES: Record<string, { min: number; max: number }> = {
   herzliya:   { min: 90,  max: 140 },
   jerusalem:  { min: 80,  max: 120 },
   netanya:    { min: 70,  max: 110 },
+  bat_yam:    { min: 75,  max: 115 },
+  ben_shemen: { min: 60,  max: 100 },
   autre:      { min: 60,  max: 100 },
 }
 
@@ -83,6 +85,8 @@ export const FiscaliteTab: React.FC = () => {
     herzliya:  tf.arnonaVHerzliya,
     jerusalem: tf.arnonaVJerusalem,
     netanya:   tf.arnonaVNetanya,
+    bat_yam:   tf.arnonaVBatYam,
+    ben_shemen: tf.arnonaVBenShemen,
     autre:     tf.arnonaVAutre,
   }
 

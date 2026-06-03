@@ -311,6 +311,8 @@ export const translations = {
       arnonaVHerzliya:  'Herzliya',
       arnonaVJerusalem: 'Jérusalem',
       arnonaVNetanya:   'Netanya',
+      arnonaVBatYam:    'Bat Yam',
+      arnonaVBenShemen: 'Ben Shemen',
       arnonaVAutre:     'Autre',
     },
     travaux: {
@@ -728,6 +730,8 @@ export const translations = {
       arnonaVHerzliya:  'Herzliya',
       arnonaVJerusalem: 'Jerusalem',
       arnonaVNetanya:   'Netanya',
+      arnonaVBatYam:    'Bat Yam',
+      arnonaVBenShemen: 'Ben Shemen',
       arnonaVAutre:     'Other',
     },
     travaux: {
@@ -1145,6 +1149,8 @@ export const translations = {
       arnonaVHerzliya:  'הרצליה',
       arnonaVJerusalem: 'ירושלים',
       arnonaVNetanya:   'נתניה',
+      arnonaVBatYam:    'בת ים',
+      arnonaVBenShemen: 'בן שמן',
       arnonaVAutre:     'אחר',
     },
     travaux: {

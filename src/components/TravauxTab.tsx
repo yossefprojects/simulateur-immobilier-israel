@@ -34,6 +34,8 @@ const VILLES_COEF: Record<string, number> = {
   rishon:      0.95,
   beer_sheva:  0.85,
   ashkelon:    0.80,
+  bat_yam:     1.05,
+  ben_shemen:  1.00,
 }
 
 const VILLES_LABELS: Record<string, string> = {
@@ -47,6 +49,8 @@ const VILLES_LABELS: Record<string, string> = {
   rishon:      'Rishon LeZion',
   beer_sheva:  'Beer Sheva',
   ashkelon:    'Ashkelon',
+  bat_yam:     'Bat Yam',
+  ben_shemen:  'Ben Shemen',
 }
 
 const VILLES_LABELS_HE: Record<string, string> = {
@@ -60,6 +64,8 @@ const VILLES_LABELS_HE: Record<string, string> = {
   rishon:      'ראשון לציון',
   beer_sheva:  'באר שבע',
   ashkelon:    'אשקלון',
+  bat_yam:     'בת ים',
+  ben_shemen:  'בן שמן',
 }
 
 const ACCES_DATA = [
