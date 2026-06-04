@@ -1,9 +1,10 @@
-import React from 'react'
-import { ArrowRight } from 'lucide-react'
+import React, { useMemo, useState } from 'react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { useLang } from '../i18n/LanguageContext'
 
 type Tool = 'estimation' | 'urbanisme' | 'investisseur' | 'promoteur' | 'fiscalite' | 'travaux' | 'agent'
 
+// ── HERO ────────────────────────────────────────────────────────────────────
 export const HeroSection: React.FC<{ onCTA: () => void }> = ({ onCTA }) => {
   const { t } = useLang()
   const h = t.home
@@ -15,74 +16,174 @@ export const HeroSection: React.FC<{ onCTA: () => void }> = ({ onCTA }) => {
     { val: '7',       lbl: h.stat3 },
   ]
 
+  // Particules dorées — positions figées (ne se régénèrent pas au re-render)
+  const particles = useMemo(
+    () => Array.from({ length: 26 }).map(() => ({
+      size:  1.5 + Math.random() * 2.5,
+      left:  Math.random() * 100,
+      top:   Math.random() * 100,
+      delay: Math.random() * 5,
+      dur:   4 + Math.random() * 6,
+      op:    0.15 + Math.random() * 0.45,
+    })),
+    []
+  )
+
   return (
-    <div className="relative overflow-hidden rounded-2xl"
-      style={{ background: 'linear-gradient(160deg, #0F2235 0%, #1A3A5C 100%)' }}>
+    <section
+      className="relative flex items-center justify-center overflow-hidden"
+      style={{ minHeight: 'min(88vh, 760px)' }}
+    >
+      {/* Photo de fond — Tel Aviv, effet Ken Burns (mouvement lent) */}
+      <img
+        src="/hero-telaviv.jpg"
+        alt=""
+        aria-hidden="true"
+        className="kenburns-img absolute inset-0 w-full h-full object-cover"
+        style={{ zIndex: 0 }}
+      />
 
-      {/* Skyline */}
-      <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.12 }}>
-        <svg width="100%" height="100%" viewBox="0 0 800 140" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-          <rect x="0"   y="60" width="60"  height="80"  fill="white" />
-          <rect x="70"  y="30" width="90"  height="110" fill="white" />
-          <rect x="170" y="50" width="60"  height="90"  fill="white" />
-          <rect x="240" y="15" width="80"  height="125" fill="white" />
-          <rect x="330" y="40" width="70"  height="100" fill="white" />
-          <rect x="410" y="25" width="100" height="115" fill="white" />
-          <rect x="520" y="45" width="65"  height="95"  fill="white" />
-          <rect x="595" y="10" width="90"  height="130" fill="white" />
-          <rect x="695" y="55" width="105" height="85"  fill="white" />
-        </svg>
-      </div>
+      {/* Overlay dégradé navy */}
+      <div className="absolute inset-0" style={{
+        zIndex: 1,
+        background: `linear-gradient(to bottom,
+          rgba(10,22,40,0.62) 0%,
+          rgba(12,30,48,0.74) 45%,
+          rgba(10,22,40,0.92) 100%)`,
+      }} />
+      {/* Vignette latérale subtile */}
+      <div className="absolute inset-0" style={{
+        zIndex: 1,
+        background: 'radial-gradient(ellipse at center, transparent 50%, rgba(8,16,28,0.55) 100%)',
+      }} />
 
-      <div className="relative text-center px-6 py-9 sm:py-11">
-        {/* Eyebrow */}
-        <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 mb-4"
-          style={{ background: 'rgba(201,168,76,0.15)', border: '1px solid rgba(201,168,76,0.3)' }}>
-          <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#C9A84C' }}>
+      {/* Particules dorées flottantes */}
+      {particles.map((p, i) => (
+        <div key={i} className="absolute rounded-full" style={{
+          zIndex: 2,
+          width: p.size, height: p.size,
+          left: `${p.left}%`, top: `${p.top}%`,
+          background: '#C9A84C',
+          opacity: p.op,
+          animation: `floatParticle ${p.dur}s ease-in-out ${p.delay}s infinite`,
+        }} />
+      ))}
+
+      {/* Contenu */}
+      <div className="relative text-center px-6 py-16" style={{ zIndex: 3, maxWidth: 820 }}>
+        {/* Badge */}
+        <div className="anim-fade-down inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6"
+          style={{ background: 'rgba(201,168,76,0.12)', border: '1px solid rgba(201,168,76,0.35)' }}>
+          <span className="rounded-full" style={{
+            width: 6, height: 6, background: '#C9A84C',
+            animation: 'pulseDot 2s ease-in-out infinite',
+          }} />
+          <span className="text-[11px] font-bold uppercase" style={{ color: '#C9A84C', letterSpacing: '0.12em' }}>
             {h.eyebrow}
           </span>
         </div>
 
-        {/* Title */}
-        <h1 className="text-white leading-tight mb-3"
-          style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 'clamp(24px, 5vw, 36px)', fontWeight: 400 }}>
+        {/* Titre */}
+        <h1 className="anim-fade-up text-white mb-5"
+          style={{
+            fontFamily: "'DM Serif Display', Georgia, serif",
+            fontSize: 'clamp(38px, 7vw, 68px)',
+            fontWeight: 400, lineHeight: 1.08,
+            animationDelay: '0.1s',
+            textShadow: '0 2px 30px rgba(0,0,0,0.35)',
+          }}>
           {h.title1}<br />
-          <span style={{ color: '#C9A84C' }}>{h.title2}</span>
+          <span className="shimmer-gold">{h.title2}</span>
         </h1>
 
-        {/* Subtitle */}
-        <p className="mx-auto mb-6 leading-relaxed" style={{ color: '#85B7EB', fontSize: 13, maxWidth: 520 }}>
+        {/* Sous-titre */}
+        <p className="anim-fade-up mx-auto mb-2" style={{
+          color: 'rgba(255,255,255,0.72)', fontSize: 'clamp(13px, 2vw, 16px)',
+          lineHeight: 1.7, maxWidth: 560, animationDelay: '0.25s',
+        }}>
           {h.subtitle}
-          <br />
-          <span style={{ fontSize: 11, opacity: 0.7 }}>{h.subtitleNote}</span>
+        </p>
+        <p className="anim-fade-up mx-auto mb-9" style={{
+          color: 'rgba(255,255,255,0.42)', fontSize: 12, letterSpacing: '0.03em',
+          animationDelay: '0.35s',
+        }}>
+          {h.subtitleNote}
         </p>
 
         {/* CTA */}
-        <button onClick={onCTA}
-          className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-bold mb-7 transition-transform hover:scale-[1.03]"
-          style={{ background: '#C9A84C', color: '#0F2235', boxShadow: '0 4px 20px rgba(201,168,76,0.35)' }}>
-          {h.cta}
-          <ArrowRight size={17} className={isRtl ? 'rotate-180' : ''} />
-        </button>
+        <div className="anim-fade-up flex flex-wrap items-center justify-center gap-3.5 mb-14"
+          style={{ animationDelay: '0.5s' }}>
+          <button onClick={onCTA}
+            className="inline-flex items-center gap-2 rounded-full px-9 py-3.5 text-[15px] font-bold transition-all hover:-translate-y-0.5"
+            style={{
+              background: 'linear-gradient(135deg, #C9A84C, #E8C96A)',
+              color: '#0A1628', border: 'none',
+              boxShadow: '0 8px 32px rgba(201,168,76,0.45)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 14px 42px rgba(201,168,76,0.6)' }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(201,168,76,0.45)' }}>
+            {h.cta}
+            <ArrowRight size={17} className={isRtl ? 'rotate-180' : ''} />
+          </button>
+
+          <a href="https://nadlan-connect.replit.app/" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold transition-all"
+            style={{
+              background: 'rgba(255,255,255,0.08)',
+              backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+              color: 'white', border: '1px solid rgba(255,255,255,0.25)',
+              textDecoration: 'none',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(201,168,76,0.6)'; e.currentTarget.style.background = 'rgba(201,168,76,0.1)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)'; e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}>
+            <span aria-hidden="true">🏗️</span> NadlanConnect
+            <ArrowUpRight size={15} style={{ color: '#C9A84C' }} />
+          </a>
+        </div>
 
         {/* Stats */}
-        <div className="flex justify-center" style={{ gap: 'clamp(20px, 5vw, 48px)' }}>
+        <div className="anim-fade-up flex justify-center" style={{ gap: 'clamp(28px, 6vw, 56px)', animationDelay: '0.65s' }}>
           {stats.map((s, i) => (
             <div key={i} className="text-center">
-              <div className="text-lg font-bold" style={{ color: '#C9A84C' }}>{s.val}</div>
-              <div className="mt-0.5" style={{ fontSize: 10, color: '#8aa0b8' }}>{s.lbl}</div>
+              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(24px, 4vw, 32px)', color: '#C9A84C', lineHeight: 1 }}>
+                {s.val}
+              </div>
+              <div className="mt-1.5" style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.06em' }}>
+                {s.lbl}
+              </div>
             </div>
           ))}
         </div>
       </div>
-    </div>
+
+      {/* Indicateur de scroll */}
+      <div className="absolute flex flex-col items-center gap-1.5" style={{
+        zIndex: 3, bottom: 26, left: '50%', transform: 'translateX(-50%)',
+        animation: 'bounceScroll 2.4s ease-in-out infinite',
+      }}>
+        <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.16em', textTransform: 'uppercase' }}>
+          {h.eyebrow.length ? '↓' : ''}
+        </span>
+        <div style={{ width: 1, height: 34, background: 'linear-gradient(to bottom, rgba(201,168,76,0.6), transparent)' }} />
+      </div>
+    </section>
   )
+}
+
+// ── GRILLE D'OUTILS ──────────────────────────────────────────────────────────
+const TOOL_COLORS: Record<Tool, string> = {
+  estimation:   '#1A3A5C',
+  investisseur: '#0F6E56',
+  promoteur:    '#C9A84C',
+  fiscalite:    '#7F77DD',
+  travaux:      '#BA7517',
+  urbanisme:    '#2A5080',
+  agent:        '#C9A84C',
 }
 
 export const QuickAccess: React.FC<{ onNavigate: (tab: Tool) => void }> = ({ onNavigate }) => {
   const { t } = useLang()
   const h = t.home
-
   const isRtl = t.dir === 'rtl'
 
   const items: { icon: string; title: string; sub: string; tab: Tool }[] = [
@@ -95,45 +196,158 @@ export const QuickAccess: React.FC<{ onNavigate: (tab: Tool) => void }> = ({ onN
   ]
 
   return (
-    <div className="mt-7">
-      {/* Agent IA — full-width bar */}
-      <button onClick={() => onNavigate('agent')}
-        className="w-full flex items-center gap-4 rounded-xl p-4 mb-4 transition-all hover:-translate-y-0.5"
-        style={{
-          background: 'linear-gradient(135deg, #1A3A5C 0%, #0F2235 100%)',
-          border: '1px solid #C9A84C',
-          textAlign: isRtl ? 'right' : 'left',
-          flexDirection: isRtl ? 'row-reverse' : 'row',
-        }}>
-        <div className="flex items-center justify-center rounded-full shrink-0"
-          style={{ width: 42, height: 42, background: 'rgba(201,168,76,0.18)', color: '#C9A84C', fontSize: 20 }}>✦</div>
-        <div className="flex-1 min-w-0">
-          <div className="text-[15px] font-semibold" style={{ color: '#fff' }}>{t.tabs.agent}</div>
-          <div className="text-[12px] leading-snug" style={{ color: '#8aa0b8' }}>{h.subAgent}</div>
-        </div>
-        <ArrowRight size={18} style={{ color: '#C9A84C' }} className={`shrink-0 ${isRtl ? 'rotate-180' : ''}`} />
-      </button>
+    <section style={{ background: '#F8F7F4', padding: '72px 0 88px' }}>
+      <div className="max-w-5xl mx-auto px-6">
 
-      <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-3 text-center">
-        {h.chooseTool}
-      </p>
-      <div className="grid gap-2.5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
-        {items.map(item => (
-          <button key={item.tab} onClick={() => onNavigate(item.tab)}
-            className="group rounded-xl p-3 transition-all hover:-translate-y-0.5"
-            style={{
-              background: 'white',
-              border: '1px solid #E5E7EB',
-              textAlign: isRtl ? 'right' : 'left',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#C9A84C' }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = '#E5E7EB' }}>
-            <div className="text-xl mb-1.5">{item.icon}</div>
-            <div className="text-[13px] font-semibold mb-0.5" style={{ color: '#1A3A5C' }}>{item.title}</div>
-            <div className="text-[11px] leading-snug text-neutral-500">{item.sub}</div>
-          </button>
-        ))}
+        {/* Agent IA — bandeau pleine largeur avec photo */}
+        <button onClick={() => onNavigate('agent')}
+          className="reveal group relative w-full overflow-hidden flex items-center gap-4 rounded-2xl p-5 mb-10 transition-all hover:-translate-y-1"
+          style={{ border: '1px solid #C9A84C', textAlign: isRtl ? 'right' : 'left', flexDirection: isRtl ? 'row-reverse' : 'row' }}>
+          {/* Photo de fond */}
+          <img src="/residential.jpg" alt="" aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" style={{ zIndex: 0 }} />
+          <div className="absolute inset-0" style={{
+            zIndex: 1,
+            background: isRtl
+              ? 'linear-gradient(to left, rgba(15,34,53,0.97) 30%, rgba(15,34,53,0.78) 100%)'
+              : 'linear-gradient(to right, rgba(15,34,53,0.97) 30%, rgba(15,34,53,0.78) 100%)',
+          }} />
+          <div className="relative flex items-center justify-center rounded-full shrink-0" style={{
+            zIndex: 2, width: 46, height: 46, background: 'rgba(201,168,76,0.2)', color: '#C9A84C', fontSize: 22,
+          }}>✦</div>
+          <div className="relative flex-1 min-w-0" style={{ zIndex: 2 }}>
+            <div className="text-[16px] font-semibold" style={{ color: '#fff' }}>{t.tabs.agent}</div>
+            <div className="text-[12px] leading-snug" style={{ color: 'rgba(255,255,255,0.6)' }}>{h.subAgent}</div>
+          </div>
+          <ArrowRight size={18} style={{ color: '#C9A84C', zIndex: 2 }} className={`relative shrink-0 transition-transform group-hover:translate-x-1 ${isRtl ? 'rotate-180' : ''}`} />
+        </button>
+
+        {/* Titre section */}
+        <div className="reveal text-center mb-12">
+          <div className="text-[11px] font-bold uppercase mb-2.5" style={{ color: '#C9A84C', letterSpacing: '0.14em' }}>
+            {t.appSubtitle.split(' · ')[0]}
+          </div>
+          <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(26px, 4vw, 40px)', color: '#0A1628', fontWeight: 400 }}>
+            {h.chooseTool}
+          </h2>
+        </div>
+
+        {/* Grille 3×2 */}
+        <div className="grid gap-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
+          {items.map((item, i) => (
+            <ToolCard key={item.tab} item={item} color={TOOL_COLORS[item.tab]} delay={i * 0.07} isRtl={isRtl} onClick={() => onNavigate(item.tab)} />
+          ))}
+        </div>
       </div>
+    </section>
+  )
+}
+
+const ToolCard: React.FC<{
+  item: { icon: string; title: string; sub: string; tab: Tool }
+  color: string
+  delay: number
+  isRtl: boolean
+  onClick: () => void
+}> = ({ item, color, delay, isRtl, onClick }) => {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <div className="reveal" style={{ transitionDelay: `${delay}s` }}>
+      <button
+        onClick={onClick}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        className="relative w-full overflow-hidden rounded-2xl"
+        style={{
+          background: hovered ? '#0A1628' : 'white',
+          border: hovered ? `1.5px solid ${color}` : '1px solid #E2E8F0',
+          padding: '28px 24px',
+          textAlign: isRtl ? 'right' : 'left',
+          transition: 'all 0.28s cubic-bezier(0.16,1,0.3,1)',
+          transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
+          boxShadow: hovered ? `0 18px 50px rgba(0,0,0,0.16)` : '0 1px 4px rgba(0,0,0,0.05)',
+        }}>
+        {hovered && (
+          <div className="absolute inset-0 pointer-events-none" style={{
+            background: `radial-gradient(circle at 30% 25%, ${color}1f 0%, transparent 70%)`,
+          }} />
+        )}
+
+        <div className="relative inline-block mb-4" style={{
+          fontSize: 32, transition: 'transform 0.28s',
+          transform: hovered ? 'scale(1.15)' : 'scale(1)',
+        }}>{item.icon}</div>
+
+        <div className="relative text-[17px] font-bold mb-1.5" style={{
+          color: hovered ? 'white' : '#0A1628', transition: 'color 0.2s',
+        }}>{item.title}</div>
+
+        <div className="relative text-[12px] leading-relaxed" style={{
+          color: hovered ? 'rgba(255,255,255,0.55)' : '#64748B', transition: 'color 0.2s',
+        }}>{item.sub}</div>
+
+        {/* Flèche */}
+        <div className="absolute flex items-center justify-center rounded-full" style={{
+          bottom: 20, [isRtl ? 'left' : 'right']: 20,
+          width: 28, height: 28,
+          background: hovered ? color : '#F1F5F9',
+          color: hovered ? '#0A1628' : '#94A3B8',
+          transition: 'all 0.25s', transform: hovered ? 'scale(1.1)' : 'scale(1)',
+        } as React.CSSProperties}>
+          <ArrowRight size={13} className={isRtl ? 'rotate-180' : ''} />
+        </div>
+
+        {/* Barre colorée */}
+        <div className="absolute bottom-0 left-0" style={{
+          height: 2, width: hovered ? '100%' : '0%', background: color,
+          transition: 'width 0.4s cubic-bezier(0.16,1,0.3,1)',
+        }} />
+      </button>
     </div>
+  )
+}
+
+// ── SOURCES (footer page d'accueil, version sombre animée) ───────────────────
+export const HomeSources: React.FC = () => {
+  const { t } = useLang()
+  const f = t.footer
+
+  const SOURCES = [
+    { name: 'Nadlan Gov', sub: f.subNadlan, icon: '📊', url: 'https://www.gov.il/en/departments/units/real_estate_transactions' },
+    { name: 'CBS',        sub: f.subCbs,    icon: '📈', url: 'https://www.cbs.gov.il' },
+    { name: 'GovMap',     sub: f.subGovmap, icon: '🗺️', url: 'https://www.govmap.gov.il' },
+    { name: 'Mavat',      sub: f.subMavat,  icon: '🏛️', url: 'https://mavat.iplan.gov.il' },
+  ]
+
+  return (
+    <section style={{ background: '#0A1628', padding: '64px 24px 44px' }}>
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-12" style={{ height: 1, background: 'linear-gradient(to right, transparent, #C9A84C, transparent)' }} />
+
+        <div className="reveal flex flex-wrap justify-center mb-10" style={{ gap: 'clamp(24px, 5vw, 60px)' }}>
+          {SOURCES.map(s => (
+            <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer"
+              className="flex flex-col items-center gap-1.5 transition-opacity"
+              style={{ textDecoration: 'none', opacity: 0.62 }}
+              onMouseEnter={e => { e.currentTarget.style.opacity = '1' }}
+              onMouseLeave={e => { e.currentTarget.style.opacity = '0.62' }}>
+              <span style={{ fontSize: 24 }}>{s.icon}</span>
+              <span className="font-bold" style={{ fontSize: 13, color: 'white' }}>{s.name}</span>
+              <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)' }}>{s.sub}</span>
+            </a>
+          ))}
+        </div>
+
+        <p className="text-center mx-auto mb-6" style={{
+          fontSize: 11, color: 'rgba(255,255,255,0.3)', lineHeight: 1.7, maxWidth: 620,
+        }}>
+          {f.disclaimer}
+        </p>
+        <p className="text-center" style={{ fontSize: 10, color: 'rgba(255,255,255,0.18)' }}>
+          © 2025 {t.appTitle} — simmoisrael.com
+        </p>
+      </div>
+    </section>
   )
 }

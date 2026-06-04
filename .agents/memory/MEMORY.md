@@ -1,2 +1,3 @@
 - [Premium refonte design](premium-refonte.md) — palette #1A3A5C/#C9A84C, DM Serif Display, SVG banners, 5 tabs incl. Fiscalité, recharts, xlsx, scenarios localStorage.
+- [Homepage V2 animations](homepage-v2-animations.md) — animations home-only (hero/grid/sources); .reveal + useScrollReveal([active,lang]); local Ken Burns photo not video; tool tabs stay intact.
 - [AgentTab renderer & PDF markers](agent-tab-renderer.md) — custom (non-markdown) renderer keys off literal `SCORE FINAL :`/`Statut :`/`## N.` markers; prompt edits must preserve them; jsPDF can't render Hebrew.

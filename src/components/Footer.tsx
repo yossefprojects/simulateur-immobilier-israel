@@ -7,7 +7,7 @@ export const Footer: React.FC = () => {
 
   const SOURCES = [
     { name: 'Nadlan Gov', sub: f.subNadlan },
-    { name: 'CBS Israël', sub: f.subCbs },
+    { name: 'CBS',        sub: f.subCbs },
     { name: 'GovMap',     sub: f.subGovmap },
     { name: 'Mavat',      sub: f.subMavat },
   ]

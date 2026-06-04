@@ -7,7 +7,8 @@ import { FiscaliteTab }   from './components/FiscaliteTab'
 import { TravauxTab }     from './components/TravauxTab'
 import { AgentTab }       from './components/AgentTab'
 import { MarketBanner }   from './components/MarketBanner'
-import { HeroSection, QuickAccess } from './components/HeroSection'
+import { HeroSection, QuickAccess, HomeSources } from './components/HeroSection'
+import { useScrollReveal } from './hooks/useScrollReveal'
 import { Footer }         from './components/Footer'
 import { useLang }        from './i18n/LanguageContext'
 import { Lang }           from './i18n/translations'
@@ -333,7 +334,19 @@ export default function App() {
   const [saveName, setSaveName]       = useState('')
   const [menuOpen, setMenuOpen]       = useState(false)
   const [langOpen, setLangOpen]       = useState(false)
+  const [scrolled, setScrolled]       = useState(false)
   const { lang, setLang, t }          = useLang()
+
+  // Reveal au scroll (page d'accueil)
+  useScrollReveal([active, lang])
+
+  // Effet glassmorphism sur le header au scroll
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   useEffect(() => {
     if (showScenarios) setScenarios(lireScenarios())
@@ -478,7 +491,18 @@ export default function App() {
       <MarketBanner />
 
       {/* Header */}
-      <header style={{ background: '#1A3A5C' }} className="px-6 py-4">
+      <header
+        className="px-6 sticky top-0 z-30"
+        style={{
+          background: scrolled ? 'rgba(15,34,53,0.82)' : '#1A3A5C',
+          backdropFilter: scrolled ? 'blur(14px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(14px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(201,168,76,0.25)' : '1px solid transparent',
+          boxShadow: scrolled ? '0 6px 24px rgba(0,0,0,0.22)' : 'none',
+          paddingTop: scrolled ? 10 : 16,
+          paddingBottom: scrolled ? 10 : 16,
+          transition: 'background 0.3s, padding 0.3s, box-shadow 0.3s, border-color 0.3s',
+        }}>
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-3 flex-wrap">
           <button onClick={() => setActive('home')} className="flex items-center gap-3 text-start" title={t.appTitle}>
             <img src="/logo.png" width={36} height={36} alt={t.appTitle} className="shrink-0 rounded-lg" />
@@ -630,11 +654,12 @@ export default function App() {
         </div>
       )}
 
-      {/* Home landing */}
+      {/* Home landing — pleine largeur, animée */}
       {active === 'home' && (
-        <main className="max-w-5xl mx-auto px-6 pt-6 pb-8">
+        <main>
           <HeroSection onCTA={() => setActive('estimation')} />
           <QuickAccess onNavigate={setActive} />
+          <HomeSources />
         </main>
       )}
 
@@ -649,7 +674,7 @@ export default function App() {
         <div className={active === 'agent'        ? 'tab-content' : 'hidden'}><AgentTab /></div>
       </main>
 
-      <Footer />
+      {active !== 'home' && <Footer />}
       {toast && <Toast msg={toast} onDone={() => setToast(null)} />}
 
       {/* Save scenario modal */}

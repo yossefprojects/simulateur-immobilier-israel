@@ -60,3 +60,33 @@ id = "5bRIJ5pHzlNxRgEJQ_C2z"
 uri = "file://exports/logos/favicon-16.png"
 type = "image"
 title = "Favicon — 16px"
+
+[[outputs]]
+id = "l1gWUneEJpJ9W_1MQM7bn"
+uri = "file://attached_assets/stock_images/jerusalem_pano.jpg"
+type = "image"
+title = "Jerusalem old city and modern buildings panoramic warm light"
+
+[[outputs]]
+id = "cvJueoEtRwdILdf-wSugr"
+uri = "file://attached_assets/stock_images/modern_residential_israel.jpg"
+type = "image"
+title = "modern luxury residential apartment building facade Israel contemporary architecture"
+
+[[outputs]]
+id = "Aks1i7teUwQ7pUefyaCdq"
+uri = "file://attached_assets/stock_images/tel_aviv_skyline_1.jpg"
+type = "image"
+title = "Tel Aviv skyline cityscape skyscrapers"
+
+[[outputs]]
+id = "IAXBT37qTfIHvP8liJkp7"
+uri = "file://attached_assets/stock_images/tel_aviv_skyline_2.jpg"
+type = "image"
+title = "Tel Aviv skyline cityscape skyscrapers"
+
+[[outputs]]
+id = "O3gZuKBrAqo0FyAEpTK5Y"
+uri = "file://attached_assets/stock_images/city_skyline_night.jpg"
+type = "image"
+title = "city skyline night lights modern towers aerial"
