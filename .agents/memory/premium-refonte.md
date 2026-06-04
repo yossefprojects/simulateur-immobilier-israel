@@ -42,4 +42,10 @@ description: Full design overhaul decisions and constraints for the Israel real 
 - `fiscalite` key added to `tabs` object in all 3 languages (FR/EN/HE) in `translations.ts`
 - FiscaliteTab is purely local state (no global hook, no reportStore registration)
 
+## Full-site visual refonte (cascade approach)
+- Site-wide restyle is done by editing the SHARED primitives in `src/components/ui.tsx` (SliderField/NumberField/SelectField/MetricCard/SectionTitle/ResultBox/DataTable) while keeping prop APIs identical — every tab inherits the new look with ZERO change to calculation logic. Prefer this over rewriting each tab.
+- **Range slider gold fill:** global CSS paints `input[type=range]` track via `linear-gradient(... var(--val,50%) ...)`. Any range input MUST set `style={{ ['--val']: pct% }}` or it shows a misleading 50% fill. `SliderField` does this automatically; raw `<input type="range">` that bypass SliderField (FinanceTab x2, UrbanismeTab) set `--val` inline.
+- Footer is ONE shared dark 3-col `Footer.tsx` (i18n + `onNavigate` prop wired to `setActive`), rendered on ALL views incl. home. The old home-only `HomeSources` was removed to avoid duplication. Footer column headers use new i18n keys `footer.tools/sources/tagline` (present in all 3 langs).
+- `bannerSub` literals in App.tsx are hardcoded FR/EN/HE strings — pre-existing, left as-is (not part of the visual refonte scope).
+
 **Why:** The app needed a premium professional look to match Israeli real estate market standards. All decisions were made for consistency — DM Serif only for numbers, gold only for interactive accents.

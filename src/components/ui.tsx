@@ -1,6 +1,11 @@
 import React from 'react'
 import { ChevronDown } from 'lucide-react'
 
+// ─── Shared label style ───────────────────────────────────────────────────────
+
+const fieldLabelClass =
+  'block text-[11px] font-bold uppercase tracking-[0.07em] text-[#1A3A5C] mb-1.5'
+
 // ─── SliderField ──────────────────────────────────────────────────────────────
 
 interface SliderFieldProps {
@@ -13,20 +18,24 @@ interface SliderFieldProps {
   onChange: (v: number) => void
 }
 
-export const SliderField: React.FC<SliderFieldProps> = ({ label, min, max, step, value, display, onChange }) => (
-  <div className="mb-3">
-    <label className="block text-xs text-neutral-500 mb-1">{label}</label>
-    <div className="flex items-center gap-3">
-      <input
-        type="range" min={min} max={max} step={step} value={value}
-        onChange={e => onChange(parseFloat(e.target.value))}
-        aria-valuemin={min} aria-valuemax={max} aria-valuenow={value}
-        className="flex-1 h-1"
-      />
-      <span className="text-sm font-medium shrink-0 whitespace-nowrap text-right tabular-nums">{display}</span>
+export const SliderField: React.FC<SliderFieldProps> = ({ label, min, max, step, value, display, onChange }) => {
+  const pct = max > min ? ((value - min) / (max - min)) * 100 : 0
+  return (
+    <div className="mb-3.5">
+      <label className={fieldLabelClass}>{label}</label>
+      <div className="flex items-center gap-3">
+        <input
+          type="range" min={min} max={max} step={step} value={value}
+          onChange={e => onChange(parseFloat(e.target.value))}
+          aria-valuemin={min} aria-valuemax={max} aria-valuenow={value}
+          className="flex-1"
+          style={{ ['--val' as string]: `${pct}%` }}
+        />
+        <span className="text-sm font-semibold shrink-0 whitespace-nowrap text-right tabular-nums text-[#0C1A2E]">{display}</span>
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 // ─── NumberField ──────────────────────────────────────────────────────────────
 
@@ -38,12 +47,21 @@ interface NumberFieldProps {
 }
 
 export const NumberField: React.FC<NumberFieldProps> = ({ label, value, step = 1, onChange }) => (
-  <div className="mb-3">
-    <label className="block text-xs text-neutral-500 mb-1">{label}</label>
+  <div className="mb-3.5">
+    <label className={fieldLabelClass}>{label}</label>
     <input
       type="number" value={value} step={step}
       onChange={e => onChange(parseFloat(e.target.value) || 0)}
-      className="w-full rounded border border-neutral-200 px-3 py-1.5 text-sm"
+      className="w-full text-sm text-[#0C1A2E] bg-white"
+      style={{
+        border: '1.5px solid #E2E8F0',
+        borderRadius: 10,
+        padding: '9px 14px',
+        outline: 'none',
+        transition: 'border-color .2s, box-shadow .2s',
+      }}
+      onFocus={e => { e.currentTarget.style.borderColor = '#1A3A5C'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(26,58,92,0.08)' }}
+      onBlur={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = 'none' }}
     />
   </div>
 )
@@ -58,18 +76,27 @@ interface SelectFieldProps {
 }
 
 export const SelectField: React.FC<SelectFieldProps> = ({ label, value, options, onChange }) => (
-  <div className="mb-3">
-    <label className="block text-xs text-neutral-500 mb-1">{label}</label>
+  <div className="mb-3.5">
+    <label className={fieldLabelClass}>{label}</label>
     <div className="relative">
       <select
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-full appearance-none rounded border border-neutral-200 bg-white pl-3 pr-10 py-1.5 text-sm truncate"
+        className="w-full appearance-none text-sm text-[#0C1A2E] bg-white truncate cursor-pointer ps-3.5 pe-10"
+        style={{
+          border: '1.5px solid #E2E8F0',
+          borderRadius: 10,
+          paddingTop: 9, paddingBottom: 9,
+          outline: 'none',
+          transition: 'border-color .2s, box-shadow .2s',
+        }}
+        onFocus={e => { e.currentTarget.style.borderColor = '#1A3A5C'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(26,58,92,0.08)' }}
+        onBlur={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = 'none' }}
       >
         {options.map(o => <option key={String(o.value)} value={o.value}>{o.label}</option>)}
       </select>
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-        <ChevronDown size={16} strokeWidth={2.2} className="text-neutral-500" />
+      <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-3">
+        <ChevronDown size={15} strokeWidth={2.4} className="text-[#94A3B8]" />
       </div>
     </div>
   </div>
@@ -84,19 +111,39 @@ interface MetricCardProps {
 }
 
 export const MetricCard: React.FC<MetricCardProps> = ({ label, value, accent }) => (
-  <div className="bg-neutral-50 rounded-lg p-3">
-    <div className="text-xs text-neutral-500 mb-1">{label}</div>
-    <div className={`font-display text-xl font-semibold tabular-nums ${accent ? 'text-primary' : 'text-neutral-900'}`}>{value}</div>
+  <div
+    className="rounded-xl p-3.5"
+    style={{
+      background: accent ? 'linear-gradient(135deg, #0A1628, #1A3A5C)' : '#F8F7F4',
+      border: accent ? 'none' : '1px solid #E2E8F0',
+    }}
+  >
+    <div
+      className="text-[10px] font-semibold uppercase tracking-[0.07em] mb-1.5"
+      style={{ color: accent ? 'rgba(255,255,255,0.45)' : '#94A3B8' }}
+    >
+      {label}
+    </div>
+    <div
+      className="font-display text-xl tabular-nums leading-tight"
+      style={{ color: accent ? '#C9A84C' : '#0C1A2E' }}
+    >
+      {value}
+    </div>
   </div>
 )
 
 // ─── SectionTitle ─────────────────────────────────────────────────────────────
 
 export const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="text-xs font-semibold text-neutral-500 uppercase tracking-widest mt-5 mb-2">{children}</div>
+  <div className="flex items-center gap-2 mt-6 mb-3.5">
+    <div className="flex-1 h-px" style={{ background: 'rgba(201,168,76,0.2)' }} />
+    <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#C9A84C]">{children}</span>
+    <div className="flex-1 h-px" style={{ background: 'rgba(201,168,76,0.2)' }} />
+  </div>
 )
 
-// ─── ResultBox ────────────────────────────────────────────────────────────────
+// ─── ResultBox — navy gradient hero result ────────────────────────────────────
 
 interface ResultBoxProps {
   main:    string
@@ -106,14 +153,28 @@ interface ResultBoxProps {
 }
 
 export const ResultBox: React.FC<ResultBoxProps> = ({ main, sub, label, badges }) => (
-  <div className="bg-neutral-50 rounded-xl p-4 mb-4 border border-neutral-100">
-    {label && <div className="text-xs text-neutral-500 mb-1">{label}</div>}
-    <div className="font-display text-4xl font-semibold tabular-nums text-primary">{main}</div>
-    <div className="text-sm text-neutral-500 mt-1">{sub}</div>
+  <div
+    className="relative overflow-hidden rounded-2xl mb-4"
+    style={{ background: 'linear-gradient(135deg, #0A1628, #1A3A5C)', padding: '24px 28px' }}
+  >
+    <div
+      className="absolute pointer-events-none"
+      style={{
+        top: -30, right: -30, width: 120, height: 120,
+        background: 'radial-gradient(circle, rgba(201,168,76,0.2) 0%, transparent 70%)',
+      }}
+    />
+    {label && (
+      <div className="text-[11px] font-semibold uppercase tracking-[0.08em] mb-2" style={{ color: 'rgba(255,255,255,0.45)' }}>
+        {label}
+      </div>
+    )}
+    <div className="font-display text-4xl tabular-nums leading-none" style={{ color: '#C9A84C' }}>{main}</div>
+    <div className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>{sub}</div>
     {badges && (
       <div className="flex gap-2 flex-wrap mt-3">
         {badges.map((b, i) => (
-          <span key={i} className={`text-xs px-2 py-0.5 rounded font-medium ${b.color}`}>{b.text}</span>
+          <span key={i} className={`text-xs px-2.5 py-1 rounded-md font-semibold ${b.color}`}>{b.text}</span>
         ))}
       </div>
     )}
@@ -130,11 +191,15 @@ export const DataTable: React.FC<DataTableProps> = ({ rows }) => (
   <table className="w-full text-xs border-collapse">
     <tbody>
       {rows.map((r, i) => (
-        <tr key={i} className="border-b border-neutral-100 last:border-0">
-          <td className={`py-1.5 px-2 text-neutral-500 ${r.bold ? 'font-semibold' : ''}`}>{r.label}</td>
-          <td className={`py-1.5 px-2 text-right tabular-nums font-medium
-            ${r.accent === 'pos' ? 'text-success' : r.accent === 'neg' ? 'text-danger' : 'text-neutral-900'}
-            ${r.bold ? 'font-semibold' : ''}`}>
+        <tr
+          key={i}
+          className="border-b border-[#F1F5F9] last:border-0"
+          style={r.bold ? { borderTop: '1.5px solid #E2E8F0' } : undefined}
+        >
+          <td className={`py-2 px-2 ${r.bold ? 'font-semibold text-[#0C1A2E]' : 'text-[#64748B]'}`}>{r.label}</td>
+          <td className={`py-2 px-2 text-right tabular-nums font-medium
+            ${r.accent === 'pos' ? 'text-success' : r.accent === 'neg' ? 'text-danger' : 'text-[#0C1A2E]'}
+            ${r.bold ? 'font-bold' : ''}`}>
             {r.value}
           </td>
         </tr>

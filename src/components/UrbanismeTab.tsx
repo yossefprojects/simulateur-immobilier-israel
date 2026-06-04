@@ -106,7 +106,8 @@ export const UrbanismeTab: React.FC = () => {
           </label>
           <input type="range" min={0.5} max={8} step={0.5} value={inputs.cos}
             onChange={e => set('cos', parseFloat(e.target.value))}
-            className="w-full" aria-label={tu.cos} aria-valuemin={0.5} aria-valuemax={8} aria-valuenow={inputs.cos} />
+            className="w-full" style={{ ['--val' as string]: `${((inputs.cos - 0.5) / (8 - 0.5)) * 100}%` }}
+            aria-label={tu.cos} aria-valuemin={0.5} aria-valuemax={8} aria-valuenow={inputs.cos} />
           <div className="text-right text-xs font-medium tabular-nums mt-0.5">{inputs.cos}</div>
         </div>
 

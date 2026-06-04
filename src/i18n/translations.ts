@@ -21,6 +21,9 @@ export const translations = {
       subGovmap:    'Données cadastrales',
       subMavat:     'Plans urbanistiques',
       disclaimer:   "Les estimations sont fournies à titre indicatif. Pour toute décision d'investissement, consultez un expert immobilier certifié. Données basées sur les transactions Nadlan Gov et l'indice CBS.",
+      tools:        'Outils',
+      sources:      'Sources de données',
+      tagline:      "Estimations indicatives basées sur les données Nadlan Gov, CBS et BOI. Ne remplace pas un rapport de Shamai certifié.",
     },
     home: {
       eyebrow:      'Marché immobilier israélien',
@@ -460,6 +463,9 @@ export const translations = {
       subGovmap:    'Cadastral maps',
       subMavat:     'Urban planning',
       disclaimer:   'Estimates are provided for informational purposes only. For any investment decision, consult a certified real estate expert. Data based on Nadlan Gov transactions and the CBS index.',
+      tools:        'Tools',
+      sources:      'Data sources',
+      tagline:      'Indicative estimates based on Nadlan Gov, CBS and BOI data. Not a substitute for a certified Shamai report.',
     },
     home: {
       eyebrow:      'Israeli real estate market',
@@ -899,6 +905,9 @@ export const translations = {
       subGovmap:    'מפות קדסטר',
       subMavat:     'תכנון עירוני',
       disclaimer:   'ההערכות ניתנות לצורך מידע בלבד. לכל החלטת השקעה, יש להתייעץ עם מומחה נדל"ן מוסמך. הנתונים מבוססים על עסקאות Nadlan Gov ומדד הלמ"ס.',
+      tools:        'כלים',
+      sources:      'מקורות נתונים',
+      tagline:      'הערכות אינדיקטיביות המבוססות על נתוני Nadlan Gov, הלמ"ס ובנק ישראל. אינן מחליפות דוח שמאות מוסמך.',
     },
     home: {
       eyebrow:      'שוק הנדל"ן הישראלי',

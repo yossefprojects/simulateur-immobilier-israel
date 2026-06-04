@@ -41,7 +41,8 @@ export const InvestisseurTab: React.FC = () => {
           </label>
           <input type="range" min={3} max={8} step={0.1} value={inputs.taux}
             onChange={e => set('taux', parseFloat(e.target.value))}
-            className="w-full" aria-label={ti.taux} aria-valuemin={3} aria-valuemax={8} aria-valuenow={inputs.taux} />
+            className="w-full" style={{ ['--val' as string]: `${((inputs.taux - 3) / (8 - 3)) * 100}%` }}
+            aria-label={ti.taux} aria-valuemin={3} aria-valuemax={8} aria-valuenow={inputs.taux} />
           <div className="text-right text-xs font-medium tabular-nums mt-0.5">{inputs.taux}%</div>
         </div>
         <SliderField label={ti.duree} min={10} max={30} step={1}
@@ -143,7 +144,8 @@ export const PromoteurTab: React.FC = () => {
           </label>
           <input type="range" min={1} max={8} step={0.5} value={inputs.cos}
             onChange={e => set('cos', parseFloat(e.target.value))}
-            className="w-full" aria-label={tp.cos} />
+            className="w-full" style={{ ['--val' as string]: `${((inputs.cos - 1) / (8 - 1)) * 100}%` }}
+            aria-label={tp.cos} />
           <div className="text-right text-xs font-medium tabular-nums mt-0.5">{inputs.cos}</div>
         </div>
         <SliderField label={tp.ratioVend} min={60} max={90} step={1}

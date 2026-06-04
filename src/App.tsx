@@ -7,7 +7,7 @@ import { FiscaliteTab }   from './components/FiscaliteTab'
 import { TravauxTab }     from './components/TravauxTab'
 import { AgentTab }       from './components/AgentTab'
 import { MarketBanner }   from './components/MarketBanner'
-import { HeroSection, QuickAccess, HomeSources } from './components/HeroSection'
+import { HeroSection, QuickAccess } from './components/HeroSection'
 import { useScrollReveal } from './hooks/useScrollReveal'
 import { Footer }         from './components/Footer'
 import { useLang }        from './i18n/LanguageContext'
@@ -659,7 +659,6 @@ export default function App() {
         <main>
           <HeroSection onCTA={() => setActive('estimation')} />
           <QuickAccess onNavigate={setActive} />
-          <HomeSources />
         </main>
       )}
 
@@ -674,7 +673,7 @@ export default function App() {
         <div className={active === 'agent'        ? 'tab-content' : 'hidden'}><AgentTab /></div>
       </main>
 
-      {active !== 'home' && <Footer />}
+      <Footer onNavigate={setActive} />
       {toast && <Toast msg={toast} onDone={() => setToast(null)} />}
 
       {/* Save scenario modal */}
