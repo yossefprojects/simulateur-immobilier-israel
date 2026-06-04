@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useLang } from '../i18n/LanguageContext'
 
 type Tool = 'estimation' | 'urbanisme' | 'investisseur' | 'promoteur' | 'fiscalite' | 'travaux' | 'agent'
@@ -125,20 +125,6 @@ export const HeroSection: React.FC<{ onCTA: () => void }> = ({ onCTA }) => {
             {h.cta}
             <ArrowRight size={17} className={isRtl ? 'rotate-180' : ''} />
           </button>
-
-          <a href="https://nadlan-connect.replit.app/" target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold transition-all"
-            style={{
-              background: 'rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-              color: 'white', border: '1px solid rgba(255,255,255,0.25)',
-              textDecoration: 'none',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(201,168,76,0.6)'; e.currentTarget.style.background = 'rgba(201,168,76,0.1)' }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)'; e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}>
-            <span aria-hidden="true">🏗️</span> NadlanConnect
-            <ArrowUpRight size={15} style={{ color: '#C9A84C' }} />
-          </a>
         </div>
 
         {/* Stats */}
