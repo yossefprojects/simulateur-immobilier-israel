@@ -94,7 +94,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           ))}
 
           <a
-            href="https://nadlan-connect.replit.app/"
+            href="https://nadlanconnect.com"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 mt-4 rounded-lg px-3.5 py-2 text-xs font-semibold no-underline transition-all"

@@ -515,7 +515,7 @@ export default function App() {
           <div className="flex items-center gap-1.5 shrink-0">
             {/* Platform access — NadlanConnect is live. */}
             <a
-              href="https://nadlan-connect.replit.app/"
+              href="https://nadlanconnect.com"
               target="_blank"
               rel="noopener noreferrer"
               title={t.platformOpen}
