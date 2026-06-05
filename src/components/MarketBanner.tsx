@@ -13,8 +13,8 @@ export const MarketBanner: React.FC = () => {
   const { t } = useLang()
   const m = t.market
 
-  return (
-    <div className="flex gap-6 items-center whitespace-nowrap text-[11px] overflow-x-auto" style={{ background: '#060E1A', padding: '5px 24px' }}>
+  const items = (
+    <>
       <span className="shrink-0" style={{ color: '#4B5563' }}>
         📊 <span style={{ color: '#85B7EB' }}>{m.date} {MARKET_DATA.derniereMAJ}</span>
       </span>
@@ -30,6 +30,16 @@ export const MarketBanner: React.FC = () => {
       <span className="shrink-0 font-medium" style={{ color: MARKET_DATA.evol12mois > 0 ? '#0F9D6E' : '#f87171' }}>
         {MARKET_DATA.evol12mois > 0 ? '▲' : '▼'} {Math.abs(MARKET_DATA.evol12mois)}% {m.over12months}
       </span>
+    </>
+  )
+
+  return (
+    <div className="overflow-hidden text-[11px]" style={{ background: '#060E1A', padding: '5px 0' }}>
+      <div className="ticker-track" aria-hidden="false">
+        {/* Two identical sequences placed back-to-back so the -50% loop is seamless */}
+        <div className="flex gap-6 items-center" style={{ paddingInlineEnd: 24, paddingInlineStart: 24 }}>{items}</div>
+        <div className="flex gap-6 items-center" style={{ paddingInlineEnd: 24 }} aria-hidden="true">{items}</div>
+      </div>
     </div>
   )
 }
