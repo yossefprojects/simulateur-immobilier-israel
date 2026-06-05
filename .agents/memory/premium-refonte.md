@@ -48,4 +48,9 @@ description: Full design overhaul decisions and constraints for the Israel real 
 - Footer is ONE shared dark 3-col `Footer.tsx` (i18n + `onNavigate` prop wired to `setActive`), rendered on ALL views incl. home. The old home-only `HomeSources` was removed to avoid duplication. Footer column headers use new i18n keys `footer.tools/sources/tagline` (present in all 3 langs).
 - `bannerSub` literals in App.tsx are hardcoded FR/EN/HE strings — pre-existing, left as-is (not part of the visual refonte scope).
 
+## AI Agent page (/agent) bespoke design
+- The agent tab intentionally has NO decorative SVG banner: App.tsx gates it with `active !== 'home' && active !== 'agent'`. AgentTab renders its OWN compact dark header (`#0D1B3E`) instead. Don't re-enable the banner for agent.
+- Active "AI Agent" nav tab uses a solid gold PILL (`background #C9A84C`, `color #0D1B3E`, rounded, `borderBottomColor transparent`) — only in the `isAgent && isActive` branch; other tabs keep the gold-underline style. Inactive agent tab keeps its cream/amber look.
+- AgentTab layout: one white "main card" (`0.5px` border, radius 12, padding 24) holding examples chips + quick-fields accordion + textarea + action row; History pill + "Claude · Replit AI" badge live in the dark header. Disclaimer sits below the card. Spec source: `attached_assets/REPLIT_SIMMOISRAEL_FULLSITE_PROMPT_*` agent-page redesign prompt.
+
 **Why:** The app needed a premium professional look to match Israeli real estate market standards. All decisions were made for consistency — DM Serif only for numbers, gold only for interactive accents.

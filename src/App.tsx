@@ -622,7 +622,7 @@ export default function App() {
                 style={
                   isAgent
                     ? isActive
-                      ? { borderBottomColor: '#C9A84C', color: '#C9A84C', background: 'linear-gradient(to bottom, #fffbf0, #fff8e1)' }
+                      ? { borderBottomColor: 'transparent', color: '#0D1B3E', background: '#C9A84C', borderRadius: 6, fontWeight: 500 }
                       : { borderBottomColor: '#e8c96a', color: '#a07800', background: 'linear-gradient(to bottom, #fffdf5, #fffaec)', borderBottomWidth: 2 }
                     : isActive
                       ? { borderBottomColor: '#C9A84C', color: '#1A3A5C' }
@@ -641,8 +641,8 @@ export default function App() {
         </div>
       </nav>
 
-      {/* SVG Banner (tool views only) */}
-      {active !== 'home' && (
+      {/* SVG Banner (tool views only — AI Agent has its own compact header) */}
+      {active !== 'home' && active !== 'agent' && (
         <div className="h-24 sm:h-32 md:h-36 lg:h-40 overflow-hidden relative">
           {TAB_BANNERS[active as Tab]}
           <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent" />

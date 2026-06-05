@@ -855,31 +855,144 @@ export function AgentTab() {
   return (
     <div className="space-y-5">
 
-      {/* Header + history toggle */}
-      <div className="rounded-xl p-4 border border-neutral-200" style={{ background: 'linear-gradient(135deg, #f0f5fa 0%, #f9f8f4 100%)' }}>
-        <div className="flex items-center gap-2 mb-1 flex-wrap">
-          <span className="text-base">🤖</span>
-          <h2 className="text-sm font-bold" style={{ color: '#1A3A5C' }}>{ta.title}</h2>
-          <span className="ml-auto flex items-center gap-2">
-            <button
-              onClick={() => setShowHistory(v => !v)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all"
-              style={showHistory
-                ? { background: '#1A3A5C', borderColor: '#1A3A5C', color: 'white' }
-                : { background: 'white', borderColor: '#d1d5db', color: '#374151' }}>
-              <History size={12} />
-              {ta.historyBtn}
-              {history.length > 0 && (
-                <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-xs font-bold"
-                  style={showHistory ? { background: 'rgba(255,255,255,0.2)' } : { background: '#f3f4f6' }}>
-                  {history.length}
-                </span>
-              )}
-            </button>
-            <span className="text-xs text-neutral-400 hidden sm:block">{ta.poweredBy}</span>
-          </span>
+      {/* Compact header + main card */}
+      <div className="rounded-xl overflow-hidden" style={{ border: '0.5px solid rgba(0,0,0,0.08)' }}>
+
+        {/* Compact dark header */}
+        <div style={{ background: '#0D1B3E', padding: '20px 32px' }}>
+          <div className="flex items-start justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-base shrink-0">🤖</span>
+              <h2 className="text-white truncate" style={{ fontSize: 18, fontWeight: 500 }}>{ta.title}</h2>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setShowHistory(v => !v)}
+                className="flex items-center gap-1.5 rounded-full transition-all"
+                style={showHistory
+                  ? { padding: '4px 12px', fontSize: 12, border: '0.5px solid #C9A84C', background: 'rgba(201,168,76,0.18)', color: '#C9A84C' }
+                  : { padding: '4px 12px', fontSize: 12, border: '0.5px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.7)' }}>
+                <History size={12} />
+                {ta.historyBtn}
+                {history.length > 0 && (
+                  <span className="font-semibold" style={{ color: showHistory ? '#C9A84C' : 'rgba(255,255,255,0.85)' }}>
+                    {history.length}
+                  </span>
+                )}
+              </button>
+              <span className="hidden sm:inline-flex items-center rounded-full"
+                style={{ padding: '4px 12px', fontSize: 12, border: '0.5px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.7)' }}>
+                {ta.poweredBy}
+              </span>
+            </div>
+          </div>
+          <p className="mt-1.5 leading-relaxed" style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>{ta.subtitle}</p>
         </div>
-        <p className="text-xs text-neutral-500 leading-relaxed">{ta.subtitle}</p>
+
+        {/* Main card body */}
+        <div className="bg-white space-y-5" style={{ padding: 24 }}>
+
+          {/* Examples */}
+          <div>
+            <p className="mb-2 uppercase" style={{ fontSize: 11, letterSpacing: '0.08em', color: '#9ca3af', fontWeight: 600 }}>{ta.examplesTitle}</p>
+            <div className="flex flex-wrap gap-2">
+              {EXAMPLES.map((ex, i) => (
+                <button key={i} onClick={() => setInput(ex.text)}
+                  className="rounded-full transition-colors bg-white hover:bg-[#FBF5E6] hover:text-[#0D1B3E]"
+                  style={{ border: '0.5px solid rgba(0,0,0,0.12)', padding: '5px 14px', fontSize: 12, color: '#374151' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#C9A84C' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.12)' }}>
+                  {ex.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick fields */}
+          <div className="rounded-lg overflow-hidden" style={{ border: '0.5px solid rgba(0,0,0,0.12)' }}>
+            <button
+              onClick={() => setShowQuick(v => !v)}
+              className="w-full flex items-center justify-between uppercase transition-colors"
+              style={{ padding: '12px 16px', fontSize: 12, fontWeight: 500, color: '#6b7280' }}>
+              <span className="flex items-center gap-2">
+                <Sliders size={13} /> {ta.quick.title}
+              </span>
+              <ChevronDown size={14} className={`transition-transform ${showQuick ? 'rotate-180' : ''}`} />
+            </button>
+            {showQuick && (
+              <div style={{ padding: '0 16px 16px' }}>
+                <p className="mb-3" style={{ fontSize: 11, color: '#9ca3af' }}>{ta.quick.hint}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 10 }}>
+                  {QUICK_KEYS.map(k => {
+                    const f = (ta.quick.fields as Record<string, { label: string; ph: string }>)[k]
+                    const fullWidth = k === 'objectif'
+                    return (
+                      <div key={k} className={`flex flex-col gap-1 ${fullWidth ? 'sm:col-span-2' : ''}`}>
+                        <label className="uppercase" style={{ fontSize: 11, letterSpacing: '0.04em', fontWeight: 500, color: '#6b7280' }}>{f.label}</label>
+                        <input
+                          type="text"
+                          value={quick[k] ?? ''}
+                          onChange={e => setQuick(q => ({ ...q, [k]: e.target.value }))}
+                          placeholder={f.ph}
+                          className="rounded-lg focus:outline-none transition-colors"
+                          style={{ background: '#F7F5F0', border: '0.5px solid rgba(0,0,0,0.12)', padding: '8px 10px', fontSize: 13 }}
+                          onFocus={e => { e.currentTarget.style.borderColor = '#C9A84C'; e.currentTarget.style.background = '#fff' }}
+                          onBlur={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.12)'; e.currentTarget.style.background = '#F7F5F0' }}
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
+                <div className="flex justify-end mt-3">
+                  <button
+                    onClick={composeQuick}
+                    className="flex items-center gap-1.5 rounded-lg font-semibold transition-all"
+                    style={{ background: '#C9A84C', color: '#0D1B3E', padding: '8px 16px', fontSize: 12 }}>
+                    <ChevronRight size={13} /> {ta.quick.compose}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Main textarea */}
+          <textarea
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) analyze() }}
+            placeholder={ta.placeholder}
+            disabled={loading}
+            className="w-full rounded-[10px] focus:outline-none transition-colors"
+            style={{ minHeight: 140, padding: '14px 16px', border: '0.5px solid rgba(0,0,0,0.12)', background: '#fff', fontSize: 14, lineHeight: 1.6, color: '#1e293b', resize: 'vertical', fontFamily: 'inherit' }}
+            onFocus={e => { e.currentTarget.style.borderColor = '#C9A84C' }}
+            onBlur={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.12)' }}
+          />
+
+          {/* Bottom action row */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <button onClick={handleClear}
+              className="flex items-center gap-1.5 transition-colors self-start sm:self-auto"
+              style={{ fontSize: 13, color: '#9ca3af', background: 'transparent' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#374151' }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#9ca3af' }}>
+              <Trash2 size={13} /> {ta.clear}
+            </button>
+            <span className="hidden sm:inline-flex items-center self-center"
+              style={{ fontSize: 11, background: '#F0EDE6', borderRadius: 4, padding: '2px 6px', color: '#9ca3af' }}>
+              Ctrl+Enter
+            </span>
+            <button onClick={analyze} disabled={loading || !input.trim()}
+              className="flex items-center justify-center gap-2 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+              style={{ background: loading ? '#cbb878' : '#C9A84C', color: '#0D1B3E', padding: '10px 22px', fontSize: 14 }}
+              onMouseEnter={e => { if (!loading && input.trim()) e.currentTarget.style.background = '#b8963e' }}
+              onMouseLeave={e => { e.currentTarget.style.background = loading ? '#cbb878' : '#C9A84C' }}>
+              {loading
+                ? <><Loader2 size={14} className="animate-spin" /> {ta.submitting}</>
+                : <><Send size={14} /> {ta.submit}</>
+              }
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* History panel */}
@@ -947,93 +1060,6 @@ export function AgentTab() {
         </div>
       )}
 
-      {/* Examples */}
-      <div>
-        <p className="text-xs font-semibold text-neutral-400 mb-2 uppercase tracking-wide">{ta.examplesTitle}</p>
-        <div className="flex flex-wrap gap-2">
-          {EXAMPLES.map((ex, i) => (
-            <button key={i} onClick={() => setInput(ex.text)}
-              className="px-3 py-1.5 text-xs rounded-full border border-neutral-200 hover:border-amber-400 hover:bg-amber-50 transition-colors text-neutral-600 hover:text-amber-800">
-              {ex.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Quick fields */}
-      <div className="rounded-xl border border-neutral-200 overflow-hidden">
-        <button
-          onClick={() => setShowQuick(v => !v)}
-          className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-semibold uppercase tracking-wide transition-colors"
-          style={{ color: '#1A3A5C', background: '#f8f7f5' }}>
-          <span className="flex items-center gap-2">
-            <Sliders size={13} /> {ta.quick.title}
-          </span>
-          <ChevronDown size={14} className={`transition-transform ${showQuick ? 'rotate-180' : ''}`} />
-        </button>
-        {showQuick && (
-          <div className="p-4 border-t border-neutral-100 bg-white">
-            <p className="text-xs text-neutral-400 mb-3">{ta.quick.hint}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {QUICK_KEYS.map(k => {
-                const f = (ta.quick.fields as Record<string, { label: string; ph: string }>)[k]
-                return (
-                  <div key={k} className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-neutral-500">{f.label}</label>
-                    <input
-                      type="text"
-                      value={quick[k] ?? ''}
-                      onChange={e => setQuick(q => ({ ...q, [k]: e.target.value }))}
-                      placeholder={f.ph}
-                      className="rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:outline-none focus:border-amber-400 transition-colors"
-                    />
-                  </div>
-                )
-              })}
-            </div>
-            <div className="flex justify-end mt-3">
-              <button
-                onClick={composeQuick}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-white transition-all"
-                style={{ background: '#C9A84C' }}>
-                <ChevronRight size={13} /> {ta.quick.compose}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Input */}
-      <div className="space-y-3">
-        <textarea
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) analyze() }}
-          rows={5}
-          placeholder={ta.placeholder}
-          disabled={loading}
-          className="w-full rounded-xl border border-neutral-200 px-4 py-3 text-sm resize-none focus:outline-none focus:border-amber-400 transition-colors"
-          style={{ fontFamily: 'inherit' }}
-        />
-        <div className="flex items-center justify-between gap-2">
-          <button onClick={handleClear}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-neutral-500 hover:text-neutral-800 hover:bg-neutral-100 transition-colors">
-            <Trash2 size={12} /> {ta.clear}
-          </button>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-neutral-400 hidden sm:block">Ctrl+Enter</span>
-            <button onClick={analyze} disabled={loading || !input.trim()}
-              className="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ background: loading ? '#94a3b8' : '#1A3A5C', color: 'white' }}>
-              {loading
-                ? <><Loader2 size={14} className="animate-spin" /> {ta.submitting}</>
-                : <><Send size={14} /> {ta.submit}</>
-              }
-            </button>
-          </div>
-        </div>
-      </div>
-
       {error && (
         <div className="p-3 rounded-xl text-sm text-red-700 bg-red-50 border border-red-200">
           {error}
@@ -1091,7 +1117,7 @@ export function AgentTab() {
         </div>
       )}
 
-      <p className="text-xs text-neutral-400 text-center leading-relaxed pb-2">{ta.disclaimer}</p>
+      <p className="text-center leading-relaxed pb-2" style={{ fontSize: 12, color: '#9ca3af', marginTop: 16 }}>{ta.disclaimer}</p>
     </div>
   )
 }
