@@ -4,7 +4,7 @@ export const translations = {
   fr: {
     dir: 'ltr' as const,
     langLabel: 'FR',
-    appTitle: 'Simulateur Immobilier Israël',
+    appTitle: 'NadlanConnect Simulator',
     appSubtitle: 'Valorisation marché · Potentiel urbanistique · Analyse financière',
     saveBtn: 'Sauvegarder',
     saveTitle: 'Sauvegarder ce scénario',
@@ -446,7 +446,7 @@ export const translations = {
   en: {
     dir: 'ltr' as const,
     langLabel: 'EN',
-    appTitle: 'Israel Real Estate Simulator',
+    appTitle: 'NadlanConnect Simulator',
     appSubtitle: 'Market valuation · Urban potential · Financial analysis',
     saveBtn: 'Save',
     saveTitle: 'Save this scenario',
@@ -888,7 +888,7 @@ export const translations = {
   he: {
     dir: 'rtl' as const,
     langLabel: 'עב',
-    appTitle: 'סימולטור נדל"ן ישראל',
+    appTitle: 'NadlanConnect Simulator',
     appSubtitle: 'הערכת שווי שוק · פוטנציאל תכנוני · ניתוח פיננסי',
     saveBtn: 'שמירה',
     saveTitle: 'שמירת תרחיש זה',

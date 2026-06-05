@@ -701,7 +701,7 @@ export function AgentTab() {
         doc.setFontSize(7)
         doc.setFont('helvetica', 'normal')
         doc.setTextColor(160, 160, 160)
-        doc.text('Simulateur Immobilier Israel   ·   Analyse indicative non contractuelle', M, 292)
+        doc.text('NadlanConnect Simulator   ·   Analyse indicative non contractuelle', M, 292)
         doc.text(`${i} / ${totalPages}`, W - M, 292, { align: 'right' })
       }
 

@@ -465,7 +465,7 @@ export default function App() {
 
   // Titre d'onglet propre (favoris / partage)
   useEffect(() => {
-    const base = 'Israel Real Estate Simulator'
+    const base = 'NadlanConnect Simulator'
     document.title = active === 'home' ? base : `${activeTab?.label ?? ''} — ${base}`
   }, [active, activeTab])
 
