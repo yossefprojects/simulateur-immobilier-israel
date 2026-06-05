@@ -13,6 +13,8 @@ export const translations = {
     menuLabel: 'Menu',
     langTitle: 'Choisir la langue',
     platformOpen: 'Accéder à la plateforme',
+    analyzePdf: 'Analyser un PDF',
+    simulatorIA: 'Simulateur IA',
     exportXls: 'Exporter XLS',
     exportPdf: 'Exporter PDF',
     footer: {
@@ -455,6 +457,8 @@ export const translations = {
     menuLabel: 'Menu',
     langTitle: 'Choose language',
     platformOpen: 'Open the platform',
+    analyzePdf: 'Analyze a PDF',
+    simulatorIA: 'AI Simulator',
     exportXls: 'Export XLS',
     exportPdf: 'Export PDF',
     footer: {
@@ -897,6 +901,8 @@ export const translations = {
     menuLabel: 'תפריט',
     langTitle: 'בחירת שפה',
     platformOpen: 'כניסה לפלטפורמה',
+    analyzePdf: 'ניתוח PDF',
+    simulatorIA: 'סימולטור AI',
     exportXls: 'ייצוא XLS',
     exportPdf: 'ייצוא PDF',
     footer: {

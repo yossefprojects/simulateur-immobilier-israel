@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Download, FileSpreadsheet, History, X, Trash2, Globe, Save, MoreVertical } from 'lucide-react'
+import { Download, FileSpreadsheet, History, X, Trash2, Globe, Save, MoreVertical, FileText, Sparkles } from 'lucide-react'
 import { EstimationTab }  from './components/EstimationTab'
 import { UrbanismeTab }   from './components/UrbanismeTab'
 import { InvestisseurTab, PromoteurTab } from './components/FinanceTab'
@@ -494,58 +494,93 @@ export default function App() {
       <header
         className="px-6 sticky top-0 z-30"
         style={{
-          background: scrolled ? 'rgba(15,34,53,0.82)' : '#1A3A5C',
+          background: scrolled ? 'rgba(255,255,255,0.90)' : '#FFFFFF',
           backdropFilter: scrolled ? 'blur(14px)' : 'none',
           WebkitBackdropFilter: scrolled ? 'blur(14px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(201,168,76,0.25)' : '1px solid transparent',
-          boxShadow: scrolled ? '0 6px 24px rgba(0,0,0,0.22)' : 'none',
+          borderBottom: '1px solid #ececec',
+          boxShadow: scrolled ? '0 6px 24px rgba(10,22,40,0.08)' : '0 1px 0 rgba(10,22,40,0.03)',
           paddingTop: scrolled ? 10 : 16,
           paddingBottom: scrolled ? 10 : 16,
           transition: 'background 0.3s, padding 0.3s, box-shadow 0.3s, border-color 0.3s',
         }}>
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-3 flex-wrap">
           <button onClick={() => setActive('home')} className="flex items-center gap-3 text-start" title={t.appTitle}>
-            <img src="/logo.png" width={36} height={36} alt={t.appTitle} className="shrink-0 rounded-lg" />
+            <span
+              aria-hidden="true"
+              className="shrink-0 flex items-center justify-center font-serif"
+              style={{
+                width: 40, height: 40, borderRadius: '50%',
+                background: '#1A3A5C', color: '#C9A84C',
+                fontSize: 15, fontWeight: 700, letterSpacing: '0.02em',
+                boxShadow: '0 1px 3px rgba(10,22,40,0.18)',
+              }}>NC</span>
             <div>
-              <h1 className="text-xl font-serif text-white">{t.appTitle}</h1>
-              <p className="text-xs text-white/60 hidden sm:block">{t.appSubtitle}</p>
+              <h1 className="text-xl font-serif leading-tight" style={{ color: '#0A1628' }}>
+                Nadlan<span style={{ color: '#C9A84C' }}>Connect</span>
+              </h1>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-neutral-400 hidden sm:block">{t.appSubtitle}</p>
             </div>
           </button>
 
-          <div className="flex items-center gap-1.5 shrink-0">
-            {/* Platform access — NadlanConnect is live. */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Analyser un PDF — NadlanConnect platform */}
             <a
               href="https://nadlanconnect.com"
               target="_blank"
               rel="noopener noreferrer"
               title={t.platformOpen}
-              aria-label={`NadlanConnect — ${t.platformOpen}`}
+              aria-label={`NadlanConnect — ${t.analyzePdf}`}
               style={{
-                background: '#1A3A5C',
-                color: 'white',
-                border: '1px solid rgba(201,168,76,0.5)',
+                background: '#FFFFFF',
+                color: '#1A3A5C',
+                border: '1px solid #d6d6d6',
                 borderRadius: 8,
-                padding: '8px 12px',
+                padding: '8px 14px',
                 fontSize: 13,
+                fontWeight: 600,
                 textDecoration: 'none',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 8,
-                transition: 'background 0.2s, border-color 0.2s',
+                transition: 'border-color 0.2s, box-shadow 0.2s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#234a73'; e.currentTarget.style.borderColor = '#C9A84C' }}
-              onMouseLeave={e => { e.currentTarget.style.background = '#1A3A5C'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.5)' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#C9A84C'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(201,168,76,0.18)' }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#d6d6d6'; e.currentTarget.style.boxShadow = 'none' }}
             >
-              <span aria-hidden="true">🏗️</span>
-              <span className="hidden sm:inline font-serif" style={{ fontSize: 15 }}>NadlanConnect</span>
-              <span aria-hidden="true" style={{ color: '#C9A84C', fontSize: 12 }}>↗</span>
+              <FileText size={15} />
+              <span className="hidden sm:inline">{t.analyzePdf}</span>
             </a>
+
+            {/* Simulateur IA — AI Agent tab */}
+            <button
+              onClick={() => setActive('agent')}
+              title={t.simulatorIA}
+              aria-label={t.simulatorIA}
+              style={{
+                background: '#C9A84C',
+                color: '#0A1628',
+                border: '1px solid #C9A84C',
+                borderRadius: 8,
+                padding: '8px 14px',
+                fontSize: 13,
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                transition: 'background 0.2s, box-shadow 0.2s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#b8983f'; e.currentTarget.style.boxShadow = '0 2px 10px rgba(201,168,76,0.35)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#C9A84C'; e.currentTarget.style.boxShadow = 'none' }}
+            >
+              <Sparkles size={15} />
+              <span className="hidden sm:inline">{t.simulatorIA}</span>
+            </button>
 
             {/* Language selector */}
             <div className="relative">
               <button onClick={() => setLangOpen(o => !o)} title={t.langTitle} aria-label={t.langTitle}
                 aria-haspopup="menu" aria-expanded={langOpen}
-                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors">
+                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-neutral-500 hover:text-[#1A3A5C] hover:bg-neutral-100 transition-colors">
                 <Globe size={16} />
                 <span className="text-xs font-medium">{LANGS.find(l => l.key === lang)?.label}</span>
               </button>
@@ -571,7 +606,7 @@ export default function App() {
             <div className="relative">
               <button onClick={() => setMenuOpen(o => !o)} title={t.menuLabel} aria-label={t.menuLabel}
                 aria-haspopup="menu" aria-expanded={menuOpen}
-                className="ml-1 p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors">
+                className="ml-1 p-1.5 rounded-lg text-neutral-500 hover:text-[#1A3A5C] hover:bg-neutral-100 transition-colors">
                 <MoreVertical size={18} />
               </button>
               {menuOpen && (
