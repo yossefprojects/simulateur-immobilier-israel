@@ -490,35 +490,29 @@ export default function App() {
     <div className="min-h-screen bg-neutral-50">
       <MarketBanner />
 
-      {/* Header */}
+      {/* Header — dark navy glassmorphism (ISR style) */}
       <header
         className="px-6 sticky top-0 z-30"
         style={{
-          background: scrolled ? 'rgba(255,255,255,0.90)' : '#FFFFFF',
+          background: scrolled ? 'rgba(10,22,40,0.80)' : '#0A1628',
           backdropFilter: scrolled ? 'blur(14px)' : 'none',
           WebkitBackdropFilter: scrolled ? 'blur(14px)' : 'none',
-          borderBottom: '1px solid #ececec',
-          boxShadow: scrolled ? '0 6px 24px rgba(10,22,40,0.08)' : '0 1px 0 rgba(10,22,40,0.03)',
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          boxShadow: scrolled ? '0 6px 24px rgba(0,0,0,0.15)' : 'none',
           paddingTop: scrolled ? 10 : 16,
           paddingBottom: scrolled ? 10 : 16,
-          transition: 'background 0.3s, padding 0.3s, box-shadow 0.3s, border-color 0.3s',
+          transition: 'background 0.3s, padding 0.3s, box-shadow 0.3s',
         }}>
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-3 flex-wrap">
-          <button onClick={() => setActive('home')} className="flex items-center gap-3 text-start" title={t.appTitle}>
-            <span
-              aria-hidden="true"
-              className="shrink-0 flex items-center justify-center font-serif"
-              style={{
-                width: 40, height: 40, borderRadius: '50%',
-                background: '#1A3A5C', color: '#C9A84C',
-                fontSize: 15, fontWeight: 700, letterSpacing: '0.02em',
-                boxShadow: '0 1px 3px rgba(10,22,40,0.18)',
-              }}>NC</span>
+          <button onClick={() => setActive('home')} className="flex items-center gap-3 text-start group" title={t.appTitle}>
+            <div className="shrink-0 h-8 w-8 rounded overflow-hidden">
+              <img src="/logo.png" alt="NadlanConnect" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+            </div>
             <div>
-              <h1 className="text-xl font-serif leading-tight" style={{ color: '#0A1628' }}>
+              <h1 className="text-xl font-serif leading-tight text-white">
                 Nadlan<span style={{ color: '#C9A84C' }}>Connect</span>
               </h1>
-              <p className="text-[11px] uppercase tracking-[0.18em] text-neutral-400 hidden sm:block">{t.appSubtitle}</p>
+              <p className="text-[11px] uppercase tracking-[0.18em] hidden sm:block" style={{ color: 'rgba(255,255,255,0.4)' }}>{t.appSubtitle}</p>
             </div>
           </button>
 
@@ -531,10 +525,10 @@ export default function App() {
               title={t.platformOpen}
               aria-label={`NadlanConnect — ${t.analyzePdf}`}
               style={{
-                background: '#FFFFFF',
-                color: '#1A3A5C',
-                border: '1px solid #d6d6d6',
-                borderRadius: 8,
+                background: 'transparent',
+                color: 'rgba(255,255,255,0.7)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: 9999,
                 padding: '8px 14px',
                 fontSize: 13,
                 fontWeight: 600,
@@ -542,10 +536,10 @@ export default function App() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 8,
-                transition: 'border-color 0.2s, box-shadow 0.2s',
+                transition: 'border-color 0.2s, color 0.2s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#C9A84C'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(201,168,76,0.18)' }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#d6d6d6'; e.currentTarget.style.boxShadow = 'none' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; e.currentTarget.style.color = '#FFFFFF' }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)' }}
             >
               <FileText size={15} />
               <span className="hidden sm:inline">{t.analyzePdf}</span>
@@ -559,18 +553,19 @@ export default function App() {
               style={{
                 background: '#C9A84C',
                 color: '#0A1628',
-                border: '1px solid #C9A84C',
-                borderRadius: 8,
+                border: 'none',
+                borderRadius: 9999,
                 padding: '8px 14px',
                 fontSize: 13,
                 fontWeight: 700,
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 8,
-                transition: 'background 0.2s, box-shadow 0.2s',
+                boxShadow: '0 4px 14px rgba(201,168,76,0.3)',
+                transition: 'background 0.2s, box-shadow 0.2s, transform 0.2s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#b8983f'; e.currentTarget.style.boxShadow = '0 2px 10px rgba(201,168,76,0.35)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = '#C9A84C'; e.currentTarget.style.boxShadow = 'none' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#E8C96A'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(201,168,76,0.4)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#C9A84C'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(201,168,76,0.3)' }}
             >
               <Sparkles size={15} />
               <span className="hidden sm:inline">{t.simulatorIA}</span>
@@ -580,19 +575,23 @@ export default function App() {
             <div className="relative">
               <button onClick={() => setLangOpen(o => !o)} title={t.langTitle} aria-label={t.langTitle}
                 aria-haspopup="menu" aria-expanded={langOpen}
-                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-neutral-500 hover:text-[#1A3A5C] hover:bg-neutral-100 transition-colors">
+                className="flex items-center gap-1 px-2 py-1.5 rounded-full transition-colors"
+                style={{ color: 'rgba(255,255,255,0.6)' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#FFFFFF'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; e.currentTarget.style.background = 'transparent' }}>
                 <Globe size={16} />
                 <span className="text-xs font-medium">{LANGS.find(l => l.key === lang)?.label}</span>
               </button>
               {langOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setLangOpen(false)} />
-                  <div className="absolute end-0 mt-2 w-32 bg-white rounded-xl shadow-xl border border-neutral-100 py-1.5 z-50">
+                  <div className="absolute end-0 mt-2 w-32 rounded-xl shadow-xl py-1.5 z-50" style={{ background: '#0A1628', border: '1px solid rgba(255,255,255,0.1)' }}>
                     {LANGS.map(l => (
                       <button key={l.key} onClick={() => { setLang(l.key); setLangOpen(false) }}
-                        className={`w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-neutral-50 ${
-                          lang === l.key ? 'font-semibold text-primary' : 'text-neutral-700'
-                        }`}>
+                        className="w-full flex items-center justify-between px-4 py-2 text-sm transition-colors"
+                        style={{ color: lang === l.key ? '#C9A84C' : 'rgba(255,255,255,0.7)' }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}>
                         {l.label}
                         {lang === l.key && <span style={{ color: '#C9A84C' }}>✓</span>}
                       </button>
@@ -606,29 +605,43 @@ export default function App() {
             <div className="relative">
               <button onClick={() => setMenuOpen(o => !o)} title={t.menuLabel} aria-label={t.menuLabel}
                 aria-haspopup="menu" aria-expanded={menuOpen}
-                className="ml-1 p-1.5 rounded-lg text-neutral-500 hover:text-[#1A3A5C] hover:bg-neutral-100 transition-colors">
+                className="ml-1 p-1.5 rounded-full transition-colors"
+                style={{ color: 'rgba(255,255,255,0.6)' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#FFFFFF'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; e.currentTarget.style.background = 'transparent' }}>
                 <MoreVertical size={18} />
               </button>
               {menuOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-                  <div className="absolute end-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-neutral-100 py-1.5 z-50">
+                  <div className="absolute end-0 mt-2 w-52 rounded-xl shadow-xl py-1.5 z-50" style={{ background: '#0A1628', border: '1px solid rgba(255,255,255,0.1)' }}>
                     <button onClick={() => { setMenuOpen(false); setSaveModal(true) }}
-                      className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
-                      <Save size={15} className="text-neutral-400" /> {t.saveBtn}
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-sm transition-colors"
+                      style={{ color: 'rgba(255,255,255,0.7)' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}>
+                      <Save size={15} style={{ color: 'rgba(255,255,255,0.4)' }} /> {t.saveBtn}
                     </button>
                     <button onClick={() => { setMenuOpen(false); setShowScenarios(true) }}
-                      className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50">
-                      <History size={15} className="text-neutral-400" /> {t.scenariosBtn}
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-sm transition-colors"
+                      style={{ color: 'rgba(255,255,255,0.7)' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}>
+                      <History size={15} style={{ color: 'rgba(255,255,255,0.4)' }} /> {t.scenariosBtn}
                     </button>
-                    <div className="h-px bg-neutral-100 my-1" />
+                    <div className="my-1" style={{ height: 1, background: 'rgba(255,255,255,0.08)' }} />
                     <button onClick={() => { setMenuOpen(false); handleExportExcel() }} disabled={exportingXls}
-                      className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 disabled:opacity-50">
-                      <FileSpreadsheet size={15} className="text-neutral-400" /> {exportingXls ? '…' : t.exportXls}
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-sm transition-colors disabled:opacity-50"
+                      style={{ color: 'rgba(255,255,255,0.7)' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}>
+                      <FileSpreadsheet size={15} style={{ color: 'rgba(255,255,255,0.4)' }} /> {exportingXls ? '…' : t.exportXls}
                     </button>
                     <button onClick={() => { setMenuOpen(false); handleExport() }} disabled={exporting}
-                      className="w-full flex items-center gap-2.5 px-4 py-2 text-sm font-medium hover:bg-neutral-50 disabled:opacity-50"
-                      style={{ color: '#a07800' }}>
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
+                      style={{ color: '#C9A84C' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}>
                       <Download size={15} /> {exporting ? '…' : t.exportPdf}
                     </button>
                   </div>
@@ -639,8 +652,8 @@ export default function App() {
         </div>
       </header>
 
-      {/* Tab nav */}
-      <nav className="bg-white border-b border-neutral-200 shadow-sm" role="tablist">
+      {/* Tab nav — dark to match header */}
+      <nav className="border-b shadow-sm" role="tablist" style={{ background: '#0F1E30', borderColor: 'rgba(255,255,255,0.08)' }}>
         <div className="max-w-5xl mx-auto px-6 flex overflow-x-auto">
           {TABS.map((tab, idx) => {
             const isAgent  = tab.key === 'agent'
@@ -652,16 +665,16 @@ export default function App() {
                 className={`px-4 py-3 text-sm border-b-2 transition-all whitespace-nowrap focus:outline-none ${
                   isActive
                     ? 'font-semibold'
-                    : 'border-transparent hover:text-primary'
+                    : 'border-transparent'
                 } ${isAgent && !isActive ? 'font-semibold' : ''}`}
                 style={
                   isAgent
                     ? isActive
                       ? { borderBottomColor: 'transparent', color: '#0D1B3E', background: '#C9A84C', borderRadius: 6, fontWeight: 500 }
-                      : { borderBottomColor: '#e8c96a', color: '#a07800', background: 'linear-gradient(to bottom, #fffdf5, #fffaec)', borderBottomWidth: 2 }
+                      : { borderBottomColor: '#e8c96a', color: '#C9A84C', background: 'rgba(201,168,76,0.1)', borderBottomWidth: 2 }
                     : isActive
-                      ? { borderBottomColor: '#C9A84C', color: '#1A3A5C' }
-                      : { color: '#737373' }
+                      ? { borderBottomColor: '#C9A84C', color: '#FFFFFF' }
+                      : { color: 'rgba(255,255,255,0.5)' }
                 }>
                 {isAgent
                   ? <span className="flex items-center gap-1.5">
