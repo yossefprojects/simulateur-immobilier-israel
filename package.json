@@ -22,9 +22,12 @@
     "react-dom": "^18.3.1",
     "react-is": "^19.2.7",
     "recharts": "^3.8.1",
-    "xlsx": "^0.18.5",
+    "exceljs": "^4.4.0",
     "zod": "^4.4.3",
     "zod-validation-error": "^5.0.0"
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
@@ -35,6 +38,6 @@
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.2.2",
-    "vite": "^5.3.1"
+    "vite": "^6.4.3"
   }
 }

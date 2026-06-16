@@ -402,10 +402,10 @@ export default function App() {
 
   const handleExportExcel = () => {
     setExportingXls(true)
-    setTimeout(() => {
+    setTimeout(async () => {
       try {
         const d = getReportData() as Record<string, Record<string, Record<string, unknown>>>
-        exporterExcel({
+        await exporterExcel({
           estimation: d.estimation ? {
             ville:     d.estimation.inputs?.ville      as string,
             quartier:  d.estimation.inputs?.quartier   as string,
