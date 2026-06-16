@@ -154,8 +154,8 @@ interface ResultBoxProps {
 
 export const ResultBox: React.FC<ResultBoxProps> = ({ main, sub, label, badges }) => (
   <div
-    className="relative overflow-hidden rounded-2xl mb-4"
-    style={{ background: 'linear-gradient(135deg, #0A1628, #1A3A5C)', padding: '24px 28px' }}
+    className="relative overflow-hidden rounded-2xl mb-4 p-5 sm:px-7 sm:py-6"
+    style={{ background: 'linear-gradient(135deg, #0A1628, #1A3A5C)' }}
   >
     <div
       className="absolute pointer-events-none"
@@ -169,7 +169,7 @@ export const ResultBox: React.FC<ResultBoxProps> = ({ main, sub, label, badges }
         {label}
       </div>
     )}
-    <div className="font-display text-4xl tabular-nums leading-none" style={{ color: '#C9A84C' }}>{main}</div>
+    <div className="font-display text-3xl sm:text-4xl tabular-nums leading-none break-words" style={{ color: '#C9A84C' }}>{main}</div>
     <div className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>{sub}</div>
     {badges && (
       <div className="flex gap-2 flex-wrap mt-3">
@@ -196,8 +196,8 @@ export const DataTable: React.FC<DataTableProps> = ({ rows }) => (
           className="border-b border-[#F1F5F9] last:border-0"
           style={r.bold ? { borderTop: '1.5px solid #E2E8F0' } : undefined}
         >
-          <td className={`py-2 px-2 ${r.bold ? 'font-semibold text-[#0C1A2E]' : 'text-[#64748B]'}`}>{r.label}</td>
-          <td className={`py-2 px-2 text-right tabular-nums font-medium
+          <td className={`py-2 px-2 align-top ${r.bold ? 'font-semibold text-[#0C1A2E]' : 'text-[#64748B]'}`}>{r.label}</td>
+          <td className={`py-2 px-2 text-right tabular-nums font-medium break-words
             ${r.accent === 'pos' ? 'text-success' : r.accent === 'neg' ? 'text-danger' : 'text-[#0C1A2E]'}
             ${r.bold ? 'font-bold' : ''}`}>
             {r.value}

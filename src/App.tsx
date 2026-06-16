@@ -295,7 +295,7 @@ const BannerAgent = () => (
     <text x="80" y="34" fontFamily="monospace" fontSize="7" fill="#C9A84C" textAnchor="middle">ROI</text>
     <line x1="90" y1="33" x2="200" y2="52" stroke="#C9A84C" strokeWidth=".8" strokeDasharray="3,3" opacity=".4"/>
     <circle cx="200" cy="52" r="6" fill="#C9A84C" opacity=".4"/>
-    <rect x="420" cy="45" y="40" width="70" height="20" rx="3" fill="#112840" stroke="#1A3A5C" strokeWidth="1"/>
+    <rect x="420" y="40" width="70" height="20" rx="3" fill="#112840" stroke="#1A3A5C" strokeWidth="1"/>
     <text x="455" y="54" fontFamily="monospace" fontSize="7" fill="#85B7EB" textAnchor="middle">SCORE 78/100</text>
     <line x1="420" y1="50" x2="386" y2="57" stroke="#85B7EB" strokeWidth=".8" strokeDasharray="3,3" opacity=".4"/>
     <rect x="480" y="65" width="90" height="30" rx="3" fill="#0E2035" stroke="#C9A84C" strokeWidth="1" opacity=".7"/>
@@ -492,7 +492,7 @@ export default function App() {
 
       {/* Header — dark navy glassmorphism (ISR style) */}
       <header
-        className="px-6 sticky top-0 z-30"
+        className="px-4 sm:px-6 sticky top-0 z-30"
         style={{
           background: scrolled ? 'rgba(10,22,40,0.80)' : '#0A1628',
           backdropFilter: scrolled ? 'blur(14px)' : 'none',
@@ -503,8 +503,8 @@ export default function App() {
           paddingBottom: scrolled ? 10 : 16,
           transition: 'background 0.3s, padding 0.3s, box-shadow 0.3s',
         }}>
-        <div className="max-w-5xl mx-auto flex items-center justify-between gap-3 flex-wrap">
-          <button onClick={() => setActive('home')} className="flex items-center gap-3 text-start group" title={t.appTitle}>
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-2 sm:gap-3 flex-wrap">
+          <button onClick={() => setActive('home')} className="flex items-center gap-2 sm:gap-3 text-start group min-w-0" title={t.appTitle}>
             <div className="shrink-0 h-8 w-8 rounded overflow-hidden">
               <img src="/logo.png" alt="NadlanConnect" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
             </div>
@@ -516,7 +516,7 @@ export default function App() {
             </div>
           </button>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Analyser un PDF — NadlanConnect platform */}
             <a
               href="https://nadlanconnect.com"
@@ -654,7 +654,7 @@ export default function App() {
 
       {/* Tab nav — dark to match header */}
       <nav className="border-b shadow-sm" role="tablist" style={{ background: '#0F1E30', borderColor: 'rgba(255,255,255,0.08)' }}>
-        <div className="max-w-5xl mx-auto px-6 flex overflow-x-auto">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex overflow-x-auto no-scrollbar">
           {TABS.map((tab, idx) => {
             const isAgent  = tab.key === 'agent'
             const isActive = active === tab.key
@@ -695,7 +695,7 @@ export default function App() {
           {TAB_BANNERS[active as Tab]}
           <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-          <div className="relative max-w-5xl mx-auto px-6 h-full flex flex-col justify-center">
+          <div className="relative max-w-5xl mx-auto px-4 sm:px-6 h-full flex flex-col justify-center">
             <p className="text-white/60 text-[10px] sm:text-xs font-medium uppercase tracking-widest mb-0.5 sm:mb-1">{bannerSub[active as Tab]}</p>
             <h2 className="text-white text-lg sm:text-2xl font-semibold">{activeTab?.label}</h2>
           </div>
@@ -711,7 +711,7 @@ export default function App() {
       )}
 
       {/* Tool content (kept mounted to preserve state) */}
-      <main className={active === 'home' ? 'hidden' : 'max-w-5xl mx-auto px-6 pt-5 pb-6'} role="tabpanel">
+      <main className={active === 'home' ? 'hidden' : 'max-w-5xl mx-auto px-4 sm:px-6 pt-5 pb-6'} role="tabpanel">
         <div className={active === 'estimation'   ? 'tab-content' : 'hidden'}><EstimationTab /></div>
         <div className={active === 'urbanisme'    ? 'tab-content' : 'hidden'}><UrbanismeTab /></div>
         <div className={active === 'investisseur' ? 'tab-content' : 'hidden'}><InvestisseurTab /></div>
@@ -728,7 +728,7 @@ export default function App() {
       {saveModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm">
-            <h3 className="text-base font-semibold text-primary mb-4">💾 Sauvegarder ce scénario</h3>
+            <h3 className="text-base font-semibold text-primary mb-4">💾 {t.saveTitle}</h3>
             <input type="text" value={saveName} onChange={e => setSaveName(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleSave() }}
               placeholder="Ex : Appartement Neve Tzedek 80m²"
@@ -746,9 +746,9 @@ export default function App() {
       {showScenarios && (
         <div className="fixed inset-0 z-50 flex">
           <div className="flex-1 bg-black/40" onClick={() => setShowScenarios(false)} />
-          <div className="w-80 bg-white shadow-xl flex flex-col overflow-hidden">
+          <div className="w-80 max-w-[85vw] bg-white shadow-xl flex flex-col overflow-hidden">
             <div className="flex items-center justify-between px-4 py-4 border-b border-neutral-100">
-              <h3 className="font-semibold text-primary">Mes scénarios</h3>
+              <h3 className="font-semibold text-primary">{t.scenariosTitle}</h3>
               <button onClick={() => setShowScenarios(false)} className="text-neutral-400 hover:text-neutral-700"><X size={18} /></button>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-3">

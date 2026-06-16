@@ -17,7 +17,17 @@
 @layer utilities {
   .tabular-nums { font-variant-numeric: tabular-nums; }
   .font-display { font-family: 'DM Serif Display', serif; }
+
+  /* Horizontal scroll containers (tab nav) without a visible scrollbar */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
 }
+
+/* Guard against accidental horizontal page scroll on small screens */
+html, body { max-width: 100%; overflow-x: hidden; }
 
 /* ── Tab fade-in ── */
 .tab-content {

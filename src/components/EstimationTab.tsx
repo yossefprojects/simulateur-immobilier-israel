@@ -98,10 +98,10 @@ export const EstimationTab: React.FC = () => {
           </label>
           <div className="relative">
             <select value={inputs.typeProjet} onChange={e => set('typeProjet', parseFloat(e.target.value))}
-              className="w-full appearance-none rounded border border-neutral-200 bg-white pl-3 pr-10 py-1.5 text-sm truncate">
+              className="w-full appearance-none rounded border border-neutral-200 bg-white ps-3 pe-10 py-1.5 text-sm truncate">
               {typesProjetOptions.map(o => <option key={String(o.value)} value={o.value}>{o.label}</option>)}
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+            <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round"/></svg>
             </div>
           </div>
@@ -184,12 +184,12 @@ export const EstimationTab: React.FC = () => {
                 const colorClass = i === 0 ? 'bg-neutral-300' : step.coef > 1 ? 'bg-success' : step.coef < 1 ? 'bg-warning' : 'bg-neutral-300'
                 return (
                   <div key={i} className="flex items-center gap-2 text-xs">
-                    <div className="w-36 text-neutral-500 shrink-0 truncate">{wfLabel(step.label)}</div>
+                    <div className="w-24 sm:w-36 text-neutral-500 shrink-0 truncate">{wfLabel(step.label)}</div>
                     <div className="flex-1 h-2 bg-neutral-100 rounded-full overflow-hidden">
                       <div className={`h-full rounded-full waterfall-bar ${colorClass}`}
                         style={{ width: `${Math.min(pct, 100)}%`, opacity: 0.45 + i * 0.06 }} />
                     </div>
-                    <div className="w-20 text-right font-medium tabular-nums">{fmt(step.prixCumul)} ₪</div>
+                    <div className="w-16 sm:w-20 text-right font-medium tabular-nums shrink-0">{fmt(step.prixCumul)} ₪</div>
                   </div>
                 )
               })}

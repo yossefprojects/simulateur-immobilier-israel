@@ -113,19 +113,19 @@ export const FiscaliteTab: React.FC = () => {
           <label className="block text-xs text-neutral-500 mb-1">{tf.statut}</label>
           <div className="relative">
             <select value={statut} onChange={e => setStatut(e.target.value as Statut)}
-              className="w-full appearance-none rounded border border-neutral-200 bg-white pl-3 pr-10 py-1.5 text-sm">
+              className="w-full appearance-none rounded border border-neutral-200 bg-white ps-3 pe-10 py-1.5 text-sm">
               <option value="resident">{tf.statutResident}</option>
               <option value="etranger">{tf.statutEtranger}</option>
               <option value="ole">{tf.statutOle}</option>
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+            <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round"/></svg>
             </div>
           </div>
         </div>
 
         <SectionTitle>{tf.masShevTitle}</SectionTitle>
-        <div className="grid grid-cols-2 gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
           <div>
             <label className="block text-xs text-neutral-500 mb-1">{tf.prixAchat}</label>
             <input type="number" value={sAchat} step={50000}
@@ -139,7 +139,7 @@ export const FiscaliteTab: React.FC = () => {
               className="w-full rounded border border-neutral-200 px-3 py-1.5 text-sm" />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-3 mb-3">
+        <div className="grid grid-cols-2 gap-3 mb-3 items-start">
           <div>
             <label className="block text-xs text-neutral-500 mb-1">{tf.anneeAchat}</label>
             <input type="number" value={sAnnee} min={1990} max={2025}
@@ -155,17 +155,17 @@ export const FiscaliteTab: React.FC = () => {
         </div>
 
         <SectionTitle>{tf.arnonaTitle}</SectionTitle>
-        <div className="grid grid-cols-2 gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
           <div>
             <label className="block text-xs text-neutral-500 mb-1">{tf.ville}</label>
             <div className="relative">
               <select value={aVille} onChange={e => setAVille(e.target.value)}
-                className="w-full appearance-none rounded border border-neutral-200 bg-white pl-3 pr-10 py-1.5 text-sm">
+                className="w-full appearance-none rounded border border-neutral-200 bg-white ps-3 pe-10 py-1.5 text-sm truncate">
                 {Object.keys(ARNONA_RATES).map(k => (
                   <option key={k} value={k}>{arnonaVilleLabels[k]}</option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+              <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round"/></svg>
               </div>
             </div>

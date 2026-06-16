@@ -24,8 +24,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ content, children }) => {
       {visible && (
         <div
           role="tooltip"
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none"
-          style={{ width: 240 }}
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none w-[240px] max-w-[80vw]"
         >
           <div className="bg-primary text-white text-xs leading-relaxed rounded-lg px-3 py-2 shadow-lg">
             {content}

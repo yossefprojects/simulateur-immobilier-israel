@@ -859,7 +859,7 @@ export function AgentTab() {
       <div className="rounded-xl overflow-hidden" style={{ border: '0.5px solid rgba(0,0,0,0.08)' }}>
 
         {/* Compact dark header */}
-        <div style={{ background: '#0D1B3E', padding: '20px 32px' }}>
+        <div className="px-5 py-5 sm:px-8" style={{ background: '#0D1B3E' }}>
           <div className="flex items-start justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-2 min-w-0">
               <span className="text-base shrink-0">🤖</span>
@@ -890,7 +890,7 @@ export function AgentTab() {
         </div>
 
         {/* Main card body */}
-        <div className="bg-white space-y-5" style={{ padding: 24 }}>
+        <div className="bg-white space-y-5 p-4 sm:p-6">
 
           {/* Examples */}
           <div>

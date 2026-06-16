@@ -37,7 +37,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
     <footer style={{ background: '#0A1628' }}>
       {/* Gold divider */}
-      <div className="mx-12" style={{ height: 1, background: 'linear-gradient(to right, transparent, #C9A84C, transparent)' }} />
+      <div className="mx-6 sm:mx-12" style={{ height: 1, background: 'linear-gradient(to right, transparent, #C9A84C, transparent)' }} />
 
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)] gap-10 md:gap-12 px-6 sm:px-10 pt-12 pb-7">
 
