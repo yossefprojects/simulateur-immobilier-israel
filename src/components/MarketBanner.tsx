@@ -26,7 +26,7 @@ export const MarketBanner: React.FC = () => {
   const dateStr = new Date().toLocaleDateString(locale, { day: '2-digit', month: '2-digit', year: 'numeric' })
 
   return (
-    <div className="w-full overflow-hidden text-[11px]" style={{ background: '#0A1628' }}>
+    <div className="w-full overflow-hidden text-[11px]" style={{ background: '#0E1B2A' }}>
       <div className="ticker-track">
         {[0, 1, 2, 3].map((copy) => (
           <div

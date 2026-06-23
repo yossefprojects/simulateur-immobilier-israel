@@ -984,7 +984,7 @@ export function AgentTab() {
             <button onClick={analyze} disabled={loading || !input.trim()}
               className="flex items-center justify-center gap-2 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
               style={{ background: loading ? '#cbb878' : '#0F7B6C', color: '#0D1B3E', padding: '10px 22px', fontSize: 14 }}
-              onMouseEnter={e => { if (!loading && input.trim()) e.currentTarget.style.background = '#b8963e' }}
+              onMouseEnter={e => { if (!loading && input.trim()) e.currentTarget.style.background = '#0B5C50' }}
               onMouseLeave={e => { e.currentTarget.style.background = loading ? '#cbb878' : '#0F7B6C' }}>
               {loading
                 ? <><Loader2 size={14} className="animate-spin" /> {ta.submitting}</>

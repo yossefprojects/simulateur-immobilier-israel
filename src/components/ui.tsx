@@ -114,7 +114,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({ label, value, accent }) 
   <div
     className="rounded-xl p-3.5"
     style={{
-      background: accent ? 'linear-gradient(135deg, #0A1628, #0E1B2A)' : '#F8F7F4',
+      background: accent ? 'linear-gradient(135deg, #0E1B2A, #0E1B2A)' : '#F7F5F0',
       border: accent ? 'none' : '1px solid #E2E8F0',
     }}
   >
@@ -155,7 +155,7 @@ interface ResultBoxProps {
 export const ResultBox: React.FC<ResultBoxProps> = ({ main, sub, label, badges }) => (
   <div
     className="relative overflow-hidden rounded-2xl mb-4 p-5 sm:px-7 sm:py-6"
-    style={{ background: 'linear-gradient(135deg, #0A1628, #0E1B2A)' }}
+    style={{ background: 'linear-gradient(135deg, #0E1B2A, #0E1B2A)' }}
   >
     <div
       className="absolute pointer-events-none"

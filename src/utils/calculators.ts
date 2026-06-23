@@ -120,7 +120,7 @@ export function calcUrbanisme(inputs: UrbanismeInputs): UrbanismeResult {
 
   const score = Math.min(100, Math.max(0, Math.round(rawScore)))
 
-  const scoreColor = score >= 70 ? '#0F6E56' : score >= 45 ? '#BA7517' : '#993C1D'
+  const scoreColor = score >= 70 ? '#0F6E56' : score >= 45 ? '#E2761A' : '#993C1D'
   const scoreLabel = score >= 70 ? 'Fort potentiel' : score >= 45 ? 'Potentiel modéré' : 'Potentiel faible'
 
   const coefTotal = plan.coef * accord.coef * permis.coef

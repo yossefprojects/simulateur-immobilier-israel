@@ -111,7 +111,7 @@ export const InvestisseurTab: React.FC = () => {
 
 // ── PromoteurTab ───────────────────────────────────────────────────────────────
 
-const DONUT_COLORS = ['#993C1D','#0E1B2A','#534AB7','#BA7517','#0F6E56','#0F7B6C']
+const DONUT_COLORS = ['#993C1D','#0E1B2A','#534AB7','#E2761A','#0F6E56','#0F7B6C']
 
 export const PromoteurTab: React.FC = () => {
   const { inputs, result, set } = usePromoteur()
