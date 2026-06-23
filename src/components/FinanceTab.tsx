@@ -93,8 +93,8 @@ export const InvestisseurTab: React.FC = () => {
               <YAxis tick={{ fontSize: 10, fill: '#6B7280' }} tickFormatter={v => v + 'k₪'} width={48} />
               <ReTooltip formatter={(v) => [(v as number).toLocaleString('fr-FR') + 'k₪']} />
               <ReferenceLine y={0} stroke="#D8D7D3" />
-              <Line type="monotone" dataKey="valeur"  stroke="#1A3A5C" strokeWidth={2} dot={{ r: 2 }} name="Valeur bien" />
-              <Line type="monotone" dataKey="cfCumul" stroke="#C9A84C" strokeWidth={2} dot={{ r: 2 }} strokeDasharray="4 2" name="CF cumulé" />
+              <Line type="monotone" dataKey="valeur"  stroke="#0E1B2A" strokeWidth={2} dot={{ r: 2 }} name="Valeur bien" />
+              <Line type="monotone" dataKey="cfCumul" stroke="#0F7B6C" strokeWidth={2} dot={{ r: 2 }} strokeDasharray="4 2" name="CF cumulé" />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -111,7 +111,7 @@ export const InvestisseurTab: React.FC = () => {
 
 // ── PromoteurTab ───────────────────────────────────────────────────────────────
 
-const DONUT_COLORS = ['#993C1D','#1A3A5C','#534AB7','#BA7517','#0F6E56','#C9A84C']
+const DONUT_COLORS = ['#993C1D','#0E1B2A','#534AB7','#BA7517','#0F6E56','#0F7B6C']
 
 export const PromoteurTab: React.FC = () => {
   const { inputs, result, set } = usePromoteur()

@@ -4,7 +4,7 @@ import { ChevronDown } from 'lucide-react'
 // ─── Shared label style ───────────────────────────────────────────────────────
 
 const fieldLabelClass =
-  'block text-[11px] font-bold uppercase tracking-[0.07em] text-[#1A3A5C] mb-1.5'
+  'block text-[11px] font-bold uppercase tracking-[0.07em] text-[#0E1B2A] mb-1.5'
 
 // ─── SliderField ──────────────────────────────────────────────────────────────
 
@@ -60,7 +60,7 @@ export const NumberField: React.FC<NumberFieldProps> = ({ label, value, step = 1
         outline: 'none',
         transition: 'border-color .2s, box-shadow .2s',
       }}
-      onFocus={e => { e.currentTarget.style.borderColor = '#1A3A5C'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(26,58,92,0.08)' }}
+      onFocus={e => { e.currentTarget.style.borderColor = '#0E1B2A'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(26,58,92,0.08)' }}
       onBlur={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = 'none' }}
     />
   </div>
@@ -90,7 +90,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({ label, value, options,
           outline: 'none',
           transition: 'border-color .2s, box-shadow .2s',
         }}
-        onFocus={e => { e.currentTarget.style.borderColor = '#1A3A5C'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(26,58,92,0.08)' }}
+        onFocus={e => { e.currentTarget.style.borderColor = '#0E1B2A'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(26,58,92,0.08)' }}
         onBlur={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = 'none' }}
       >
         {options.map(o => <option key={String(o.value)} value={o.value}>{o.label}</option>)}
@@ -114,7 +114,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({ label, value, accent }) 
   <div
     className="rounded-xl p-3.5"
     style={{
-      background: accent ? 'linear-gradient(135deg, #0A1628, #1A3A5C)' : '#F8F7F4',
+      background: accent ? 'linear-gradient(135deg, #0A1628, #0E1B2A)' : '#F8F7F4',
       border: accent ? 'none' : '1px solid #E2E8F0',
     }}
   >
@@ -126,7 +126,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({ label, value, accent }) 
     </div>
     <div
       className="font-display text-xl tabular-nums leading-tight"
-      style={{ color: accent ? '#C9A84C' : '#0C1A2E' }}
+      style={{ color: accent ? '#0F7B6C' : '#0C1A2E' }}
     >
       {value}
     </div>
@@ -138,7 +138,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({ label, value, accent }) 
 export const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="flex items-center gap-2 mt-6 mb-3.5">
     <div className="flex-1 h-px" style={{ background: 'rgba(201,168,76,0.2)' }} />
-    <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#C9A84C]">{children}</span>
+    <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#0F7B6C]">{children}</span>
     <div className="flex-1 h-px" style={{ background: 'rgba(201,168,76,0.2)' }} />
   </div>
 )
@@ -155,7 +155,7 @@ interface ResultBoxProps {
 export const ResultBox: React.FC<ResultBoxProps> = ({ main, sub, label, badges }) => (
   <div
     className="relative overflow-hidden rounded-2xl mb-4 p-5 sm:px-7 sm:py-6"
-    style={{ background: 'linear-gradient(135deg, #0A1628, #1A3A5C)' }}
+    style={{ background: 'linear-gradient(135deg, #0A1628, #0E1B2A)' }}
   >
     <div
       className="absolute pointer-events-none"
@@ -169,7 +169,7 @@ export const ResultBox: React.FC<ResultBoxProps> = ({ main, sub, label, badges }
         {label}
       </div>
     )}
-    <div className="font-display text-3xl sm:text-4xl tabular-nums leading-none break-words" style={{ color: '#C9A84C' }}>{main}</div>
+    <div className="font-display text-3xl sm:text-4xl tabular-nums leading-none break-words" style={{ color: '#0F7B6C' }}>{main}</div>
     <div className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>{sub}</div>
     {badges && (
       <div className="flex gap-2 flex-wrap mt-3">

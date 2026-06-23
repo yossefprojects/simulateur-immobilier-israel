@@ -44,7 +44,7 @@ export const MarketBanner: React.FC = () => {
             {marketItems.map((item) => (
               <span key={item.label} className="flex items-center gap-1.5" style={{ color: '#9CABBF' }}>
                 <span>{item.label}</span>
-                <span style={{ color: '#C9A84C', fontWeight: 600 }}>{item.value}</span>
+                <span style={{ color: '#0F7B6C', fontWeight: 600 }}>{item.value}</span>
                 {item.trend && (
                   <span style={{ color: '#0F6E56', fontWeight: 500 }}>{item.trend}</span>
                 )}

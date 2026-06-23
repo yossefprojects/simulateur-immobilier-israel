@@ -5,7 +5,7 @@ import { SelectField, SliderField, SectionTitle, ResultBox } from './ui'
 // ── Données de référence (stables, sans labels) ───────────────────────────────
 
 const NIVEAUX_DATA = [
-  { value: 'rafraichissement', min: 1200, max: 2200,  roi: 6,  color: '#E5F0FF', colorText: '#1A3A5C' },
+  { value: 'rafraichissement', min: 1200, max: 2200,  roi: 6,  color: '#E5F0FF', colorText: '#0E1B2A' },
   { value: 'standard',        min: 2500, max: 4500,  roi: 13, color: '#EAF3DE', colorText: '#27500A' },
   { value: 'lourde',          min: 5000, max: 8000,  roi: 20, color: '#FAEEDA', colorText: '#633806' },
   { value: 'luxe',            min: 9000, max: 14000, roi: 15, color: '#F3EAF8', colorText: '#4A1070' },
@@ -122,11 +122,11 @@ const SourceCard: React.FC<SourceCardProps> = ({ fiabilite, langLabel, titre, ur
       </span>
       <div style={{ marginBottom: 6 }}>
         {url ? (
-          <a href={url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, fontWeight: 600, color: '#1A3A5C', textDecoration: 'none' }}>
+          <a href={url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, fontWeight: 600, color: '#0E1B2A', textDecoration: 'none' }}>
             {titre} ↗
           </a>
         ) : (
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#1A3A5C' }}>{titre}</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: '#0E1B2A' }}>{titre}</span>
         )}
         {date && <span style={{ fontSize: 10, color: '#9CA3AF', marginLeft: 6 }}>{date}</span>}
       </div>
@@ -148,8 +148,8 @@ const CoefBadge: React.FC<{ num: string; label: string; value: string; coef: num
   const color = (!isAbove && !isBelow) ? '#4B5563' : isAbove ? '#633806' : '#27500A'
   return (
     <div style={{ background: bg, border: `0.5px solid ${isAbove ? '#F3D49A' : isBelow ? '#B5D89A' : '#E5E7EB'}`, borderRadius: 10, padding: '10px 14px', flex: '1 1 160px' }}>
-      <div style={{ fontSize: 10, fontWeight: 700, color: '#1A3A5C', marginBottom: 4, opacity: 0.7 }}>COEF {num}</div>
-      <div style={{ fontSize: 12, fontWeight: 600, color: '#1A3A5C', marginBottom: 2 }}>{label}</div>
+      <div style={{ fontSize: 10, fontWeight: 700, color: '#0E1B2A', marginBottom: 4, opacity: 0.7 }}>COEF {num}</div>
+      <div style={{ fontSize: 12, fontWeight: 600, color: '#0E1B2A', marginBottom: 2 }}>{label}</div>
       <div style={{ fontSize: 11, color: '#6B7280', marginBottom: 6, lineHeight: 1.3 }}>{value}</div>
       <div style={{ display: 'inline-block', fontSize: 13, fontWeight: 700, color, background: 'white', borderRadius: 6, padding: '2px 8px', border: `0.5px solid ${isAbove ? '#F3D49A' : isBelow ? '#B5D89A' : '#E5E7EB'}` }}>
         ×{coef.toFixed(2)}
@@ -240,8 +240,8 @@ export const TravauxTab: React.FC = () => {
     <div>
       {/* ── Sélecteur niveau (cards visuelles) ── */}
       <div style={{ marginBottom: '1.5rem' }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#1A3A5C', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
-          {tw.niveauTitle} <span style={{ color: '#C9A84C' }}>— {tw.niveauRequired}</span>
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#0E1B2A', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+          {tw.niveauTitle} <span style={{ color: '#0F7B6C' }}>— {tw.niveauRequired}</span>
         </div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {NIVEAUX_DATA.map(n => {
@@ -350,9 +350,9 @@ export const TravauxTab: React.FC = () => {
             </div>
           </div>
 
-          <p style={{ fontSize: 11, color: '#6B7280', marginTop: 10, lineHeight: 1.5, borderLeft: '2px solid #C9A84C', paddingLeft: 8 }}>
+          <p style={{ fontSize: 11, color: '#6B7280', marginTop: 10, lineHeight: 1.5, borderLeft: '2px solid #0F7B6C', paddingLeft: 8 }}>
             {tw.mentionLegal}{' '}
-            <strong style={{ color: '#1A3A5C' }}>{tw.mentionBold}</strong>
+            <strong style={{ color: '#0E1B2A' }}>{tw.mentionBold}</strong>
           </p>
 
           <SectionTitle>{tw.decomp}</SectionTitle>
@@ -366,7 +366,7 @@ export const TravauxTab: React.FC = () => {
                     <span className="tabular-nums font-medium text-neutral-800">{fmt(montant)} ₪</span>
                   </div>
                   <div className="h-1.5 rounded-full bg-neutral-100 overflow-hidden">
-                    <div className="h-full rounded-full" style={{ width: `${Math.round(p.pct * 100)}%`, background: '#C9A84C', opacity: 0.65 + p.pct * 1.5 }} />
+                    <div className="h-full rounded-full" style={{ width: `${Math.round(p.pct * 100)}%`, background: '#0F7B6C', opacity: 0.65 + p.pct * 1.5 }} />
                   </div>
                 </div>
               )
@@ -377,7 +377,7 @@ export const TravauxTab: React.FC = () => {
 
       {/* ── Récapitulatif des 4 coefficients ── */}
       <div style={{ marginTop: '1.5rem' }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#1A3A5C', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#0E1B2A', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
           {tw.coefSection}
         </div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
@@ -385,7 +385,7 @@ export const TravauxTab: React.FC = () => {
           <CoefBadge num="2" label={tw.coef2Name} value={riskLabel}            coef={risqueData.coef} />
           <CoefBadge num="3" label={tw.coef3Name} value={accesLabels[acces].split('—')[0].trim()} coef={accesData.coef} />
           <CoefBadge num="4" label={tw.coef4Name} value={etatLabels[etatInit].split('—')[0].trim()} coef={etatData.coef} />
-          <div style={{ background: '#1A3A5C', color: 'white', borderRadius: 10, padding: '10px 14px', flex: '1 1 160px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <div style={{ background: '#0E1B2A', color: 'white', borderRadius: 10, padding: '10px 14px', flex: '1 1 160px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <div style={{ fontSize: 10, fontWeight: 700, opacity: 0.7, marginBottom: 4 }}>{tw.coefTotalNum}</div>
             <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.5px' }}>×{coefTotal.toFixed(2)}</div>
             <div style={{ fontSize: 10, opacity: 0.65, marginTop: 2 }}>
@@ -397,7 +397,7 @@ export const TravauxTab: React.FC = () => {
 
       {/* ── SECTION SOURCES ── */}
       <div style={{ marginTop: '2rem', borderTop: '0.5px solid #E5E7EB', paddingTop: '1.5rem' }}>
-        <h3 style={{ fontSize: 12, fontWeight: 600, color: '#1A3A5C', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>
+        <h3 style={{ fontSize: 12, fontWeight: 600, color: '#0E1B2A', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>
           {tw.sourcesTitle}
         </h3>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 12 }}>

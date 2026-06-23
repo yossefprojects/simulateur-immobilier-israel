@@ -63,7 +63,7 @@ export const HeroSection: React.FC<{ onCTA: () => void }> = ({ onCTA }) => {
           zIndex: 2,
           width: p.size, height: p.size,
           left: `${p.left}%`, top: `${p.top}%`,
-          background: '#C9A84C',
+          background: '#37B3A1',
           opacity: p.op,
           animation: `floatParticle ${p.dur}s ease-in-out ${p.delay}s infinite`,
         }} />
@@ -73,12 +73,12 @@ export const HeroSection: React.FC<{ onCTA: () => void }> = ({ onCTA }) => {
       <div className="relative text-center px-6 py-16" style={{ zIndex: 3, maxWidth: 820 }}>
         {/* Badge */}
         <div className="anim-fade-down inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6"
-          style={{ background: 'rgba(201,168,76,0.12)', border: '1px solid rgba(201,168,76,0.35)' }}>
+          style={{ background: 'rgba(55,179,161,0.12)', border: '1px solid rgba(55,179,161,0.35)' }}>
           <span className="rounded-full" style={{
-            width: 6, height: 6, background: '#C9A84C',
+            width: 6, height: 6, background: '#37B3A1',
             animation: 'pulseDot 2s ease-in-out infinite',
           }} />
-          <span className="text-[11px] font-bold uppercase" style={{ color: '#C9A84C', letterSpacing: '0.12em' }}>
+          <span className="text-[11px] font-bold uppercase" style={{ color: '#37B3A1', letterSpacing: '0.12em' }}>
             {h.eyebrow}
           </span>
         </div>
@@ -86,7 +86,7 @@ export const HeroSection: React.FC<{ onCTA: () => void }> = ({ onCTA }) => {
         {/* Titre */}
         <h1 className="anim-fade-up text-white mb-5"
           style={{
-            fontFamily: "'DM Serif Display', Georgia, serif",
+            fontFamily: "'Fraunces', Georgia, serif",
             fontSize: 'clamp(38px, 7vw, 68px)',
             fontWeight: 400, lineHeight: 1.08,
             animationDelay: '0.1s',
@@ -116,12 +116,12 @@ export const HeroSection: React.FC<{ onCTA: () => void }> = ({ onCTA }) => {
           <button onClick={onCTA}
             className="inline-flex items-center gap-2 rounded-full px-9 py-3.5 text-[15px] font-bold transition-all hover:-translate-y-0.5"
             style={{
-              background: 'linear-gradient(135deg, #C9A84C, #E8C96A)',
-              color: '#0A1628', border: 'none',
-              boxShadow: '0 8px 32px rgba(201,168,76,0.45)',
+              background: 'linear-gradient(135deg, #0F7B6C, #37B3A1)',
+              color: '#fff', border: 'none',
+              boxShadow: '0 8px 32px rgba(55,179,161,0.45)',
             }}
-            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 14px 42px rgba(201,168,76,0.6)' }}
-            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(201,168,76,0.45)' }}>
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 14px 42px rgba(55,179,161,0.6)' }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(55,179,161,0.45)' }}>
             {h.cta}
             <ArrowRight size={17} className={isRtl ? 'rotate-180' : ''} />
           </button>
@@ -131,7 +131,7 @@ export const HeroSection: React.FC<{ onCTA: () => void }> = ({ onCTA }) => {
         <div className="anim-fade-up flex justify-center" style={{ gap: 'clamp(28px, 6vw, 56px)', animationDelay: '0.65s' }}>
           {stats.map((s, i) => (
             <div key={i} className="text-center">
-              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(24px, 4vw, 32px)', color: '#C9A84C', lineHeight: 1 }}>
+              <div style={{ fontFamily: "'Fraunces', serif", fontSize: 'clamp(24px, 4vw, 32px)', color: '#37B3A1', lineHeight: 1 }}>
                 {s.val}
               </div>
               <div className="mt-1.5" style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.06em' }}>
@@ -150,7 +150,7 @@ export const HeroSection: React.FC<{ onCTA: () => void }> = ({ onCTA }) => {
         <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.16em', textTransform: 'uppercase' }}>
           {h.eyebrow.length ? '↓' : ''}
         </span>
-        <div style={{ width: 1, height: 34, background: 'linear-gradient(to bottom, rgba(201,168,76,0.6), transparent)' }} />
+        <div style={{ width: 1, height: 34, background: 'linear-gradient(to bottom, rgba(55,179,161,0.6), transparent)' }} />
       </div>
     </section>
   )
@@ -158,13 +158,13 @@ export const HeroSection: React.FC<{ onCTA: () => void }> = ({ onCTA }) => {
 
 // ── GRILLE D'OUTILS ──────────────────────────────────────────────────────────
 const TOOL_COLORS: Record<Tool, string> = {
-  estimation:   '#1A3A5C',
+  estimation:   '#0E1B2A',
   investisseur: '#0F6E56',
-  promoteur:    '#C9A84C',
+  promoteur:    '#0F7B6C',
   fiscalite:    '#7F77DD',
-  travaux:      '#BA7517',
-  urbanisme:    '#2A5080',
-  agent:        '#C9A84C',
+  travaux:      '#E2761A',
+  urbanisme:    '#1C3049',
+  agent:        '#0F7B6C',
 }
 
 export const QuickAccess: React.FC<{ onNavigate: (tab: Tool) => void }> = ({ onNavigate }) => {
@@ -182,13 +182,13 @@ export const QuickAccess: React.FC<{ onNavigate: (tab: Tool) => void }> = ({ onN
   ]
 
   return (
-    <section style={{ background: '#F8F7F4', padding: '72px 0 88px' }}>
+    <section style={{ background: '#F7F5F0', padding: '72px 0 88px' }}>
       <div className="max-w-5xl mx-auto px-6">
 
         {/* Agent IA — bandeau pleine largeur avec photo */}
         <button onClick={() => onNavigate('agent')}
           className="reveal group relative w-full overflow-hidden flex items-center gap-4 rounded-2xl p-5 mb-10 transition-all hover:-translate-y-1"
-          style={{ border: '1px solid #C9A84C', textAlign: isRtl ? 'right' : 'left', flexDirection: isRtl ? 'row-reverse' : 'row' }}>
+          style={{ border: '1px solid #37B3A1', textAlign: isRtl ? 'right' : 'left', flexDirection: isRtl ? 'row-reverse' : 'row' }}>
           {/* Photo de fond */}
           <img src="/residential.jpg" alt="" aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" style={{ zIndex: 0 }} />
@@ -199,21 +199,21 @@ export const QuickAccess: React.FC<{ onNavigate: (tab: Tool) => void }> = ({ onN
               : 'linear-gradient(to right, rgba(15,34,53,0.97) 30%, rgba(15,34,53,0.78) 100%)',
           }} />
           <div className="relative flex items-center justify-center rounded-full shrink-0" style={{
-            zIndex: 2, width: 46, height: 46, background: 'rgba(201,168,76,0.2)', color: '#C9A84C', fontSize: 22,
+            zIndex: 2, width: 46, height: 46, background: 'rgba(55,179,161,0.2)', color: '#37B3A1', fontSize: 22,
           }}>✦</div>
           <div className="relative flex-1 min-w-0" style={{ zIndex: 2 }}>
             <div className="text-[16px] font-semibold" style={{ color: '#fff' }}>{t.tabs.agent}</div>
             <div className="text-[12px] leading-snug" style={{ color: 'rgba(255,255,255,0.6)' }}>{h.subAgent}</div>
           </div>
-          <ArrowRight size={18} style={{ color: '#C9A84C', zIndex: 2 }} className={`relative shrink-0 transition-transform group-hover:translate-x-1 ${isRtl ? 'rotate-180' : ''}`} />
+          <ArrowRight size={18} style={{ color: '#37B3A1', zIndex: 2 }} className={`relative shrink-0 transition-transform group-hover:translate-x-1 ${isRtl ? 'rotate-180' : ''}`} />
         </button>
 
         {/* Titre section */}
         <div className="reveal text-center mb-12">
-          <div className="text-[11px] font-bold uppercase mb-2.5" style={{ color: '#C9A84C', letterSpacing: '0.14em' }}>
+          <div className="text-[11px] font-bold uppercase mb-2.5" style={{ color: '#0F7B6C', letterSpacing: '0.14em' }}>
             {t.appSubtitle.split(' · ')[0]}
           </div>
-          <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(26px, 4vw, 40px)', color: '#0A1628', fontWeight: 400 }}>
+          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 'clamp(26px, 4vw, 40px)', color: '#0E1B2A', fontWeight: 400 }}>
             {h.chooseTool}
           </h2>
         </div>
@@ -246,7 +246,7 @@ const ToolCard: React.FC<{
         onMouseLeave={() => setHovered(false)}
         className="relative w-full overflow-hidden rounded-2xl"
         style={{
-          background: hovered ? '#0A1628' : 'white',
+          background: hovered ? '#0E1B2A' : 'white',
           border: hovered ? `1.5px solid ${color}` : '1px solid #E2E8F0',
           padding: '28px 24px',
           textAlign: isRtl ? 'right' : 'left',
@@ -266,7 +266,7 @@ const ToolCard: React.FC<{
         }}>{item.icon}</div>
 
         <div className="relative text-[17px] font-bold mb-1.5" style={{
-          color: hovered ? 'white' : '#0A1628', transition: 'color 0.2s',
+          color: hovered ? 'white' : '#0E1B2A', transition: 'color 0.2s',
         }}>{item.title}</div>
 
         <div className="relative text-[12px] leading-relaxed" style={{
@@ -278,7 +278,7 @@ const ToolCard: React.FC<{
           bottom: 20, [isRtl ? 'left' : 'right']: 20,
           width: 28, height: 28,
           background: hovered ? color : '#F1F5F9',
-          color: hovered ? '#0A1628' : '#94A3B8',
+          color: hovered ? '#0E1B2A' : '#94A3B8',
           transition: 'all 0.25s', transform: hovered ? 'scale(1.1)' : 'scale(1)',
         } as React.CSSProperties}>
           <ArrowRight size={13} className={isRtl ? 'rotate-180' : ''} />

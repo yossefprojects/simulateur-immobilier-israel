@@ -31,13 +31,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
   const linkClass = 'block text-[13px] no-underline mb-1.5 transition-colors'
   const linkStyle: React.CSSProperties = { color: 'rgba(255,255,255,0.4)' }
-  const onEnter = (e: React.MouseEvent<HTMLElement>) => { e.currentTarget.style.color = '#C9A84C' }
+  const onEnter = (e: React.MouseEvent<HTMLElement>) => { e.currentTarget.style.color = '#0F7B6C' }
   const onLeave = (e: React.MouseEvent<HTMLElement>) => { e.currentTarget.style.color = 'rgba(255,255,255,0.4)' }
 
   return (
-    <footer style={{ background: '#0A1628' }}>
+    <footer style={{ background: '#0E1B2A' }}>
       {/* Gold divider */}
-      <div className="mx-6 sm:mx-12" style={{ height: 1, background: 'linear-gradient(to right, transparent, #C9A84C, transparent)' }} />
+      <div className="mx-6 sm:mx-12" style={{ height: 1, background: 'linear-gradient(to right, transparent, #0F7B6C, transparent)' }} />
 
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)] gap-10 md:gap-12 px-6 sm:px-10 pt-12 pb-7">
 
@@ -56,7 +56,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         {/* Tools */}
         <div>
-          <div className="text-[11px] font-bold uppercase tracking-[0.12em] mb-4" style={{ color: '#C9A84C' }}>
+          <div className="text-[11px] font-bold uppercase tracking-[0.12em] mb-4" style={{ color: '#0F7B6C' }}>
             {f.tools}
           </div>
           {TOOLS.map(tool => (
@@ -75,7 +75,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         {/* Data sources */}
         <div>
-          <div className="text-[11px] font-bold uppercase tracking-[0.12em] mb-4" style={{ color: '#C9A84C' }}>
+          <div className="text-[11px] font-bold uppercase tracking-[0.12em] mb-4" style={{ color: '#0F7B6C' }}>
             {f.sources}
           </div>
           {SOURCES.map(s => (
@@ -98,7 +98,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 mt-4 rounded-lg px-3.5 py-2 text-xs font-semibold no-underline transition-all"
-            style={{ background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.25)', color: '#C9A84C' }}
+            style={{ background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.25)', color: '#0F7B6C' }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.18)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.45)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.1)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.25)' }}
           >

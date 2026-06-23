@@ -206,9 +206,9 @@ function scoreLabel(score: number, lang: 'fr' | 'en' | 'he') {
 }
 
 const SECTION_COLORS: Record<number, string> = {
-  1: '#1A3A5C', 2: '#1A3A5C', 3: '#1A3A5C',
+  1: '#0E1B2A', 2: '#0E1B2A', 3: '#0E1B2A',
   4: '#7c3aed', 5: '#0369a1',
-  6: '#C9A84C', 7: '#b91c1c', 8: '#1A3A5C',
+  6: '#0F7B6C', 7: '#b91c1c', 8: '#0E1B2A',
 }
 
 function cleanText(s: string) {
@@ -307,7 +307,7 @@ function RenderOutput({ text, lang }: { text: string; lang: 'fr' | 'en' | 'he' }
 
     if (block.kind === 'section') {
       sectionNum = block.num
-      const col = SECTION_COLORS[sectionNum] ?? '#1A3A5C'
+      const col = SECTION_COLORS[sectionNum] ?? '#0E1B2A'
       const isScore = sectionNum === 6
       nodes.push(
         <div key={idx} className="flex items-center gap-3 mt-6 mb-3">
@@ -316,7 +316,7 @@ function RenderOutput({ text, lang }: { text: string; lang: 'fr' | 'en' | 'he' }
               style={{ background: col }}>{block.num}</span>
           )}
           <h3 className="text-xs font-bold uppercase tracking-widest"
-            style={{ color: isScore ? '#C9A84C' : col }}>
+            style={{ color: isScore ? '#0F7B6C' : col }}>
             {block.title}
           </h3>
           <div className="flex-1 h-px" style={{ background: isScore ? '#fde68a' : '#e5e7eb' }} />
@@ -338,13 +338,13 @@ function RenderOutput({ text, lang }: { text: string; lang: 'fr' | 'en' | 'he' }
               <div key={j} className={`flex items-start justify-between px-3 py-2 text-sm gap-4 ${!isLast ? 'border-b border-neutral-100' : ''} ${j % 2 === 0 ? 'bg-white' : 'bg-neutral-50/60'}`}>
                 <span className="text-neutral-500 text-xs shrink-0 pt-0.5 min-w-0">{item.key}</span>
                 {scorePartMatch ? (
-                  <span className="flex items-center gap-1.5 font-semibold text-xs" style={{ color: '#C9A84C' }}>
+                  <span className="flex items-center gap-1.5 font-semibold text-xs" style={{ color: '#0F7B6C' }}>
                     <span className="text-base font-bold">{scorePartMatch[1]}</span>
                     <span className="text-neutral-400">/ {scorePartMatch[2]}</span>
                   </span>
                 ) : (
                   <span className="font-semibold text-right text-xs"
-                    style={{ color: isMonetary && isFinance ? '#C9A84C' : isPct ? '#1A3A5C' : '#1e293b' }}>
+                    style={{ color: isMonetary && isFinance ? '#0F7B6C' : isPct ? '#0E1B2A' : '#1e293b' }}>
                     {item.value}
                   </span>
                 )}
@@ -393,7 +393,7 @@ function RenderOutput({ text, lang }: { text: string; lang: 'fr' | 'en' | 'he' }
       const bg = isBuy ? '#dcfce7' : isDevelop ? '#ede9fe' : isWait ? '#ffedd5' : isSell ? '#dbeafe'
                : isEx ? '#dcfce7' : isBon ? '#fef9c3' : isMod ? '#ffedd5' : isRisk ? '#fee2e2' : '#f1f5f9'
       const fg = isBuy ? '#15803d' : isDevelop ? '#6d28d9' : isWait ? '#c2410c' : isSell ? '#1d4ed8'
-               : isEx ? '#15803d' : isBon ? '#a16207' : isMod ? '#c2410c' : isRisk ? '#b91c1c' : '#1A3A5C'
+               : isEx ? '#15803d' : isBon ? '#a16207' : isMod ? '#c2410c' : isRisk ? '#b91c1c' : '#0E1B2A'
       nodes.push(
         <div key={idx} className="my-2">
           <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold tracking-wide" style={{ background: bg, color: fg }}>
@@ -407,7 +407,7 @@ function RenderOutput({ text, lang }: { text: string; lang: 'fr' | 'en' | 'he' }
     if (block.kind === 'bullet') {
       nodes.push(
         <div key={idx} className="flex items-start gap-2.5 py-1 text-sm text-neutral-700">
-          <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: '#C9A84C' }} />
+          <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: '#0F7B6C' }} />
           <span className="leading-relaxed">{block.text}</span>
         </div>
       )
@@ -870,12 +870,12 @@ export function AgentTab() {
                 onClick={() => setShowHistory(v => !v)}
                 className="flex items-center gap-1.5 rounded-full transition-all"
                 style={showHistory
-                  ? { padding: '4px 12px', fontSize: 12, border: '0.5px solid #C9A84C', background: 'rgba(201,168,76,0.18)', color: '#C9A84C' }
+                  ? { padding: '4px 12px', fontSize: 12, border: '0.5px solid #0F7B6C', background: 'rgba(201,168,76,0.18)', color: '#0F7B6C' }
                   : { padding: '4px 12px', fontSize: 12, border: '0.5px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.7)' }}>
                 <History size={12} />
                 {ta.historyBtn}
                 {history.length > 0 && (
-                  <span className="font-semibold" style={{ color: showHistory ? '#C9A84C' : 'rgba(255,255,255,0.85)' }}>
+                  <span className="font-semibold" style={{ color: showHistory ? '#0F7B6C' : 'rgba(255,255,255,0.85)' }}>
                     {history.length}
                   </span>
                 )}
@@ -900,7 +900,7 @@ export function AgentTab() {
                 <button key={i} onClick={() => setInput(ex.text)}
                   className="rounded-full transition-colors bg-white hover:bg-[#FBF5E6] hover:text-[#0D1B3E]"
                   style={{ border: '0.5px solid rgba(0,0,0,0.12)', padding: '5px 14px', fontSize: 12, color: '#374151' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#C9A84C' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#0F7B6C' }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.12)' }}>
                   {ex.label}
                 </button>
@@ -936,7 +936,7 @@ export function AgentTab() {
                           placeholder={f.ph}
                           className="rounded-lg focus:outline-none transition-colors"
                           style={{ background: '#F7F5F0', border: '0.5px solid rgba(0,0,0,0.12)', padding: '8px 10px', fontSize: 13 }}
-                          onFocus={e => { e.currentTarget.style.borderColor = '#C9A84C'; e.currentTarget.style.background = '#fff' }}
+                          onFocus={e => { e.currentTarget.style.borderColor = '#0F7B6C'; e.currentTarget.style.background = '#fff' }}
                           onBlur={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.12)'; e.currentTarget.style.background = '#F7F5F0' }}
                         />
                       </div>
@@ -947,7 +947,7 @@ export function AgentTab() {
                   <button
                     onClick={composeQuick}
                     className="flex items-center gap-1.5 rounded-lg font-semibold transition-all"
-                    style={{ background: '#C9A84C', color: '#0D1B3E', padding: '8px 16px', fontSize: 12 }}>
+                    style={{ background: '#0F7B6C', color: '#0D1B3E', padding: '8px 16px', fontSize: 12 }}>
                     <ChevronRight size={13} /> {ta.quick.compose}
                   </button>
                 </div>
@@ -964,7 +964,7 @@ export function AgentTab() {
             disabled={loading}
             className="w-full rounded-[10px] focus:outline-none transition-colors"
             style={{ minHeight: 140, padding: '14px 16px', border: '0.5px solid rgba(0,0,0,0.12)', background: '#fff', fontSize: 14, lineHeight: 1.6, color: '#1e293b', resize: 'vertical', fontFamily: 'inherit' }}
-            onFocus={e => { e.currentTarget.style.borderColor = '#C9A84C' }}
+            onFocus={e => { e.currentTarget.style.borderColor = '#0F7B6C' }}
             onBlur={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.12)' }}
           />
 
@@ -983,9 +983,9 @@ export function AgentTab() {
             </span>
             <button onClick={analyze} disabled={loading || !input.trim()}
               className="flex items-center justify-center gap-2 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
-              style={{ background: loading ? '#cbb878' : '#C9A84C', color: '#0D1B3E', padding: '10px 22px', fontSize: 14 }}
+              style={{ background: loading ? '#cbb878' : '#0F7B6C', color: '#0D1B3E', padding: '10px 22px', fontSize: 14 }}
               onMouseEnter={e => { if (!loading && input.trim()) e.currentTarget.style.background = '#b8963e' }}
-              onMouseLeave={e => { e.currentTarget.style.background = loading ? '#cbb878' : '#C9A84C' }}>
+              onMouseLeave={e => { e.currentTarget.style.background = loading ? '#cbb878' : '#0F7B6C' }}>
               {loading
                 ? <><Loader2 size={14} className="animate-spin" /> {ta.submitting}</>
                 : <><Send size={14} /> {ta.submit}</>
@@ -1000,8 +1000,8 @@ export function AgentTab() {
         <div className="rounded-xl border border-neutral-200 overflow-hidden" style={{ background: '#fafaf9' }}>
           <div className="flex items-center justify-between px-4 py-2.5 border-b border-neutral-200" style={{ background: '#f3f4f6' }}>
             <div className="flex items-center gap-2">
-              <Clock size={13} style={{ color: '#1A3A5C' }} />
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1A3A5C' }}>
+              <Clock size={13} style={{ color: '#0E1B2A' }} />
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#0E1B2A' }}>
                 {ta.historySaved}
               </span>
               <span className="text-xs text-neutral-400">({history.length})</span>
@@ -1031,7 +1031,7 @@ export function AgentTab() {
                   className="w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-white transition-colors group"
                   style={activeId === item.id ? { background: '#eff6ff' } : {}}>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-medium text-neutral-800 truncate leading-snug" style={activeId === item.id ? { color: '#1A3A5C' } : {}}>
+                    <div className="text-xs font-medium text-neutral-800 truncate leading-snug" style={activeId === item.id ? { color: '#0E1B2A' } : {}}>
                       {item.title}
                     </div>
                     <div className="text-xs text-neutral-400 mt-0.5 flex items-center gap-1">
@@ -1072,7 +1072,7 @@ export function AgentTab() {
           <div className="flex items-center justify-between px-4 py-2.5 border-b border-neutral-100" style={{ background: '#f8f7f5' }}>
             <div className="flex items-center gap-2">
               <span className="text-sm">📊</span>
-              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#1A3A5C' }}>{ta.reportTitle}</span>
+              <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#0E1B2A' }}>{ta.reportTitle}</span>
               {activeId && history.find(h => h.id === activeId) && (
                 <span className="text-xs text-neutral-400">
                   · {fmtDate(history.find(h => h.id === activeId)!.date, lang)}
@@ -1101,7 +1101,7 @@ export function AgentTab() {
                     disabled={pdfBusy}
                     title="Exporter en PDF"
                     className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all border disabled:opacity-50"
-                    style={{ background: '#1A3A5C', borderColor: '#1A3A5C', color: 'white' }}>
+                    style={{ background: '#0E1B2A', borderColor: '#0E1B2A', color: 'white' }}>
                     {pdfBusy
                       ? <><Loader2 size={11} className="animate-spin" /> {ta.pdfBtn}…</>
                       : <><FileDown size={11} /> {ta.pdfBtn}</>}
