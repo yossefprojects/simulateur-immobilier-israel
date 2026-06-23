@@ -102,7 +102,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(55,179,161,0.2)'; e.currentTarget.style.borderColor = 'rgba(55,179,161,0.5)' }}
             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(55,179,161,0.12)'; e.currentTarget.style.borderColor = 'rgba(55,179,161,0.3)' }}
           >
-            <svg viewBox="0 0 56 56" className="h-4 w-4 shrink-0" aria-hidden="true"><rect width="56" height="56" rx="14" fill="#F7F5F0" /><rect x="16" y="18" width="13" height="26" rx="2" fill="#0E1B2A" /><rect x="28" y="24" width="13" height="20" rx="2" fill="#0F7B6C" /></svg> NadlanConnect →
+            <svg viewBox="0 0 56 56" className="h-4 w-4 shrink-0 nc-logo" aria-hidden="true"><rect width="56" height="56" rx="14" fill="#F7F5F0" /><rect className="nc-tower" x="16" y="18" width="13" height="26" rx="2" fill="#0E1B2A" /><rect className="nc-tower nc-tower-2" x="28" y="24" width="13" height="20" rx="2" fill="#0F7B6C" /></svg> NadlanConnect →
           </a>
         </div>
       </div>
