@@ -137,9 +137,9 @@ export const MetricCard: React.FC<MetricCardProps> = ({ label, value, accent }) 
 
 export const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="flex items-center gap-2 mt-6 mb-3.5">
-    <div className="flex-1 h-px" style={{ background: 'rgba(201,168,76,0.2)' }} />
+    <div className="flex-1 h-px" style={{ background: 'rgba(15,123,108,0.2)' }} />
     <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#0F7B6C]">{children}</span>
-    <div className="flex-1 h-px" style={{ background: 'rgba(201,168,76,0.2)' }} />
+    <div className="flex-1 h-px" style={{ background: 'rgba(15,123,108,0.2)' }} />
   </div>
 )
 
@@ -161,7 +161,7 @@ export const ResultBox: React.FC<ResultBoxProps> = ({ main, sub, label, badges }
       className="absolute pointer-events-none"
       style={{
         top: -30, right: -30, width: 120, height: 120,
-        background: 'radial-gradient(circle, rgba(201,168,76,0.2) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(15,123,108,0.2) 0%, transparent 70%)',
       }}
     />
     {label && (

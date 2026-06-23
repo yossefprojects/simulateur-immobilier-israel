@@ -492,7 +492,7 @@ export function AgentTab() {
       const M     = 16
       const maxW  = W - M * 2
       const NAVY  : [number,number,number] = [26, 58, 92]
-      const GOLD  : [number,number,number] = [201, 168, 76]
+      const SEA  : [number,number,number] = [15, 123, 108]
       const GRAY  : [number,number,number] = [90, 90, 90]
       const BLACK : [number,number,number] = [33, 37, 41]
       const LINE  : [number,number,number] = [224, 224, 224]
@@ -529,7 +529,7 @@ export function AgentTab() {
       doc.setFontSize(7.5)
       doc.setFont('helvetica', 'normal')
       doc.text(`Genere le ${new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' })}   ·   Estimation indicative (ne remplace pas un Shamai agree)`, M, 18)
-      doc.setFillColor(...GOLD)
+      doc.setFillColor(...SEA)
       doc.rect(0, 24, W, 1, 'F')
       y = 34
 
@@ -579,7 +579,7 @@ export function AgentTab() {
           doc.setFontSize(10.5)
           doc.setTextColor(...NAVY)
           doc.text(sanitize(line.slice(3)).toUpperCase(), M, y + 4)
-          doc.setDrawColor(...GOLD)
+          doc.setDrawColor(...SEA)
           doc.setLineWidth(0.5)
           doc.line(M, y + 6.4, M + maxW, y + 6.4)
           y += 11
@@ -635,7 +635,7 @@ export function AgentTab() {
               doc.text(k, M, y + 4)
               doc.setFont('helvetica', 'normal')
               const isGold = /\bNIS\b/.test(v)
-              doc.setTextColor(isGold ? GOLD[0] : BLACK[0], isGold ? GOLD[1] : BLACK[1], isGold ? GOLD[2] : BLACK[2])
+              doc.setTextColor(isGold ? SEA[0] : BLACK[0], isGold ? SEA[1] : BLACK[1], isGold ? SEA[2] : BLACK[2])
               doc.text(wrapped, W - M, y + 4, { align: 'right' })
               doc.setDrawColor(...LINE)
               doc.setLineWidth(0.2)
@@ -647,7 +647,7 @@ export function AgentTab() {
 
           // ── Puce enrichie (gras inline supporté) ──
           guard(5)                       // garantit que la puce et sa 1re ligne tiennent ensemble
-          doc.setFillColor(...GOLD)
+          doc.setFillColor(...SEA)
           doc.circle(M + 1.1, y + 1.6, 0.8, 'F')
           drawRich(content, M + 4.5, maxW - 4.5, 8.2, GRAY, 4.4, false)
           y += 1.2
@@ -680,7 +680,7 @@ export function AgentTab() {
         doc.setFontSize(10.5)
         doc.setTextColor(...NAVY)
         doc.text('ANNEXE  —  DONNEES DU BIEN', M, y + 4)
-        doc.setDrawColor(...GOLD)
+        doc.setDrawColor(...SEA)
         doc.setLineWidth(0.5)
         doc.line(M, y + 6.4, M + maxW, y + 6.4)
         y += 11
@@ -870,7 +870,7 @@ export function AgentTab() {
                 onClick={() => setShowHistory(v => !v)}
                 className="flex items-center gap-1.5 rounded-full transition-all"
                 style={showHistory
-                  ? { padding: '4px 12px', fontSize: 12, border: '0.5px solid #0F7B6C', background: 'rgba(201,168,76,0.18)', color: '#0F7B6C' }
+                  ? { padding: '4px 12px', fontSize: 12, border: '0.5px solid #0F7B6C', background: 'rgba(15,123,108,0.18)', color: '#0F7B6C' }
                   : { padding: '4px 12px', fontSize: 12, border: '0.5px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.7)' }}>
                 <History size={12} />
                 {ta.historyBtn}

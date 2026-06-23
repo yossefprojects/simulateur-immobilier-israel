@@ -36,7 +36,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
   return (
     <footer style={{ background: '#0E1B2A' }}>
-      {/* Gold divider */}
+      {/* Sea divider */}
       <div className="mx-6 sm:mx-12" style={{ height: 1, background: 'linear-gradient(to right, transparent, #0F7B6C, transparent)' }} />
 
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)] gap-10 md:gap-12 px-6 sm:px-10 pt-12 pb-7">
@@ -98,11 +98,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 mt-4 rounded-lg px-3.5 py-2 text-xs font-semibold no-underline transition-all"
-            style={{ background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.25)', color: '#0F7B6C' }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.18)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.45)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.1)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.25)' }}
+            style={{ background: 'rgba(55,179,161,0.12)', border: '1px solid rgba(55,179,161,0.3)', color: '#37B3A1' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(55,179,161,0.2)'; e.currentTarget.style.borderColor = 'rgba(55,179,161,0.5)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(55,179,161,0.12)'; e.currentTarget.style.borderColor = 'rgba(55,179,161,0.3)' }}
           >
-            <span aria-hidden="true">🏗️</span> NadlanConnect →
+            <svg viewBox="0 0 56 56" className="h-4 w-4 shrink-0" aria-hidden="true"><rect width="56" height="56" rx="14" fill="#F7F5F0" /><rect x="16" y="18" width="13" height="26" rx="2" fill="#0E1B2A" /><rect x="28" y="24" width="13" height="20" rx="2" fill="#0F7B6C" /></svg> NadlanConnect →
           </a>
         </div>
       </div>

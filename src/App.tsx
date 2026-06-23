@@ -565,11 +565,11 @@ export default function App() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 8,
-                boxShadow: '0 4px 14px rgba(201,168,76,0.3)',
+                boxShadow: '0 4px 14px rgba(15,123,108,0.3)',
                 transition: 'background 0.2s, box-shadow 0.2s, transform 0.2s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#37B3A1'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(201,168,76,0.4)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = '#0F7B6C'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(201,168,76,0.3)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#37B3A1'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(15,123,108,0.4)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#0F7B6C'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(15,123,108,0.3)' }}
             >
               <Sparkles size={15} />
               <span className="hidden sm:inline">{t.simulatorIA}</span>
@@ -675,7 +675,7 @@ export default function App() {
                   isAgent
                     ? isActive
                       ? { borderBottomColor: 'transparent', color: '#0D1B3E', background: '#0F7B6C', borderRadius: 6, fontWeight: 500 }
-                      : { borderBottomColor: '#e8c96a', color: '#0F7B6C', background: 'rgba(201,168,76,0.1)', borderBottomWidth: 2 }
+                      : { borderBottomColor: '#0F7B6C', color: '#0F7B6C', background: 'rgba(15,123,108,0.1)', borderBottomWidth: 2 }
                     : isActive
                       ? { borderBottomColor: '#0F7B6C', color: '#FFFFFF' }
                       : { color: 'rgba(255,255,255,0.5)' }
