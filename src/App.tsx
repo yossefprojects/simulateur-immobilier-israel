@@ -505,9 +505,13 @@ export default function App() {
         }}>
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-2 sm:gap-3 flex-wrap">
           <button onClick={() => setActive('home')} className="flex items-center gap-2 sm:gap-3 text-start group min-w-0" title={t.appTitle}>
-            <div className="shrink-0 h-8 w-8 rounded overflow-hidden">
-              <img src="/logo.png" alt="NadlanConnect" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
-            </div>
+            <svg viewBox="0 0 56 56" className="shrink-0 h-8 w-8" aria-hidden="true">
+              <rect width="56" height="56" rx="14" fill="#F7F5F0" stroke="#0E1B2A" strokeOpacity="0.14" />
+              <rect x="16" y="18" width="13" height="26" rx="2" fill="#0E1B2A" />
+              <rect x="28" y="24" width="13" height="20" rx="2" fill="#0F7B6C" />
+              <g fill="#F7F5F0"><circle cx="22.5" cy="24" r="1.4" /><circle cx="22.5" cy="30" r="1.4" /><circle cx="22.5" cy="36" r="1.4" /></g>
+              <g fill="#fff"><circle cx="34.5" cy="31" r="1.4" /><circle cx="34.5" cy="37" r="1.4" /></g>
+            </svg>
             <div>
               <h1 className="text-xl font-serif leading-tight text-white">
                 Nadlan<span style={{ color: '#0F7B6C' }}>Connect</span>
